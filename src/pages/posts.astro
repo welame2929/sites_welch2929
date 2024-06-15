@@ -1,0 +1,21 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Card from '../components/Card.astro';
+const pageTitle = "Posts";
+---
+<Layout pageTitle={pageTitle}>
+    <h2>Blog</h2>
+    <ul role="list" class="link-card-grid">
+        準備中
+    </ul>
+    <h2>YouTube</h2>
+    <ul role="list" class="link-card-grid">
+        <Card
+            url="https://www.youtube.com/watch?v=fhe2KIlCeto"
+            image="/youtube.webp"
+            title="Intersteno Typing test - Deutsch / Deutsch (Schweiz) 【タイピング】"
+            body="多言語タイピング動画（ドイツ語）"
+        />
+    </ul>
+</Layout>
+

@@ -1,0 +1,182 @@
+---
+import { getCollection } from "astro:content";
+import Layout from '../layouts/Layout.astro';
+import Card from '../components/Card.astro';
+const allProjects = await getCollection("projects");
+const pageTitle = "Profile";
+---
+<Layout pageTitle={pageTitle}>
+    <h2>Profile</h2>
+    <p>
+        ハンドルネーム：うぇるあめ<br>
+        <br>
+        1999年11月11日 生<br>
+        2018年 埼玉県立浦和高等学校 卒業<br>
+        2024年 東京大学 工学部 応用化学科 卒業（2留、6年在学）<br>
+        2024年～ 分析機器メーカー勤務<br>
+        <br>
+        連絡先：<a href="https://x.com/welch2929">Twitter</a> DMにお願いします。
+    </p>
+    <h2>Belong</h2>
+    <p>
+        2018-2020 UT-virtual （東大VR開発サークル）<br>
+        2018- 東大VTuber愛好会（創設メンバー、2020～2024 会長）<br>
+    </p>
+    <h2>SNS</h2>
+    <h3>Twitter</h3>
+    <p>
+        <a href="https://x.com/welch2929">＠welch2929</a>（本アカウント）<br>
+        <a href="https://x.com/welch292929">@welch292929</a>（VTuberファンアカウント、更新停止）<br>
+        <br>
+        ・いいね、リプライ、DM等はご自由に。僕が喜びます。<br>
+        ・ブロックは通常用いません。<br>
+        ・自発フォローは単純にツイートを見たいと思った方に。フォローバックは気まぐれです。<br>
+        ・可能ならお別れはブロ解ではなくリムーブでしていただけると有難いです。（あなたのツイートを見続けたいので）<br>
+    </p>
+    <h3>Discord</h3>
+    <p>
+        ＠welch2929
+    </p>
+    <h2>Blog</h2>
+    <p>
+        <a href="https://welch2929.hatenadiary.jp">うぇるあめのVTuber情報保管庫</a> …VTuberに関する記事<br>
+        <a href="https://welame.hatenadiary.com">うぇるたいぷろぐ</a> …競技タイピングに関する記事<br>
+        <a href="https://welame.hatenablog.com">雨のち植える</a> …雑多な記事
+    </p>
+    <h2>LOVE</h2>
+    <h3>VTuber</h3>
+    <p><a href="/VTuber/">専用ページ</a>にまとめてあります。</p>
+    <h3>音楽ゲーム</h3>
+    <p>
+        ◆pop'n music <br>
+        始めたバージョンはうさねこ。<br>
+        Lv49はtrideca/Timepiece phase II/Sky High/SailRen/the Chameleon/メタリックオペラ/Moon child/オイパンクの8曲をクリア済。<br>
+        <br>
+        ◆プロジェクトセカイ<br>
+        練習中。MASTER AP1譜面。<br>
+        イベントストーリーもすべて読んでおり、ユニットは「25時、ナイトコードで。」が一番好きです。<br>
+        <br>
+        ◆beatmania IIDX<br>
+        BISTROVER SP八段。右利き2P。<br>
+        <br>
+        ◆太鼓の達人<br>
+        イエロー九段。中学生の頃に「金色の太鼓勢」というチームに入れてもらっていました。<br>
+        Xa裏クリア、郢曲フルコンなど。<br>
+    </p>
+    <h3>競技タイピング</h3>
+    <p>
+        2020年末から練習中。<br>
+        <br>
+        ◆e-typing腕試し<br>
+        ローマ字646、英語530、かな237、ローマ字長文696<br>
+        <br>
+        ◆寿司打<br>
+        高級23140円お得（速度：8.5key/秒、ミス：24key、2位）<br>
+        <br>
+        ◆Weather Typing<br>
+        qwe Lv8.4<br>
+        <br>
+        ◆Intersteno Internet Contests多言語部門（オンライン世界大会）<br>
+        2021年大会全体40位、2024年大会全体34位<br>
+        <br>
+        タイプウェル成績表<br>
+        <table>
+            <tr>
+                <th>タイプウェル国語R</th>
+                <th>常用XX</th>
+                <th>カタカナXB</th>
+                <th>漢字XD</th>
+                <th>慣ことXA</th>   
+            </tr>
+            <tr>
+                <th>タイプウェル国語K</th>
+                <th>常用SF</th>
+                <th>カタカナSJ</th>
+                <th>漢字SJ</th>
+                <th>慣ことSH</th>   
+            </tr>
+            <tr>
+                <th>タイプウェル英語</th>
+                <th>常用XA</th>
+                <th>A-F拡張XE</th>
+                <th>G-P拡張XD</th>
+                <th>Q-Z拡張XE</th>   
+            </tr>
+            <tr>
+                <th>タイプウェルオリジナル</th>
+                <th>のみSD</th>
+                <th>混在SB</th>
+                <th>すべキーSI</th>
+                <th>数字SH</th>   
+            </tr>
+        </table>
+        <br>
+        ブログ：<a href="https://welame.hatenadiary.com">https://welame.hatenadiary.com</a><br>
+        タイパーとしてのより詳しいプロフィール：<a href="https://docs.google.com/spreadsheets/d/e/2PACX-1vQgCEiRl0R6OBo-5Za3tJGP7JmzPMDlwR_G4TOQYt-cz9XZgI71K46d1VtI95SPXr8nS9SNrJTF1Fzj/pubhtml">SpreadSheetリンク</a><br>
+        <br>
+        QWERTY配列とかな入力のほかにEucalyn配列も使用経験があり、e-typingのベストスコアは274です。<br>
+    </p>
+    <h3>情報系</h3>
+    <p>
+        応用情報技術者(AP)、データベーススペシャリスト（DB）合格<br>
+        <br>
+        競技プログラミング：<br>
+        AtCoder緑(highest水/Rating1200)。C++ユーザー。蟻本は一通り読了。<br>
+        PAST（アルゴリズム実技検定）中級認定。<br>
+        AtCoderユーザーページ：<a href="https://atcoder.jp/users/welame">https://atcoder.jp/users/welame</a><br>
+    </p>
+    <h3>ゲーム</h3>
+    <p>
+        ・プロジェクトセカイ<br>
+        ・UNDERTALE<br>
+        ・幻想水滸伝II<br>
+        <br>
+        ゲーム音楽が好きです。FCやSFC、レトロPCゲーのような古いものから最近のゲームのものまで色々聴きます。<br>
+        一番好きなサントラはサガフロンティア2。<br>
+    </p>
+    <h3>漫画</h3>
+    <p>
+        ・『少女終末旅行』<br>
+        ・『シメジシミュレーション』<br>
+        ・『またぞろ。』<br>
+        ・『春あかね高校定時制夜間部』<br>
+        ・『ハイキュー!!』<br>
+    </p>
+    <h3>書籍</h3>
+    <p>
+        ・『ゼロ年代の想像力』宇野常寛<br>
+        ・『構造と力』浅田彰<br>
+        ・『有閑階級の理論』ソースティン・ヴェブレン<br>
+        ・『寛容について』マイケル・ウォルツァー<br>
+        ・『意志と表象としての世界』ショーペンハウアー<br>
+        ・『ヴィータ 遺棄された者たちの生』ジョアオ・ビール<br>
+        ・『現代世界における意思決定と合理性』キース・E・スタノヴィッチ<br>
+        <br>
+        ・『豊饒の海』三島由紀夫<br>
+        ・『砂糖菓子の弾丸は撃ちぬけない』桜庭一樹<br>
+    </p>
+    <h3>アーティスト</h3>
+    <p>
+        <a href="https://www.youtube.com/@harumakigohan">はるまきごはん</a>さんを愛しています。<br>
+    </p>
+    <h3>その他趣味</h3>
+    <p>
+        ・漢字<br>
+        幼い頃から難読漢字の類いが好きでした。小5のときに漢字検定2級を取得。<br>
+        1級をそのうち取りたいと思いつつも漢字逞筆を1/3やったくらいで勉強が止まっています。<br>
+        <br>
+        ・読書<br>
+        人文学の書籍を中心に月10冊くらいいろいろ読みます。乱読派です。<br>
+        <br>
+        ・言語学習<br>
+        ドイツ語（第二外国語）、インドネシア語、中国語。文法と単語の基礎をさらったくらいなので、今はすべて忘れていますが……。<br>
+        <br>
+        ・アニメ試聴<br>
+        ・競技クイズ<br>
+        ・MCバトル試聴<br>
+        ・簡単なドット絵作り<br>
+    </p>
+    <p>（最終更新：2024年6月15日）</p>
+    
+</Layout>
+
