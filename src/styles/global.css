@@ -6,6 +6,8 @@
     --text: #d6d6ff;
     --text-light: #1e1e2e; 
     --text-link: #bf7fff;
+    --text-link-body: #3366cc;
+    --text-link-body-visit: #9966ff;
     --underline: #244970;
     --accent-color: #ff7f7f;
     --header: 'Hiragino Kaku Gothic Pro', sans-serif;
@@ -57,6 +59,14 @@ p {
     line-height: 1.5;
 }
 
+a {
+    color: var(--text-link-body);
+}
+
+a:visited { 
+    color: var(--text-link-body-visit);
+}
+
 table {
     border-collapse: collapse;
     font-family: sans-serif;
@@ -65,7 +75,7 @@ table {
 }
 
 th, td {
-  border: 2px solid rgb(35, 0, 51);
+  border: 2px solid rgb(183, 112, 215);
   padding: 8px 10px;
 }
 
@@ -286,10 +296,6 @@ footer {
     content: url("/li-in-white.png");
 }
 
-.Twitter {
-    content: url();
-}
-
 /* 404 */
 .lost {
     margin-top: 30%;
@@ -366,6 +372,11 @@ html.light {
 .light .badge__link {
     color: var(--text-link);
 }
+
+.light th, td {
+    border: 2px solid rgb(35, 0, 51);
+    padding: 8px 10px;
+  }
 
 /* Media Query */
 @media only screen and (max-width: 600px) {
