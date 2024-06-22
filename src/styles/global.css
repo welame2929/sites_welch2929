@@ -1,9 +1,9 @@
 /* Global styles */
 :root {
     --background: #1e1e2e; 
-    --background-light: #d6d6ff;
+    --background-light: #dbdbff;
     --button: #bf7fff;
-    --text: #d6d6ff;
+    --text: #dbdbff;
     --text-light: #1e1e2e; 
     --text-link: #bf7fff;
     --text-link-body: #3366cc;
@@ -20,9 +20,8 @@ html {
 }
 
 body {
-    max-width: 540px;
+    max-width: 700px;
     margin: 0 auto;
-    text-align: justify;
 }
 
 h1, h2, h3 {
@@ -31,8 +30,8 @@ h1, h2, h3 {
 }
 
 h1 {
-    font-size: 2.6rem;
-    margin: 0;
+    font-size: 2.0rem;
+    margin-top: 40px;
 }
 
 h2 {
@@ -54,7 +53,7 @@ h3 {
 
 p {
     font-family: var(--body);
-    font-size: 1.1rem;
+    font-size: 1.0rem;
     hyphens: auto;
     line-height: 1.5;
 }
@@ -75,12 +74,21 @@ table {
 }
 
 th, td {
-  border: 2px solid rgb(183, 112, 215);
-  padding: 8px 10px;
+    border: 2px solid rgb(183, 112, 215);
+    padding: 8px 10px;
 }
 
 small, li {
     font-family: var(--body); 
+}
+
+iframe.youtube-16-9 {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    max-width: 600px;
+    display: block;
+    margin: auto;
 }
 
 /* Navigation Bar */
