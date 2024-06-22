@@ -125,7 +125,9 @@ iframe.youtube-16-9 {
     text-underline-offset: 6px;
 }
 
-.image {
+figure.image img {
+    width: 100%;
+    height: auto;
     margin: 20px 0 0 0;
     text-align: center;
 }
