@@ -45,10 +45,8 @@ h2 {
 
 h3 {
     font-size: 1.3em;
+    font-weight: bold;
     margin-top: 30px;
-    text-decoration: underline var(--underline);
-    text-decoration-thickness: 2px;
-    text-underline-offset: 6px;
 }
 
 p {
