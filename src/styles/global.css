@@ -147,6 +147,7 @@ figure.respimage img {
     margin: 20px 0 10px 0;
 }
 
+
 /* Gifs */
 .gif {
     margin: 20px 0 0 0;
@@ -267,6 +268,10 @@ figure.respimage img {
 /* Items */
 .leftalign {
     text-align: start;
+}
+
+.center {
+    text-align: center;
 }
 
 .pro-img {
