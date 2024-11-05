@@ -140,6 +140,7 @@ iframe.youtube-16-9 {
 
 figure {
     text-align: center;
+    margin: 0 auto;
 }
 
 figure.image img{
@@ -147,6 +148,7 @@ figure.image img{
 }
 
 figure.respimage img {
+    max-width: 600px;
     width: 100%;
     height: auto;
     margin: 20px 0 10px 0;
