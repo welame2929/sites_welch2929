@@ -1,0 +1,32 @@
+---
+import Layout from '../layouts/Layout.astro';
+const pageTitle = "Typinggame";
+---
+<Layout pageTitle={pageTitle}>
+    <div class="container-game">
+        <header>
+            <h1>タイピングゲーム</h1>
+        </header>
+        <div class="game-info">
+            <p>ワード: <span id="word-count">0</span> / 20</p>
+            <p>成功: <span id="success-count">0</span> 失敗: <span id="fail-count">0</span></p>
+            <p>平均打鍵速度: <span id="average-speed">0.00</span> 打/秒</p>
+        </div>
+        <div class="word-display">
+            <p><span id="current-word">ここに文が表示されます</span></p>
+            <p><span id="current-hiragana">ここにひらがな文が表示されます</span></p>
+        </div>
+        <div class="log-display">
+            <p>打鍵:</p>
+            <pre id="log-output">ここにログ再生の様子が表示されます</pre>
+        </div>
+        <div class="result-display">
+            <p>打鍵速度: <span id="current-speed">0.00</span> 打/秒</p>
+        </div>
+        <div class="controls">
+            <button id="enter-button">Go! (Enter)</button>
+        </div>
+    </div>
+    <!-- <script src="script.js"></script>  -->
+</Layout>
+
