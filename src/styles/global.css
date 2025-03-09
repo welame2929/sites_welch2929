@@ -119,13 +119,15 @@ iframe.mastodon-embed {
 .navbar__title {
     font-family: var(--headertitle);
     font-weight: 500;
-    font-size: 2.0rem;
+    font-size: 1.8rem;
     margin-top: 0.3rem;
+    text-align: left;
 }
 
 .navbar__menu {
     font-family: var(--body);
     font-size: 1rem;
+    margin-top: 0.3rem;
     text-align: right;
 }
 
