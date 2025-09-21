@@ -1,0 +1,680 @@
+---
+import Layout from '../../layouts/Layout.astro';
+const pageTitle = "ときめきマイリスト";
+---
+<Layout pageTitle={pageTitle}>
+    <h1>ときめきマイリスト</h1>
+    <p>各ジャンルの好きなものを一挙に紹介するためのページです。<br>
+        太字は特に印象的だったもの。順番は適当です。
+    </p>
+    <h3>書籍</h3>
+    <p>
+        <b>ハーマン・メルヴィル『白鯨』田中西二郎訳<br></b>
+        ヘルマン・ヘッセ『車輪の下』高橋健二訳<br>
+        ヴィクトル・ユゴー『レ・ミゼラブル』永山篤一訳<br>
+        ミシェル・ウェルベック『地図と領土』野崎歓訳<br>
+        <b>アンドレ・ブルトン『シュルレアリスム宣言・溶ける魚』巖谷國士訳</b><br>
+        エドガー・アラン・ポー『ハンス・プファアルの無類の冒険』小泉一郎訳<br>
+        グレッグ・イーガン『ディアスポラ』山岸真訳<br>
+        フランツ・カフカ『城』前田敬作訳<br>
+        フランツ・カフカ『中年のひとり者ブルームフェルト』池内紀訳<br>
+        ハリイ・ケメルマン『九マイルは遠すぎる』永井淳、深町眞理子訳<br>
+        ザッハー=マゾッホ『毛皮を着たヴィーナス』許光俊訳<br>
+        スタニスワフ・レム『虚数』長谷見一雄、沼野充義、西成彦訳<br>
+        タリアイ・ヴェーソス『氷の城』浅田千惠、アンネ・ランデ・ペータス訳<br>
+        ペーター・マーギンター『男爵と魚』垂野創一郎訳<br>
+        <b>桜庭一樹『砂糖菓子の弾丸は撃ちぬけない』</b><br>
+        <b>山本周五郎『正雪記』</b><br>
+        <b>三島由紀夫『豊饒の海』</b><br>
+        三島由紀夫『仮面の告白』<br>
+        稲垣足穂『天体嗜好症』<br>
+        伊藤計劃『ハーモニー』<br>
+        塗田一帆『鈴波アミを待っています』<br>
+    </p>
+    <p>カント『純粋理性批判』篠田英雄訳<br>
+        <b>ショーペンハウアー『意志と表象としての世界』西尾幹二訳</b><br>
+        <b>浅田彰『構造と力』</b><br>
+        東浩紀『動物化するポストモダン』<br>
+        <b>宇野常寛『ゼロ年代の想像力』</b><br>
+        宇野常寛『庭の話』<br>
+        大澤真幸『虚構の時代の果て』<br>
+        木澤佐登志『ニック・ランドと新反動主義』<br>
+        <b>木澤佐登志『失われた未来を求めて』</b><br>
+        佐々木敦『ニッポンの思想 増補新版』<br>
+        千葉雅也『センスの哲学』<br>
+        千葉雅也『現代思想入門』<br>
+        柘植尚則『プレップ倫理学』<br>
+        永井均『転校生とブラック・ジャック』<br>
+        <b>キムリッカ『現代政治理論』千葉眞、岡崎晴輝訳</b><br>
+        大西広『マルクス経済学』<br>
+        マイケル・ウォルツァー『寛容について』大川正彦訳<br>
+        中岡成文『ハーバーマス コミュニケーション行為』<br>
+        スティーブン・トロンブレイ『優生思想の歴史』藤田真利子訳<br>
+        本多康作、八重樫徹、谷岡知美編著『ヘイトスピーチの何が問題なのか』<br>
+        ウィリアム・マッカスキル『＜効果的な利他主義＞宣言！』千葉敏生訳<br>
+        <b>ソースティン・ヴェブレン『有閑階級の理論』高哲男訳</b><br>
+        <b>ジョアオ・ビール『ヴィータ 遺棄された者たちの生』桑島薫、水野友美子訳</b><br>
+        <b>五月あかり・周司あきら『埋没した世界 トランスジェンダーふたりの往復書簡』</b><br>
+        ノエル・キャロル『批評について 芸術批評の哲学』森功次訳<br>
+        源河亨『悲しい曲の何が悲しいのか 音楽美学と心の哲学』<br>
+        廣野由美子『批評理論入門』<br>
+        レジー『ファスト教養』<br>
+        赤坂真理『安全に狂う方法』<br>
+        <b>難波優輝『物語化批判の哲学』</b><br>
+        朱喜哲『人類の会話のための哲学』<br>
+        桜井厚『境界文化のライフストーリー』<br>
+        矢崎慶太郎『抑圧と余暇のはざまで』<br>
+        横川善正『ホスピスが美術館になる日』<br>
+        <b>藤井誠二『贖罪 殺人は償えるのか』</b><br>
+        ハンス・ロスリング、オーラ・ロスリング、アンナ・ロスリング・ロンランド『ファクトフルネス』上杉周作、関美和訳<br>
+        <b>リチャード・ローティ『偶然性・アイロニー・連帯』斎藤純一、山岡龍一、大川正彦訳</b><br>
+        マーク・フィッシャー『アシッド・コミュニズム 思索・未来への路線図』セバスチャン・ブロイ、河南瑠莉訳<br>
+        R.マリー・シェーファー『世界の調律』鳥越けい子ほか訳<br>
+        Ｇ・フィリップ・ハマトン『知的生活』渡部昇一、下谷和幸訳<br>
+        伊勢田哲治『疑似科学と科学の哲学』<br>
+        エミール・ルーダー『本質的なもの』雨宮郁江、室賀清徳和訳<br>
+        保坂和志『小説の誕生』<br>
+        オクタビオ・パス『弓と竪琴』牛島信明訳<br>
+        フィリッポ・トンマーゾ・マリネッティ『未来派宣言』森鴎外訳<br>
+        鮎川ぱて『東京大学「ボーカロイド音楽論」講義』<br>
+        <b>為末大『熟達論』</b><br>
+        菊地正憲『速記者たちの国会秘録』<br>
+        安岡孝一、安岡素子『キーボード配列 QWERTYの謎』<br>
+        谷崎潤一郎『陰影礼讃』<br>
+        和辻哲郎『古寺巡礼』<br>
+        マルクス・アウレリウス『自省録』水地宗明訳<br>
+        安宅和人『イシューからはじめよ』<br>
+        鈴木宏昭『私たちはどう学んでいるのか』
+        </p>
+    <p><b>田中泰延『読みたいことを、書けばいい。』</b><br>
+        <b>阿部幸大『まったく新しいアカデミック・ライティングの教科書』</b><br>
+        大出敦『クリティカル・リーディング入門』<br>
+        町田康『俺の文章修行』<br> 
+        千葉雅也ほか『ライティングの哲学 書けない悩みのための執筆論』<br>
+        野矢茂樹『新版 論理トレーニング』</p>
+    <p><b>田原夕『生き延びるための自虐』</b></p>
+    <p>ほし『遺失物統轄機構』</p>
+
+    <h3>漫画</h3>
+    <p>
+    <b>『少女終末旅行』</b><br>
+    <b>『シメジシミュレーション』</b><br>
+    <b>『またぞろ。』</b><br>
+    『黒子のバスケ』<br>
+    『ハイキュー！』<br>
+    『いわかける!』<br>
+    『チハヤリスタート！』<br>
+    『メダリスト』<br>
+    『児玉まりあ文学集成』<br>
+    『放課後ひみつクラブ』<br>
+    『ご飯は私を裏切らない』<br>
+    <b>『春あかね高校定時制夜間部』</b><br>
+    『ナナカド町綺譚』<br>
+    『オールドヨコハマラジオアワー』<br>
+    『サテライト・コインランドリー』<br>
+    『おれが野ちゃん』<br>
+    『ホイホ・ホイホイホ』<br>
+    『ふたりで木々を』<br>
+    『雨がしないこと』<br>
+    『クロシオカレント』<br>
+    『星旅少年』<br>
+    『瑠璃の宝石』<br>
+    『大科学少女』<br>
+    『三千世界を弔って』<br>
+    『頽廃の花売り』<br>
+    『夜と海』<br>
+    『有害無罪玩具』<br>
+    『ブランクスペース』<br>
+    『凹村戦争 完全版』<br>
+    『北北西に曇と往け』<br>
+    『ムシ・コミュニケーター』<br>
+    『みなそこにて』<br>
+    『ILY.』<br>
+    『LIAR GAME』<br>
+    </p>
+    <p>『走り出す花びら』<br>
+    『遠い日の陽』<br>
+    『反骨』<br>
+    『アルカナの最終兵器』<br>
+    『忍耐サトリくん』<br>
+    『Blue Drawing』<br>
+    『ハッピー可視域』</p>
+    <p>panpanya作品</p>
+
+    <h3>ゲーム</h3>
+    <p>『サルゲッチュ』シリーズ（1,2,3,サルバト～レ、ミリオンモンキーズ）<br>
+    『塊魂』シリーズ（初代、みんな大好き、僕の私の）<br>
+    『イナズマイレブン』シリーズ（円堂編1,2,3）<br>
+    『もじぴったん』シリーズ（大辞典、アンコール）<br>
+    『幻想水滸伝2』<br>
+    『スーパーマリオ64DS』<br>
+    『ニュー・スーパーフックガール』<br>
+    『UNDERTALE』<br>
+    『Ib』<br>
+    『NEEDY GIRL OVERDOSE』</p>
+    <p><b>『太鼓の達人』シリーズ（ソライロ～イエロー、PSP家庭用）</b><br>
+    <b>『pop'n music』シリーズ（うさぎと猫と少年の夢～）</b><br>
+    『Deemo』</p>
+    <p>『魔法使いと黒猫のウィズ』<br>
+    <b>『プロジェクトセカイ』（『25時、ナイトコードで。』中心にストーリー全般）</b><br>
+    『トロとパズル』<br>
+    『幻影AP』</p>
+
+    <h3>アニメ</h3>
+    <p><b>『魔法少女まどか☆マギカ』</b><br>
+    『化物語』『偽物語』<br>
+    『Angel Beats!』<br>
+    『けいおん！』<br>
+    『ハナヤマタ』<br>
+    『ぼっち・ざ・ろっく！』<br>
+    『少女☆歌劇 レヴュースタァライト』<br>
+    『たまゆら』</p>
+
+    <h3>映画</h3>
+    <p>『ショーシャンクの空に』<br>
+    『この世界の片隅に』<br>
+    『サマーウォーズ』<br>
+    『セッション』<br>
+    『アナザーラウンド』<br>
+    『ジョーカー』<br>
+    『グスコーブドリの伝記』<br>
+    『ノマドランド』<br>
+    『三島由紀夫vs東大全共闘 50年目の真実』<br>
+    『ベン・ハー』<br>
+    <b>『アンゼルム』</b><br>
+    『AKIRA』<br>
+    <b>『スカイ・クロラ』</b></p>
+
+    <h3>VTuber</h3>
+    <p><b>キズナアイ</b><br>
+    バーチャルのじゃロリ狐娘Youtuberおじさん<br>
+    電脳少女シロ<br>
+    富士葵<br>
+    月ノ美兎<br>
+    ギルザレンIII世<br>
+    緑仙<br>
+    ヰ世界情緒<br>
+    長瀬有花<br>
+    メトロミュー<br>
+    アズマリム<br>
+    鳩羽つぐ<br>
+    <b>空想料理店 蟹</b><br>
+    世界クルミ<br>
+    ピクセルコ<br>
+    有栖川ドット<br>
+    <b>むすび二等兵</b><br>
+    <b>可哀片コハル</b><br>
+    NaMiMi<br>
+    ヘアピンまみれ<br>
+    ナポ・レボリューション<br>
+    まりの歯<br>
+    VNフラヴィ<br>
+    トライアンブリ</p>
+
+    <h3>Web文章</h3>
+    <p><b><a href="https://not-miso-inside.net/blog/a-voyage-to-the-open-sea/">一階堂洋『中学2年生のときに同級生が外洋へ航海した話</a></b><br>
+    <a href="https://not-miso-inside.netlify.app/blog/how-can-we-make-jpn-great-again/">一階堂洋『霞ヶ関に東大生を洗脳させて年収2000万で雇わせることで日本を先進国にしろ』</a><br>
+    <a href="https://not-miso-inside.net/blog/cloth-in-another-world/">一階堂洋『別の世界の衣』</a><br>
+    <a href="https://note.com/428sk1_guardian/n/n52ab5a27002c">こばると『「言葉る」記録#06〜言葉という娯楽〜』</a><br>
+    <a href="https://note.com/nyalra2/n/n5617fb77000f">にゃるら『Angel fall down』</a><br>
+    <a href="https://note.com/nyalra2/n/n876db9f9dc67">にゃるら『フツーの女子大生の夜』</a><br>
+    <a href="https://saize-lw.hatenablog.com/entry/2022/09/17/210727">LW『小二で全国模試一位を取った男の半生』</a><br>
+    <a href="https://saize-lw.hatenablog.com/entry/2023/10/21/185938">LW『就活に苦しむインテリの学生に社会の真実を教える』</a><br>
+    <a href="https://saize-lw.hatenablog.com/entry/2024/02/22/223748">LW『マジでカードゲーム強い人たちにマジで強くなる方法聞いてきた』</a><br>
+    <a href="https://note.com/akhlt/n/n2ed031286e08">黒浜灯幼『嘘のタイムライン（不定期更新）』</a><br>
+    <a href="https://note.com/akhlt/n/n105cdac8a296">黒浜灯幼『ええ感じの、きわめてええ感じの世界にて』</a><br>
+    <a href="https://note.com/akhlt/n/nea2146592e5a?sub_rt=share_pw">黒浜灯幼『SEE YOU SPACE COWBOY...』</a><br>
+    <a href="https://dismal-dusk.hatenablog.com/entry/2024/03/12/210708">田原夕『「消えたい」の解釈を拒絶する：プロジェクトセカイ「25時、ナイトコードで。」について』</a><br>
+    <a href="https://licjar-xeymelloz.hatenablog.com/entry/2022/11/30/180432">りちゃ『バリケードの向こうに見たい景色はあるか？』</a><br>
+    <a href="https://note.com/lovehotel/n/n8b86d542eb35">エロマンガ専制『反実在電脳少女についての唯物弁証法――博衣こよりをファックするたった一つの冴えたやり方――』</a><br>
+    <a href="https://obakeweb.hatenablog.com/entry/magicrealism">銭清弘『「#magicrealism」のレシピ：「分裂」と「統合」の力学』</a><br>
+    <a href="https://note.com/sight/n/nff7c26550916">ainigma『「砂の惑星」とはなんだったのか【MV・歌詞　考察】』</a><br>
+    <a href="https://anond.hatelabo.jp/20240506174540">はてな匿名ダイアリー『短歌を詠むほど俳句は作れなくなる』</a>/<a href="https://anond.hatelabo.jp/20240508195326">返信</a><br>
+    <a href="https://note.com/shu_yamaguchi/n/n7fba59671886">山口周『若い時の無目的なインプットが重要』</a><br>
+    <a href="https://note.com/kannoke6/n/n1e990b01f5ae">棺桶六『呪殺インターハイの思い出』</a><br>
+    <a href="https://note.com/nonphilobc/n/n526a9c98c3ee">非哲学者による非哲学者のための哲学入門読書会『「哲学入門読書会で話したこと」の目次』</a><br>
+    <a href="https://note.com/iovis_takahasius/n/nce8a165cbf1c">髙橋優『TVアニメ『弱キャラ友崎くん』が映し出す現代資本主義の袋小路：宇野常寛『ゼロ年代の想像力』と終わらない「自己啓発」を超えて』</a><br>
+    <a href="https://otogeworks.com/blog/the-sekai-that-vocaloid-producers-fought-for-chapter1/">ushui『ボカロPたちが戦った20年間のセカイ』</a><br>
+    <a href="https://note.com/hito_horobe/n/n87cca3732875">人間が大好き『この日記をTwitterに載せない理由（2025年2月27日の日記） 』</a><br>
+    <a href="https://note.com/gairon/n/n635eac968103">林東国『ブルーアーカイブと朝鮮問題──七・八事件と「予言の自己成就」について』</a><br>
+    <a href="https://moepedia.net/blog/19/">すかぢ『すかぢ式 シナリオライター脱創作論』</a><br>
+    <a href="https://note.com/koichannokokoro/n/n244f0c0a136f?sub_rt=share_pw">多田恋一朗『［恋の画塾］』</a><br>
+    <a href="https://note.com/66mh/n/n767aa4117344">66mh『他人の問題意識にフリーライドしない』</a><br>
+    <a href="https://kokamumo.hatenablog.com/entry/2025/06/06/103513">こかむも『きらら4コマの描き方』</a><br>
+    <a href="https://note.com/nohelmetlovedog/n/nbfd4c54f16ea">nohelmetlovedog『pious?』</a><br>
+    <a href="https://ferne-web.com/article/shinkaimakoto-apple/">布施琳太郎『この手のなかに溶けゆく世界——新海誠とAppleにおける流体のマテリアリズム』</a><br>
+    <a href="https://note.com/nandemo_oboeru/n/nb73bde3f39ef">平田直也『記憶力世界一あるある50選』</a><br>
+    <a href="https://note.com/gairon/n/n987bac47f5bc">藤田『Reddit再考 - 日本語圏インターネットにおける中間的発信空間にむけて』</a><br>
+    <a href="https://note.com/xcloche/n/n55938e706986?sub_rt=share_pb">かもリバー『色違いのコイキングでLLMをバグらせろ：グリッチトークン入門』</a><br>
+    <a href="https://note.com/chuck_abril17/n/n2efb0065d53c">紫藤春香『福山雅治でいいのか』</a><br>
+    <a href="https://note.com/muryo_o/n/n958372be0ca9">無了『風、落ちていく』</a><br>
+    </p>
+    <p>
+     <a href="https://kakuyomu.jp/works/16818023212903983111">名無し『メイド・イン・アフリカ』</a><br>
+    <a href="https://tales.note.com/akhlt/wqr2wsxiw4ddi">黒浜灯幼『AlterGrace』</a><br>
+    <a href="https://kakuyomu.jp/works/16817330657858213509/episodes/16817330657858495728">都市と自意識『薄珈琲大好鬼（うすいこーひーだいすき） 』</a><br>
+    <a href="https://www.pixiv.net/novel/show.php?id=23648220"> HK15『頭の中の戦争』</a><br>
+    <b><a href="https://www.pixiv.net/novel/show.php?id=18884879">うぶわらい『鳥を売る方法』</a></b><br>
+    <a href="https://note.com/awesome_awa/n/n192440636a1e">(awa)『台湾で鳥を探す』</a>
+    </p>
+
+    <h3>楽曲</h3>
+    <p>【ボカロ周辺】</p>
+    <p>
+    <b>はるまきごはん『セブンティーナ』</b><br>
+    はるまきごはん『コバルトメモリーズ』<br>
+    はるまきごはん『Wonderland19』<br>
+    <b>はるまきごはん『約束』</b><br>
+    はるまきごはん『ナナ』<br>
+    はるまきごはん『彗星になれたなら』<br>
+    はるまきごはん『再会』<br>
+    はるまきごはん『誕生』<br>
+    <b>はるまきごはん『蛍はいなかった』</b><br>
+    <b>はるまきごはん『仮定した夏』</b><br>
+    <b>はるまきごはん『第三の心臓』</b><br>
+    はるまきごはん『エンパープル』<br>
+    いよわ『あだぽしゃ』<br>
+    いよわ『パジャミィ』<br>
+    <b>wowaka『ローリンガール』</b><br>
+    <b>wowaka『アンハッピーリフレイン』</b><br>
+    wowaka『アンノウン・マザーグース』<br>
+    ハチ『WORLD'S END UMBRELLA』<br>
+    ハチ『ドーナツホール』<br>
+    ハチ『結ンデ開イテ羅刹ト骸』<br>
+    ハチ『パンダヒーロー』<br>
+    ハチ『砂の惑星』<br>
+    じん『カゲロウデイズ』<br>
+    じん『チルドレンレコード』<br>
+    <b>小宮かふぃー『スモーキィクォーツ』</b><br>
+    Last note.『セツナトリップ』<br>
+    Last note.『放課後ストライド』<br>
+    トーマ『ヤンキーボーイ・ヤンキーガール』<br>
+    のりP『右肩の蝶』<br>
+    ゆうゆ『天樂』<br>
+    みきとP『バレリーコ』<br>
+    MASATAKA『Chaining Intention』<br>
+    <b>P.I.N.A.『レッド・パージ！！！』</b><br>
+    P.I.N.A.『ラットが死んだ』<br>
+    nyanyannya『ドクター＝ファンクビート』<br>
+    ハヤシダ『Penguin's Detour』<br>
+    Omoi『グリーンライツ・セレナーデ』<br>
+    OSTER Project『ミラクルペイント』<br>
+    Orangestar『快晴』<br>
+    <b>Orangestar『Alice in 冷凍庫』</b><br>
+    すりぃ『テレキャスタービーボーイ』<br>
+    R Sound Design『flos』<br>
+    ELECTROCUTICA『Piece of Cipher』<br>
+    ジミーサムP『from Y to Y』<br>
+    カンザキイオリ『あの夏が飽和する。』<br>
+    稲葉曇『ラグトレイン』<br>
+    稲葉曇『レイニーブーツ』<br>
+    稲葉曇『電気予報』<br>
+    シャノン『恐竜電力の街』<br>
+    シャノン『ひとりぼっち産業革命』<br>
+    夏代孝明『ニア』<br>
+    キノシタ『ポッピンキャンディ☆フィーバー！』<br>
+    てにをは『古書屋敷殺人事件』<br>
+    Eight『とても素敵な六月でした』<br>
+    LonePi『ハイドレンジア』<br>
+    sui『魔法の本より』<br>
+    なきゃむりゃ『幾望の月』<br>
+    栗山夕璃『フェレス』<br>
+    西憂花『夏の日』<br>
+    中瀬ミル『君が僕を嗤う日』<br>
+    赤坂んんん『図書室A』<br>
+    Gyr0『通行可能はあなただけ』<br>
+    <b>Gyr0『天底に座した浮遊鯨が完全に消滅するまでの4つの段階』</b><br>
+    イナナキ『黄昏の獅子から』<br>
+    OLDUCT『終末おはなし倶楽部 (Alt.)』<br>
+    窓辺リカ『深夜コンビニ昆虫図鑑』<br>
+    はんごうすいはん『地雨の星』<br>
+    <b>Sebon『のっく、りたーど、すてろいど』</b><br>
+    柊マグネタイト『終焉逃避行』<br>
+    <b>アメリカ民謡研究会『宗教に犯されているのではないか。』</b><br>
+    r-906『プシ』<br>
+    r-906『梅に鶯』<br>
+    いのうつはSA『なんとかシミュレーション』<br>
+    <b>椎乃味醂『デュレエ』</b><br>
+    椎乃味醂『OSINT』<br>
+    椎乃味醂『あなたにはなれない』<br>
+    No.22『23号』<br>
+    髥莏『てせうす』<br>
+    ukiyojingu『音楽を楽しく正しく聞くことに慣れている私たちにとって、不愉快で非合理なものこそが必要だ。そうして私は、この雑音の反復さえ、意味があるのだと言ってしまう。』<br>
+    kemu『熱風』<br>
+    <b>じん『ステラ』</b><br>
+    夏代孝明『フロムトーキョー』<br>
+    葵木ゴウ『それでも僕らは歌うことをやめない』<br>
+    DECO*27『SToRY』<br>
+    いよわ『ももいろの鍵』<br>
+    雄之助、春野『Supernova』<br>
+    Peg『ひつじがいっぴき』<br>
+    jon-YAKITORY『街』<br>
+    煮ル果実『ヘイヴン』<br>
+    sasakure.uk『トンデモワンダーズ』<br>
+    YASUHIRO(康寛)『踊れオーケストラ』<br>
+    キノシタ『Glory Steady Go!』<br>
+    羽生まゐご『ぼくのかみさま』<br>
+    香椎モイミ『オールセーブチャレンジ』<br>
+    椎乃味醂『limbo』<br>
+    とあ『アイディスマイル』<br>
+    とあ『トワイライトライト』<br>
+    <b>ぬゆり『ロウワー』</b><br>
+    古川本舗『君の夜をくれ』<br>
+    カンザキイオリ『25時の情熱』<br>
+    てにをは『ザムザ』<br>
+    ツミキ『キティ』<br>
+    なきそ『化けの花』<br>
+    keeno『余花にみとれて』<br>
+    Azari『D/N/A』<br>
+    </p>
+
+    <p>【アニメ関連】</p>
+    <p>
+    NARUTO『GO!!!』<br>
+    鋼の錬金術師『嘘』<br>
+    チェンソーマン『残機』<br>
+    化物語『staple stable』<br>
+    化物語『君の知らない物語』<br>
+    〈物語〉シリーズ オフ&モンスターシーズン『UNDEAD』<br>
+    とある魔術の禁書目録『See visionS』<br>
+    とある魔術の禁書目録『No buts!』<br>
+    とある科学の超電磁砲『only my railgun』<br>
+    とある科学の超電磁砲『sister`s noise』<br>
+    とある科学の超電磁砲『LEVEL5 -judgelight-』<br>
+    涼宮ハルヒの憂鬱シリーズ『雪、無音、窓辺にて。』<br>
+    Angel Beats.『theme of SSS』<br>
+    Angel Beats.『一番の宝物』<br>
+    CLANNAD『時を刻む唄』<br>
+    STEINS;GATE『スカイクラッドの観測者』<br>
+    GOSICK『Destin Histoire』<br>
+    機巧少女は傷つかない『回レ！雪月花』<br>
+    <b>魔法少女まどか☆マギカ『コネクト』</b><br>
+    魔法少女まどか☆マギカ『magia』<br>
+    新世界より『割れたリンゴ』<br>
+    DARKER THAN BLACK『ツキアカリのミチシルベ』<br>
+    神無月の巫女『agony』<br>
+    メカクシティアクターズ『daze』<br>
+    Fate/Zero『oath sign』<br>
+    ガンスリンガーガール『たった一つの想い』<br>
+    ノラガミ『午後の待ち合わせ』<br>
+    ヨルムンガンド『Borderland』<br>
+    アウトブレイク・カンパニー『ユニバーページ』<br>
+    いなり、こんこん、恋いろは。『今日に恋色』<br>
+    PSYCHO-PASS『名前のない怪物』<br>
+    夏目友人帳『あの日タイムマシン』<br>
+    とある飛空士への恋歌『azurite』<br>
+    少女終末旅行『動く、動く』<br>
+    四月は君の嘘『光るなら』<br>
+    謀略のズヴィズダー『Be mine!』<br>
+    Selector WIXOSS『killy killy joker』<br>
+    サーバント×サービス『めいあいへるぷゆ～？』<br>
+    響け！ユーフォニアム『トゥッティ！』<br>
+    響け！ユーフォニアム『ヴィヴァーチェ！』<br>
+    <b>ぼっち・ざ・ろっく！『あのバンド』</b><br>
+    少女☆歌劇 レヴュースタァライト『wi (l) d-screen baroque』<br>
+    デュラララ！『裏切りの夕焼け』<br>
+    図書館戦争『あたしの街、明日の街』<br>
+    日常『zzz』<br>
+    となりの関くん『Set them Free デスクトップver.』<br>
+    アサルトリリィ『Edel Lilie』<br>
+    トリニティセブン『beautiful≒sentence』<br>
+    機動戦士ガンダム 第08MS小隊『嵐の中で輝いて』<br>
+    エウレカセブン『秘密基地』<br>
+    ブレンパワード『IN MY DREAM』<br>
+    マクロスF『ダイアモンド クレバス』<br>
+    ギルティクラウン『the everlasting guilty crown』<br>
+    コードギアス『モザイクカケラ』<br>
+    キルミーベイベー『キルミーのベイベー！』<br>
+    けいおん！『Don’t say “lazy”』<br>
+    けいおん！『ふわふわ時間』<br>
+    ご注文はうさぎですか？『Daydream café』<br>
+    じょしらく『お後がよろしくって…よ！』<br>
+    ハナヤマタ『花ハ踊レヤいろはにほ』<br>
+    ディーふらぐ！『すているめいと！』<br>
+    天体のメソッド『星屑のインターリュード』<br>
+    ゆゆ式『せーのっ！』<br>
+    H2O『片翼のイカロス』<br>
+    ローゼンメイデン『聖少女領域』<br>
+    ローゼンメイデン『禁じられた遊び』<br>
+    true tears『リフレクティア』<br>
+    Fortune Arterial『絆-kizunairo-色』<br>
+    sola『colorless wind』<br>
+    獣の奏者エリン『雫』<br>
+    MAJOR『心絵』<br>
+    </p>
+
+    <p>【ゲーム】</p>
+    <p>
+    <b>pop'n music『neu』</b><br>
+    pop'n music『音楽』<br>
+    pop'n music『少年は空を辿る』<br>
+    pop'n music『凛として咲く花の如く』<br>
+    pop'n music『生命の環を紡いで』<br>
+    pop'n music『透明なマニキュア』<br>
+    pop'n music『君を壊したい』<br>
+    pop'n music『西麻布水道曲』<br>
+    pop'n music『Homesick Pt.2 & 3』<br>
+    pop'n music『Sorrows』<br>
+    pop'n music『僕の飛行機』<br>
+    pop'n music『have a good dream.』<br>
+    pop'n music『Little Rock Overture』<br>
+    pop'n music『白夜幻燈』<br>
+    pop'n music『時守唄』<br>
+    <b>pop'n music『面影橋』</b><br>
+    pop'n music『リメンバーリメンバー』<br>
+    pop'n music『うた』<br>
+    pop'n music『桜色のメロディー』<br>
+    pop'n music『アルレシャ』<br>
+    pop'n music『少女と時の花』<br>
+    pop'n music『霽れと褻と穢れ』<br>
+    pop'n musicアルバム『BabeL ～Stairway to Heaven～』<br>
+    beatmaniaIIDX『Innocent Walls』<br>
+    beatmaniaIIDX『Be quiet』<br>
+    beatmaniaIIDX『ピアノ協奏曲第1番“蠍火”(大きな鍵盤と円盤のための)』<br>
+    beatmaniaIIDX『super highway』<br>
+    beatmaniaIIDX『ZZ』<br>
+    beatmaniaIIDX『Vermilion』<br>
+    beatmaniaIIDX『HELL SCAPER -Last Escape Remix-』<br>
+    beatmaniaIIDX『SCREAM SQUAD』<br>
+    beatmaniaIIDX『少年A』<br>
+    beatmaniaIIDX『Watch Out Pt.2』<br>
+    beatmaniaIIDX『199024club -Re:BounceKiller-』<br>
+    beatmaniaIIDX『Yellow Sketch(RX-Ver.S.P.L.)』<br>
+    beatmaniaIIDX『rough percussionythm』<br>
+    beatmaniaIIDX『ハイテックトキオ』<br>
+    beatmaniaIIDX『Peaktime Booster』<br>
+    DanceDanceRevolution『PARANOiA Revolution』<br>
+    DanceDanceRevolution『TRIP MACHINE EVOLUTION』<br>
+    DanceDanceRevolution『Pluto Relinquish』<br>
+    DanceDanceRevolution『UNBELIEVABLE (Sparky remix)』<br>
+    DanceDanceRevolution『Anti-Matter』<br>
+    SOUND VOLTEX『僕らの時間』<br>
+    SOUND VOLTEX『Divine's։Bugscript』<br>
+    SOUND VOLTEX『超越してしまった彼女と其を生み落した理由』<br>
+    jubeat『量子の海のリントヴルム』<br>
+    jubeat『霖が哭く』<br>
+    jubeat『隅田川夏恋歌』<br>
+    GITADORA『つぼみ』<br>
+    REFLEC BEAT『7 Colors』<br>
+    BEMANI『StrayedCatz』<br>
+    太鼓の達人『大空と太鼓の踊り』<br>
+    太鼓の達人『伝説の祭り』<br>
+    Deemo『ANiMA』<br>
+    Deemo『Fluquor』<br>
+    ポケットモンスター ダイヤモンド・パール『209ばんどうろ(昼)』<br>
+    星のカービィ Wii『支配してアゲルヨォ』<br>
+    カービィのエアライド『スチールオーガン』<br>
+    <b>レイクライシス『.BLUE -地球に棲む日-』</b><br>
+    レイクライシス『女の子にはセンチメンタルなんて感情はない』<br>
+    レイメイズ『テーマ#1』<br>
+    Gダライアス『KIMERA II』<br>
+    カラス『Sex pervert of a silence』<br>
+    スペースインベーダーエクストリーム2『Invader GIRL!』<br>
+    東方星蓮船『春の湊に』<br>
+    東方緋想天『地の色は黄色』<br>
+    .hack//G.U.『やさしい両手[Japanese Ver.]』<br>
+    アーシャのアトリエ『誘いの花 ～ 秋』<br>
+    トトリのアトリエ『Red Zone』<br>
+    サガフロンティア2『Roman』<br>
+    サガフロンティア2『Vorspiel』<br>
+    テイルズオブレジェンディア『回線不良』<br>
+    英雄伝説 空の軌跡FC『Sophisticated Fight』<br>
+    UNDERTALE『Death By Glamour』<br>
+    UNDERTALE『Finale』<br>
+    FRAGILE ～さよなら月の廃墟～『すべての人へ』<br>
+    NiGHTS into dreams...『Dreams Dreams』<br>
+    Quartett!『咲き誇る季節』<br>
+    R4/RIDGE RACER TYPE 4『MOVIN' IN CIRCLE』<br>
+    十三機兵防衛圏『(ISOLEUCINE)』<br>
+    塊魂『さくらいろの季節』<br>
+    サルゲッチュ『からくりキャッスル』<br>
+    ニュー・スーパーフックガール『サイハテギャラクシー』<br>
+    ロックマンDASH『あなたの風が吹くから』<br>
+    ジェット セット ラジオ フューチャー『Funky Dealer』<br>
+    <b>無限回廊 光と影の箱『prime # 4507』</b><br>
+    エミル・クロニクル・オンライン『The World of Curiosity』<br>
+    クロス探偵物語『大都会交響楽』<br>
+    街『One and Only』<br>
+    ダンガンロンパ『議論 -HOPE VS DESPAIR-』<br>
+    サクラノ詩『櫻ノ詩』<br>
+    素晴らしき日々『夜の向日葵』<br>
+    紫影のソナーニル『Rosa Morada』<br>
+    NEEDY GIRL OVERDOSE『INTERNET YAMERO』<br>
+    </p>
+
+    <p>【VTuber関連】</p>
+    <p><b>Niwa、羽子田チカ『星凪の地』</b><br>
+    <b>をとは『jelly girl』</b><br>
+    をとは『Digital Life Hacker』<br>
+    をとは、原口沙輔『フラットアース』<br>
+    HIMEHINA『3分ガール』<br>
+    花譜『過去を喰らう』<br>
+    <b>ヰ世界情緒『霞がついてくる』</b><br>
+    長瀬有花『異世界うぇあ』<br>
+    長瀬有花『ほんの感想』<br>
+    星街すいせい『天球、彗星は夜を跨いで』<br>
+    星街すいせい『自分勝手Dazzling』<br>
+    星街すいせい『Newton』<br>
+    星街すいせい『みちづれ』<br>
+    星街すいせい『ソワレ』<br>
+    Midnight Grand Orchestra『Midnight Mission』<br>
+    Midnight Grand Orchestra『Igniter』<br>
+    白上フブキ『KINGWORLD』<br>
+    さくらみこ『flower rhapsody』<br>
+    Hakos Baelz『PLAY DICE!』<br>
+    ルキロキ『ルキロキ☆ラッキー』<br>
+    ミライアカリ『Fly to NEWWORLD』<br>
+    電脳少女シロ『叩ケ　叩ケ　手ェ叩ケ』<br>
+    <b>ピンキーポップヘップバーン『P!NGPONG QUEST』</b><br>
+    甲賀流忍者ぽんぽこ『カフカ』<br>
+    しぐれうい『勝手に生きましょ』<br>
+    緑仙『イツライ』<br>
+    卯月コウ『アイシー』<br>
+    ChroNoiR『ヘテロスタシス』<br>
+    Nornis『ジョハリ』<br>
+    アンジュ・カトリーナ、戌亥とこ、リゼ・ヘルエスタ『3倍！Sun Shine！カーニバル！』<br>
+    名取さな『モンダイナイトリッパー！』<br>
+    名取さな『パラレルサーチライト』<br>
+    名取さな『ゆびきりをつたえて』<br>
+    朝ノ瑠璃『泡沫夢幻』<br>
+    KMNZ『VERSE』<br>
+    Marpril『キミエモーション』<br>
+    えのぐ、Marpril『ゼログラビティユニオン』<br>
+    アザミ『遣ラズノ雨』<br>
+    鷹森ツヅル『鷹森ツヅルの自己紹介 (的)ソング』<br>
+    ウィッチ・ダリ・スイート『さようなら私の魔法』<br>
+    メトロミュー『めろめろグルーヴ』<br>
+    メトロミュー『プラズマ』<br>
+    ReVdol!『Pre-STAR』<br>
+    Mewtral『パラレルロード』<br>
+    エハラミオリ『サイネリア』<br>
+    </p>
+
+    <p>【HIPHOP】</p>
+    <p>
+    <b>TABOO、志人『禁断の惑星』</b><br>
+    志人『狐の嫁入り』<br>
+    Creepy Nuts『生業』<br>
+    梅田サイファー『マジでハイ』<br>
+    梅田サイファー『トラボルタカスタム』<br>
+    ralph『Selfish』<br>
+    ralph、JUMADIBA、Watson『Get Back』<br>
+    <b>Kay-on『300 Bars Freestyle』</b><br>
+    Bombero、Noma『Billy Mandy』<br>
+    JETG、Vega KfK、999dobby『Asian drip』<br>
+    TOFU、MIKADO『Welcome 2 Wakayama』<br>
+    STACK THE PINK『YOUNG STAR』<br>
+    FARMHOUSE『kappa』<br>
+    NARIMIMI『Get High』<br>
+    Kidney Fuji『AKO』<br>
+    </p>
+
+    <p>【その他】</p>
+    <p>
+    BUMP OF CHICKEN『なないろ』<br>
+    SMAP『CRAZY FIVE』<br>
+    SMAP『SHAKE』<br>
+    SMAP『がんばりましょう』<br>
+    Superfly『BEAUTIFUL』<br>
+    ポルノグラフィティ『アゲハ蝶』<br>
+    ポルノグラフィティ『サウダージ』<br>
+    Capsule『Music Controller』<br>
+    中谷美紀『MIND CIRCUS』<br>
+    中谷美紀『天国より野蛮～WILDER THAN HEAVEN～』<br>
+    ピチカート・ファイヴ『東京は夜の七時』<br>
+    いきものがかり『気まぐれロマンティック』<br>
+    椎名林檎『長く短い祭』<br>
+    椎名林檎・宮本浩次『獣ゆく細道』<br>
+    Ado『向日葵』<br>
+    Ado『マザーランド』<br>
+    Ado『0』<br>
+    米津玄師『Flamingo』<br>
+    米津玄師『さよーならまたいつか！』<br>
+    King Gnu『白日』<br>
+    King Gnu『Slumberland』<br>
+    King Gnu『飛行艇』<br>
+    King Gnu『The hole』<br>
+    緑黄色社会『Mela!』<br>
+    <b>キタニタツヤ『聖者の行進』</b><br>
+    Mrs. GREEN APPLE『青と夏』<br>
+    赤い公園『絶対的な関係』<br>
+    鈴木瑛美子、亀田誠治『フロントメモリー』<br>
+    P-MODEL『lab=01』<br>
+    核P-MODEL『Big Brother』<br>
+    諌山実生『月のワルツ』<br>
+    やくしまるえつこ『少年よ我に帰れ』<br>
+    YOASOBI『群青』<br>
+    ずっと真夜中でいいのに。『あいつら全員同窓会』<br>
+    ずっと真夜中でいいのに。『正義』<br>
+    ずっと真夜中でいいのに。『ミラーチューン』<br>
+    ツユ『やっぱり雨は降るんだね』<br>
+    ツユ『太陽になれるかな』<br>
+    ツユ『終点の先が在るとするならば。』<br>
+    月詠み『真昼の月明かり』<br>
+    ヨルシカ『花に亡霊』<br>
+    DUSTCELL『CULT』<br>
+    DUSTCELL『アネモネ』<br>
+    syudou『いらないよ』<br>
+    羽生まゐご『オノマトペ』<br>
+    MKLNtic『ハローマイトリート』<br>
+    魔女方式『夏と不思議の作り方』<br>
+    西憂花『春楡』<br>
+    西憂花『シュガリィ・エピローグ』<br>
+    Van De Shop『コメディなヒーローになれたなら』<br>
+    電音部『Hyper Bass』<br>
+    電音部『いただきバベル』<br>
+    電音部『ウルトラリズム』<br>
+    ヒプノシスマイク『ヒプノシスマイク -Division Battle Anthem-』<br>
+    VACON『HATED JOHN』<br>
+    森羅万象『悪戯センセーション』<br>
+    雨ニマケテモ『アンブレラレコード』<br>
+    Jazztronik『七色』<br>
+    bo en『My Time』<br>
+    Squarepusher『Terminal Slam』<br>
+    bogdan Raczynski『Samurai Masu Biitsu』<br>
+    </p>
+
+
+    <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-text="ときめきマイリスト - welame&#39;s page" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+</Layout>
+
