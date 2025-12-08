@@ -61,6 +61,13 @@ p {
     line-height: 1.5;
 }
 
+.larger {
+    font-family: var(--body);
+    font-size: 2.0rem;
+    hyphens: auto;
+    line-height: 1.5;
+}
+
 .small {
     font-size: 0.7em;
 }  
