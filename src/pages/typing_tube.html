@@ -192,6 +192,27 @@
   .btn-random:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(124,58,237,0.6); }
   .btn-random:active { transform: translateY(0); }
 
+  /* List show button */
+  .btn-show {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 28px;
+    border-radius: 10px;
+    font-family: 'Dela Gothic One', sans-serif;
+    font-size: 0.95rem;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    border: 1.5px solid var(--accent);
+    background: var(--accent-glow);
+    color: #d8b4fe;
+    transition: all 0.2s ease;
+  }
+  .btn-show:hover { background: var(--accent); color: #fff; box-shadow: 0 4px 16px rgba(124,58,237,0.4); }
+  .btn-show:active { transform: scale(0.98); }
+  #listTableWrap { display: none; }
+
   /* Result cards */
   #results { margin-top: 24px; display: flex; flex-direction: column; gap: 12px; }
   .result-card {
@@ -439,6 +460,11 @@
         <span class="chip active" data-genre="その他">その他</span>
       </div>
     </div>
+    <button class="btn-show" id="showListBtn">
+      <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      譜面一覧を表示
+    </button>
+    <div id="listTableWrap">
     <div class="count-info" id="listCount"></div>
     <div class="table-wrap">
       <table>
@@ -453,6 +479,7 @@
         </thead>
         <tbody id="listBody"></tbody>
       </table>
+    </div>
     </div>
   </div>
 </div>
@@ -1399,12 +1426,6 @@ const _RAW = {
     },
     {
       "genre": "ボカロ",
-      "title": "私は嘘に絡まっていませんが、大谷翔平さんと一緒にフォニイを歌いたいです",
-      "artist": "ツミキ(MAD)",
-      "url": "https://typing-tube.net/movie/show/57420"
-    },
-    {
-      "genre": "ボカロ",
       "title": "時間が足りなさすぎた",
       "artist": "ラマーズP",
       "url": "https://typing-tube.net/movie/show/29960"
@@ -1624,12 +1645,6 @@ const _RAW = {
       "title": "「ひなこのーと」OP＆EDシングルクロスフェード試聴動画",
       "artist": "ひなこのーと",
       "url": "https://typing-tube.net/movie/show/38942"
-    },
-    {
-      "genre": "アニメ",
-      "title": "「モンスター娘TD～ボクは絶海の孤島でモン娘たちに溺愛されて困っています～」ティザー映像",
-      "artist": "モンスター娘TD",
-      "url": "https://typing-tube.net/movie/show/47435"
     },
     {
       "genre": "アニメ",
@@ -2101,12 +2116,6 @@ const _RAW = {
     },
     {
       "genre": "ゲーム",
-      "title": "u m p o p o f f",
-      "artist": "Muse Dash",
-      "url": "https://typing-tube.net/movie/show/47278"
-    },
-    {
-      "genre": "ゲーム",
       "title": "Vacation VS Summer ～ナツとヤスミのアンビバレント！～",
       "artist": "アイドルマスターシリーズ",
       "url": "https://typing-tube.net/movie/show/59323"
@@ -2224,12 +2233,6 @@ const _RAW = {
       "title": "五ツ座流星群",
       "artist": "アイドルマスターシリーズ",
       "url": "https://typing-tube.net/movie/show/56313"
-    },
-    {
-      "genre": "ゲーム",
-      "title": "時雨Dictionary",
-      "artist": "キミトユメミシ",
-      "url": "https://typing-tube.net/movie/show/23462"
     },
     {
       "genre": "ゲーム",
@@ -3067,12 +3070,6 @@ const _RAW = {
     },
     {
       "genre": "その他",
-      "title": "うるｾｲｰわぁ！？",
-      "artist": "Ado(MAD)",
-      "url": "https://typing-tube.net/movie/show/36306"
-    },
-    {
-      "genre": "その他",
       "title": "エイプリルフールに妹に送った動画",
       "artist": "ARuFa",
       "url": "https://typing-tube.net/movie/show/43736"
@@ -3478,12 +3475,6 @@ const _RAW = {
       "title": "辛いや嫌",
       "artist": "すとぷり",
       "url": "https://typing-tube.net/movie/show/55102"
-    },
-    {
-      "genre": "その他",
-      "title": "陣内智則【コント デレステ】",
-      "artist": "陣内智則",
-      "url": "https://typing-tube.net/movie/show/52010"
     },
     {
       "genre": "その他",
@@ -4749,12 +4740,6 @@ const _RAW = {
     },
     {
       "genre": "アニメ",
-      "title": "アイドル / うーたん(究極体)",
-      "artist": "推しの子/あっかんB太郎",
-      "url": "https://typing-tube.net/movie/show/59365"
-    },
-    {
-      "genre": "アニメ",
       "title": "ウタカタララバイ （FAKE TYPE.）",
       "artist": "ONE PIECE",
       "url": "https://typing-tube.net/movie/show/54817"
@@ -4854,12 +4839,6 @@ const _RAW = {
       "title": "ばかものーと",
       "artist": "ひなこのーと(MAD)",
       "url": "https://typing-tube.net/movie/show/27948"
-    },
-    {
-      "genre": "アニメ",
-      "title": "ハナビラ音頭",
-      "artist": "異種族レビュアーズ",
-      "url": "https://typing-tube.net/movie/show/42929"
     },
     {
       "genre": "アニメ",
@@ -6159,12 +6138,6 @@ const _RAW = {
     },
     {
       "genre": "その他",
-      "title": "おっぱいは世界を救うのだ☆彡",
-      "artist": "OPPAIZ",
-      "url": "https://typing-tube.net/movie/show/54025"
-    },
-    {
-      "genre": "その他",
       "title": "お二人Summer",
       "artist": "ケツメイシ",
       "url": "https://typing-tube.net/movie/show/25070"
@@ -6573,21 +6546,9 @@ const _RAW = {
     },
     {
       "genre": "その他",
-      "title": "陣内智則【コント ランク天国】",
-      "artist": "陣内智則",
-      "url": "https://typing-tube.net/movie/show/55853"
-    },
-    {
-      "genre": "その他",
       "title": "陣内智則【コント 運転シミュレーター】",
       "artist": "陣内智則",
       "url": "https://typing-tube.net/movie/show/42366"
-    },
-    {
-      "genre": "その他",
-      "title": "陣内智則【コント 運動会】",
-      "artist": "陣内智則",
-      "url": "https://typing-tube.net/movie/show/44315"
     },
     {
       "genre": "その他",
@@ -6740,12 +6701,6 @@ const _RAW = {
       "title": "Scarlet Rose",
       "artist": "seleP",
       "url": "https://typing-tube.net/movie/show/23640"
-    },
-    {
-      "genre": "ボカロ",
-      "title": "typing-tube実験譜面 （Ievan Polkka）",
-      "artist": "フィンランド舞曲",
-      "url": "https://typing-tube.net/movie/show/29507"
     },
     {
       "genre": "ボカロ",
@@ -7307,12 +7262,6 @@ const _RAW = {
     },
     {
       "genre": "ボカロ",
-      "title": "性癖M",
-      "artist": "ピノキオピー/動あり",
-      "url": "https://typing-tube.net/movie/show/58212"
-    },
-    {
-      "genre": "ボカロ",
       "title": "聖槍爆裂ボーイ",
       "artist": "れるりり",
       "url": "https://typing-tube.net/movie/show/35215"
@@ -7823,12 +7772,6 @@ const _RAW = {
     },
     {
       "genre": "アニメ",
-      "title": "長門有希、情報統合思念体の説明",
-      "artist": "涼宮ハルヒの憂鬱",
-      "url": "https://typing-tube.net/movie/show/23538"
-    },
-    {
-      "genre": "アニメ",
       "title": "満腹至上主義",
       "artist": "三者三葉",
       "url": "https://typing-tube.net/movie/show/59499"
@@ -8033,12 +7976,6 @@ const _RAW = {
     },
     {
       "genre": "ゲーム",
-      "title": "ツーディー★",
-      "artist": "俺が主人公～ナカに入って俺がダす!～",
-      "url": "https://typing-tube.net/movie/show/59512"
-    },
-    {
-      "genre": "ゲーム",
       "title": "テイルズオドル",
       "artist": "テイルズオブシリーズ(MAD)",
       "url": "https://typing-tube.net/movie/show/28816"
@@ -8156,12 +8093,6 @@ const _RAW = {
       "title": "限界オタク瑞希ちゃん",
       "artist": "プロジェクトセカイ(MAD)",
       "url": "https://typing-tube.net/movie/show/57722"
-    },
-    {
-      "genre": "ゲーム",
-      "title": "混乱少女そふらんちゃん!! (Nightmare Long version)",
-      "artist": "BEMANIシリーズ",
-      "url": "https://typing-tube.net/movie/show/35926"
     },
     {
       "genre": "ゲーム",
@@ -8897,12 +8828,6 @@ const _RAW = {
     },
     {
       "genre": "その他",
-      "title": "【心霊体験】ついにオバケ見ちまった…【幽霊】",
-      "artist": "HIKAKIN",
-      "url": "https://typing-tube.net/movie/show/41605"
-    },
-    {
-      "genre": "その他",
       "title": "☆ (記号) をつければかしこかろう",
       "artist": "Mosaic.wav",
       "url": "https://typing-tube.net/movie/show/51807"
@@ -9323,24 +9248,6 @@ const _RAW = {
     },
     {
       "genre": "その他",
-      "title": "ヒカキンの最近キレそうになった話",
-      "artist": "HIKAKIN",
-      "url": "https://typing-tube.net/movie/show/21689"
-    },
-    {
-      "genre": "その他",
-      "title": "ヒカキンの最近の愚痴を聞いてください",
-      "artist": "HIKAKIN",
-      "url": "https://typing-tube.net/movie/show/41502"
-    },
-    {
-      "genre": "その他",
-      "title": "ひろゆきと野球する橋本環奈",
-      "artist": "しょーん",
-      "url": "https://typing-tube.net/movie/show/54064"
-    },
-    {
-      "genre": "その他",
       "title": "プーチンとマーチン",
       "artist": "ラーメンズ",
       "url": "https://typing-tube.net/movie/show/22449"
@@ -9392,12 +9299,6 @@ const _RAW = {
       "title": "メルティックヘル",
       "artist": "ナナヲアカリ&超学生",
       "url": "https://typing-tube.net/movie/show/61128"
-    },
-    {
-      "genre": "その他",
-      "title": "メンヘラ女を無視し続けるとどうなるのか？【アニメ】",
-      "artist": "全力回避フラグちゃん!",
-      "url": "https://typing-tube.net/movie/show/44030"
     },
     {
       "genre": "その他",
@@ -9473,21 +9374,9 @@ const _RAW = {
     },
     {
       "genre": "その他",
-      "title": "君が代RICAL COMMUNICATION",
-      "artist": "ゆゆうた",
-      "url": "https://typing-tube.net/movie/show/39860"
-    },
-    {
-      "genre": "その他",
       "title": "嫌だなぁ仕事",
       "artist": "SHU",
       "url": "https://typing-tube.net/movie/show/35943"
-    },
-    {
-      "genre": "その他",
-      "title": "後藤輝樹の政見放送 西暦2020年",
-      "artist": "後藤輝樹",
-      "url": "https://typing-tube.net/movie/show/37892"
     },
     {
       "genre": "その他",
@@ -10423,12 +10312,6 @@ const _RAW = {
     },
     {
       "genre": "東方",
-      "title": "東方乳地獄　～ちぇんの育乳大作戦～",
-      "artist": "IOSYS",
-      "url": "https://typing-tube.net/movie/show/45537"
-    },
-    {
-      "genre": "東方",
       "title": "秘神マターラ",
       "artist": "IOSYS/魂音泉",
       "url": "https://typing-tube.net/movie/show/29913"
@@ -10729,12 +10612,6 @@ const _RAW = {
     },
     {
       "genre": "その他",
-      "title": "ちっちぱいぱん",
-      "artist": "小宮真央",
-      "url": "https://typing-tube.net/movie/show/59487"
-    },
-    {
-      "genre": "その他",
       "title": "はっちゃけダイアローグ+クリスマス!",
       "artist": "DIALOGUE+",
       "url": "https://typing-tube.net/movie/show/55361"
@@ -10815,12 +10692,6 @@ const _RAW = {
     },
     {
       "genre": "ボカロ",
-      "title": "Francium （ななひら Cover）",
-      "artist": "チータン",
-      "url": "https://typing-tube.net/movie/show/23910"
-    },
-    {
-      "genre": "ボカロ",
       "title": "OSINT",
       "artist": "椎乃味醂",
       "url": "https://typing-tube.net/movie/show/59756"
@@ -10878,12 +10749,6 @@ const _RAW = {
       "title": "パラジクロロベンゼン×アンチクロロベンゼン",
       "artist": "オワタP",
       "url": "https://typing-tube.net/movie/show/26226"
-    },
-    {
-      "genre": "ボカロ",
-      "title": "ぺたぺたせいぎのランドセル ～イニミニ妹ガール～",
-      "artist": "さたぱんP",
-      "url": "https://typing-tube.net/movie/show/56689"
     },
     {
       "genre": "ボカロ",
@@ -11031,24 +10896,6 @@ const _RAW = {
     },
     {
       "genre": "ゲーム",
-      "title": "80秒でわかるゆずソフト",
-      "artist": "ゆずソフト",
-      "url": "https://typing-tube.net/movie/show/29780"
-    },
-    {
-      "genre": "ゲーム",
-      "title": "ONE NIGHT FIRE",
-      "artist": "ぜったい最胸☆おっぱい戦争!!",
-      "url": "https://typing-tube.net/movie/show/59790"
-    },
-    {
-      "genre": "ゲーム",
-      "title": "SMEE HaremKingdom ティザームービー",
-      "artist": "SMEE HaremKingdom",
-      "url": "https://typing-tube.net/movie/show/28986"
-    },
-    {
-      "genre": "ゲーム",
       "title": "ダンスサンズダンス",
       "artist": "UNDERTALE(MAD)",
       "url": "https://typing-tube.net/movie/show/33257"
@@ -11076,12 +10923,6 @@ const _RAW = {
       "title": "ポケモンはらはらリレー(むずかし版)",
       "artist": "ポケットモンスターシリーズ",
       "url": "https://typing-tube.net/movie/show/4814"
-    },
-    {
-      "genre": "ゲーム",
-      "title": "炎の孕ませもっと！発育っ！身体測定2 ED",
-      "artist": "炎の孕ませもっと！発育っ！身体測定",
-      "url": "https://typing-tube.net/movie/show/59788"
     },
     {
       "genre": "ゲーム",
@@ -11196,12 +11037,6 @@ const _RAW = {
       "title": "「ぐ」と言ったら加速してしまう「ぐるぐるどっか～ん！」",
       "artist": "いないいないばぁっ！",
       "url": "https://typing-tube.net/movie/show/58797"
-    },
-    {
-      "genre": "その他",
-      "title": "『気をつけ』の仕方を叩き込まれるタマホーム新入社員",
-      "artist": "不明",
-      "url": "https://typing-tube.net/movie/show/60089"
     },
     {
       "genre": "その他",
@@ -11565,12 +11400,39 @@ function renderList() {
   `).join('');
 }
 
-setupChips('listDiffChips', renderList);
-setupChips('listGenreChips', renderList);
-document.getElementById('searchBox').addEventListener('input', renderList);
-document.getElementById('sort-diff').textContent = '↑';
-document.getElementById('totalCount').textContent = ALL.length.toLocaleString();
-renderList();
+document.addEventListener('DOMContentLoaded', () => {
+  // ランダムセレクト
+  document.getElementById('randomBtn').addEventListener('click', doRandom);
+  setupChips('diffChips', ()=>{});
+  setupChips('genreChips', ()=>{});
+
+  // 譜面リスト：表示ボタンを押したときだけ描画
+  let listShown = false;
+  const showListBtn = document.getElementById('showListBtn');
+  const listTableWrap = document.getElementById('listTableWrap');
+
+  function showList() {
+    listTableWrap.style.display = 'block';
+    listShown = true;
+    document.getElementById('sort-diff').textContent = '↑';
+    renderList();
+  }
+
+  showListBtn.addEventListener('click', () => {
+    if (!listShown) {
+      showListBtn.textContent = ''; // ボタンのテキストを更新
+      showListBtn.innerHTML = '<svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg> 条件で絞り込む';
+    }
+    showList();
+  });
+
+  // フィルター変更時は表示済みの場合のみ再描画
+  setupChips('listDiffChips', () => { if (listShown) renderList(); });
+  setupChips('listGenreChips', () => { if (listShown) renderList(); });
+  document.getElementById('searchBox').addEventListener('input', () => { if (listShown) renderList(); });
+
+  document.getElementById('totalCount').textContent = ALL.length.toLocaleString();
+});
 </script>
 </body>
 </html>
