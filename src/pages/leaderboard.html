@@ -250,6 +250,13 @@
     color: var(--text-dim);
   }
 
+  .unit-cell {
+    font-size: 0.82rem;
+    font-weight: 400;
+    color: var(--text-dim);
+    white-space: nowrap;
+  }
+
   .actions-cell { white-space: nowrap; }
 
   .btn-icon {
@@ -378,7 +385,7 @@
       </div>
       <div class="field-group" style="max-width:160px">
         <label>スコア</label>
-        <input type="text" id="addScore" placeholder="例: 12345 / S+">
+        <input type="number" id="addScore" placeholder="0">
       </div>
       <button class="btn btn-primary" onclick="addPlayer()">登録</button>
     </div>
@@ -395,9 +402,19 @@
       </div>
       <div class="field-group" style="max-width:160px">
         <label>新スコア</label>
-        <input type="text" id="updateScore" placeholder="例: 12345 / S+">
+        <input type="number" id="updateScore" placeholder="0">
       </div>
       <button class="btn btn-update" onclick="updateScore()">更新</button>
+    </div>
+  </div>
+
+  <!-- Unit setting (always visible) -->
+  <div style="border-top: 1px solid var(--border); padding-top: 12px; margin-top: 4px;">
+    <div class="controls-row">
+      <div class="field-group" style="max-width:240px">
+        <label>単位（全行共通）</label>
+        <input type="text" id="unitLabel" placeholder="例: pt / 秒 / km" maxlength="20" oninput="render()">
+      </div>
     </div>
   </div>
 </div>
@@ -410,6 +427,7 @@
         <th style="width:52px">順位</th>
         <th>プレイヤー</th>
         <th>スコア</th>
+        <th id="thUnit"></th>
         <th style="width:60px">削除</th>
       </tr>
     </thead>
@@ -452,9 +470,11 @@
   // ── Add ──
   function addPlayer() {
     const name = document.getElementById('addName').value.trim();
-    const score = document.getElementById('addScore').value.trim();
+    const scoreRaw = document.getElementById('addScore').value.trim();
     if (!name) { toast('プレイヤー名を入力してください'); return; }
-    if (!score) { toast('スコアを入力してください'); return; }
+    if (scoreRaw === '') { toast('スコアを入力してください'); return; }
+    const score = parseFloat(scoreRaw);
+    if (isNaN(score)) { toast('スコアは数値で入力してください'); return; }
     if (players.find(p => p.name === name)) { toast(`「${name}」はすでに登録済み`); return; }
     players.push({ id: nextId++, name, score });
     document.getElementById('addName').value = '';
@@ -467,15 +487,17 @@
   function updateScore() {
     const sel = document.getElementById('updateSelect');
     const id = parseInt(sel.value);
-    const score = document.getElementById('updateScore').value.trim();
+    const scoreRaw = document.getElementById('updateScore').value.trim();
     if (!id) { toast('プレイヤーを選択してください'); return; }
-    if (!score) { toast('スコアを入力してください'); return; }
+    if (scoreRaw === '') { toast('スコアを入力してください'); return; }
+    const score = parseFloat(scoreRaw);
+    if (isNaN(score)) { toast('スコアは数値で入力してください'); return; }
     const p = players.find(p => p.id === id);
     if (!p) return;
     p.score = score;
     document.getElementById('updateScore').value = '';
     render();
-    toast(`${p.name} のスコアを ${score} に更新した`);
+    toast(`${p.name} のスコアを ${score.toLocaleString()} に更新した`);
   }
 
   // ── Delete ──
@@ -502,76 +524,56 @@
   // ── Render ──
   function render() {
     const tbody = document.getElementById('tableBody');
-    const empty = document.getElementById('emptyState');
     const countEl = document.getElementById('playerCount');
     const sel = document.getElementById('updateSelect');
+    const unit = document.getElementById('unitLabel').value.trim();
+
+    // Update unit header
+    const thUnit = document.getElementById('thUnit');
+    thUnit.textContent = unit ? '単位' : '';
+
+    // Sort descending by score
+    const sorted = [...players].sort((a, b) => b.score - a.score);
 
     countEl.textContent = players.length;
-    empty.style.display = players.length === 0 ? 'block' : 'none';
 
-    // Update select
+    // Update select (preserve original order for usability)
     const prevVal = sel.value;
     sel.innerHTML = '<option value="">-- 選択 --</option>';
     players.forEach(p => {
       const o = document.createElement('option');
       o.value = p.id;
-      o.textContent = `${p.name}  (${p.score})`;
+      o.textContent = `${p.name}  (${p.score.toLocaleString()})`;
       sel.appendChild(o);
     });
     if (prevVal) sel.value = prevVal;
 
-    // Render rows (min 15 rows: fill remainder with empty rows)
+    // Render rows (min 15 rows)
     tbody.innerHTML = '';
     const MIN_ROWS = 15;
-    const totalRows = Math.max(players.length, MIN_ROWS);
+    const totalRows = Math.max(sorted.length, MIN_ROWS);
     for (let idx = 0; idx < totalRows; idx++) {
-      const p = players[idx] || null;
+      const p = sorted[idx] || null;
       const rank = idx + 1;
       const tr = document.createElement('tr');
       tr.dataset.idx = idx;
 
       if (p) {
-        tr.draggable = true;
+        tr.draggable = false;
         const rankClass = rank <= 3 ? `rank-${rank}` : 'rank-n';
-        const medal = rank;
         tr.innerHTML = `
-          <td class="rank-cell"><span class="rank-badge ${rankClass}">${medal}</span></td>
-          <td class="player-cell"><span class="drag-handle" title="ドラッグで並び替え">⠿</span>${escHtml(p.name)}</td>
-          <td class="score-cell" data-id="${p.id}" ondblclick="inlineEdit(this, ${p.id})">${escHtml(String(p.score))}</td>
+          <td class="rank-cell"><span class="rank-badge ${rankClass}">${rank}</span></td>
+          <td class="player-cell">${escHtml(p.name)}</td>
+          <td class="score-cell" data-id="${p.id}" ondblclick="inlineEdit(this, ${p.id})">${p.score.toLocaleString()}</td>
+          <td class="unit-cell">${escHtml(unit)}</td>
           <td class="actions-cell"><button class="btn-icon" title="削除" onclick="deletePlayer(${p.id})">✕</button></td>
         `;
-
-        tr.addEventListener('dragstart', e => {
-          dragSrcIdx = idx;
-          tr.classList.add('dragging');
-          e.dataTransfer.effectAllowed = 'move';
-        });
-        tr.addEventListener('dragend', () => {
-          tr.classList.remove('dragging');
-          tbody.querySelectorAll('tr').forEach(r => r.classList.remove('drag-over'));
-        });
-        tr.addEventListener('dragover', e => {
-          e.preventDefault();
-          tbody.querySelectorAll('tr').forEach(r => r.classList.remove('drag-over'));
-          tr.classList.add('drag-over');
-          e.dataTransfer.dropEffect = 'move';
-        });
-        tr.addEventListener('drop', e => {
-          e.preventDefault();
-          const destIdx = parseInt(tr.dataset.idx);
-          if (dragSrcIdx === null || dragSrcIdx === destIdx) return;
-          const moved = players.splice(dragSrcIdx, 1)[0];
-          players.splice(destIdx, 0, moved);
-          dragSrcIdx = null;
-          render();
-          toast('順位を移動した');
-        });
       } else {
-        // Empty row
         tr.innerHTML = `
           <td class="rank-cell" style="color:#333">${rank}</td>
           <td class="player-cell" style="color:transparent">-</td>
           <td class="score-cell" style="color:transparent">-</td>
+          <td class="unit-cell"></td>
           <td class="actions-cell"></td>
         `;
       }
@@ -585,15 +587,15 @@
     const p = players.find(p => p.id === id);
     if (!p) return;
     const inp = document.createElement('input');
-    inp.type = 'text';
+    inp.type = 'number';
     inp.className = 'score-input-inline';
     inp.value = p.score;
     td.textContent = '';
     td.appendChild(inp);
     inp.focus(); inp.select();
     function commit() {
-      const v = inp.value.trim();
-      if (v) { p.score = v; toast(`${p.name} のスコアを更新した`); }
+      const v = parseFloat(inp.value);
+      if (!isNaN(v)) { p.score = v; toast(`${p.name} のスコアを更新した`); }
       render();
     }
     inp.addEventListener('blur', commit);
@@ -619,6 +621,7 @@
   document.getElementById('addScore').addEventListener('keydown', e => { if (e.key === 'Enter') addPlayer(); });
   document.getElementById('addName').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('addScore').focus(); });
   document.getElementById('updateScore').addEventListener('keydown', e => { if (e.key === 'Enter') updateScore(); });
+  document.getElementById('unitLabel').addEventListener('keydown', e => { if (e.key === 'Enter') e.target.blur(); });
 
   // Init
   render();
