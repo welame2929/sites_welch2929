@@ -1,0 +1,575 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500&display=swap');
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --navy:#1A1E3F;--blue:#8098D6;--blue-mid:#b8c8ea;
+  --white:#ffffff;--bg:#f5f7fc;--text:#1a1e3f;--muted:#5a6490;--border:#d0d8ee;
+  --del-bg:#fde8e8;--del-text:#8b1c1c;--ins-bg:#e6f4ea;--ins-text:#14532d;
+}
+body{font-family:'Noto Sans JP',sans-serif;background:var(--bg);color:var(--text);}
+.screen{display:none;}.screen.active{display:block;}
+#menu-screen{min-height:100vh;background:var(--navy);}
+.menu-inner{max-width:680px;margin:0 auto;padding:1.5rem 1.25rem;}
+.menu-hero{text-align:center;padding:1.5rem 0 1.25rem;}
+.menu-hero h1{font-size:20px;font-weight:500;color:var(--white);}
+.mcard{background:rgba(255,255,255,0.07);border:1px solid rgba(128,152,214,0.3);border-radius:10px;padding:1rem 1.25rem;margin-bottom:1rem;}
+.mcard-title{font-size:12px;font-weight:500;color:var(--blue);margin-bottom:10px;text-transform:uppercase;letter-spacing:.06em;}
+.rule-list{list-style:none;font-size:13px;color:var(--blue-mid);}
+.rule-list li{padding:4px 0;border-bottom:1px solid rgba(128,152,214,0.15);}
+.rule-list li:last-child{border-bottom:none;}
+.rule-list li b{color:var(--white);font-weight:500;}
+.err-table{width:100%;border-collapse:collapse;font-size:12px;}
+.err-table th{background:rgba(128,152,214,0.2);color:var(--blue);padding:5px 8px;text-align:left;font-weight:400;}
+.err-table td{padding:5px 8px;border-bottom:1px solid rgba(128,152,214,0.12);color:var(--blue-mid);vertical-align:top;}
+.err-table tr:last-child td{border-bottom:none;}
+.warn-row td{color:var(--white)!important;}
+.warn-row td:last-child{text-decoration:underline;text-underline-offset:3px;text-decoration-color:rgba(248,180,80,0.8);}
+.err-example{margin-top:8px;background:rgba(0,0,0,0.2);border-radius:6px;padding:8px 10px;font-size:12px;color:var(--blue-mid);line-height:1.8;}
+.err-example b{color:var(--white);font-weight:500;}
+.notice-box{background:rgba(248,180,80,0.12);border:1px solid rgba(248,180,80,0.4);border-radius:8px;padding:10px 14px;margin-bottom:1rem;font-size:13px;color:#f8d080;line-height:1.7;}
+.notice-box b{color:#fde68a;font-weight:500;}
+.text-select{display:flex;flex-direction:column;gap:6px;}
+.text-btn{background:rgba(255,255,255,0.06);border:1px solid rgba(128,152,214,0.35);border-radius:8px;padding:9px 12px;text-align:left;cursor:pointer;font-size:13px;color:var(--blue-mid);transition:all .15s;font-family:inherit;}
+.text-btn:hover{background:rgba(128,152,214,0.15);border-color:var(--blue);color:var(--white);}
+.text-btn.selected{background:rgba(128,152,214,0.22);border-color:var(--blue);color:var(--white);}
+.upload-area{border:1.5px dashed rgba(128,152,214,0.4);border-radius:8px;padding:14px;text-align:center;cursor:pointer;font-size:13px;color:var(--blue-mid);margin-top:8px;transition:all .15s;}
+.upload-area:hover{border-color:var(--blue);background:rgba(128,152,214,0.1);color:var(--white);}
+#selected-info{margin-top:6px;font-size:12px;color:var(--blue);min-height:16px;}
+.start-btn{width:100%;padding:13px;background:var(--blue);color:var(--navy);border:none;border-radius:8px;font-size:15px;font-weight:500;cursor:pointer;margin-top:.75rem;font-family:inherit;transition:all .15s;}
+.start-btn:hover{background:#a0b4e0;}
+.start-btn:disabled{background:rgba(128,152,214,0.2);color:rgba(128,152,214,0.4);cursor:not-allowed;}
+input[type="file"]{display:none;}
+#play-screen{display:none;flex-direction:column;height:100vh;overflow:hidden;}
+#play-screen.active{display:flex;}
+.play-header{background:var(--navy);padding:8px 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;gap:12px;}
+.timer-wrap{display:flex;align-items:baseline;gap:5px;}
+.timer-label{font-size:11px;color:var(--blue-mid);}
+.timer-display{font-size:20px;font-weight:500;color:var(--white);font-variant-numeric:tabular-nums;}
+.timer-display.warning{color:#f87171;animation:blink .5s step-end infinite;}
+@keyframes blink{50%{opacity:.2;}}
+.stats-bar{display:flex;gap:14px;}
+.stat-item{font-size:12px;color:var(--blue-mid);}
+.stat-item span{font-weight:500;color:var(--white);}
+.end-btn{font-size:12px;padding:4px 12px;cursor:pointer;background:transparent;border:1px solid rgba(128,152,214,0.5);border-radius:6px;color:var(--blue-mid);font-family:inherit;transition:all .15s;white-space:nowrap;}
+.end-btn:hover{background:rgba(128,152,214,0.2);border-color:var(--blue);color:var(--white);}
+.play-body{flex:1;display:grid;grid-template-columns:1fr 1fr;overflow:hidden;}
+.source-pane{display:flex;flex-direction:column;align-items:center;overflow:hidden;background:var(--bg);padding:8px;}
+.input-pane{display:flex;flex-direction:column;align-items:center;overflow:hidden;background:var(--bg);padding:8px;border-left:1px solid var(--border);}
+.pane-head-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;flex-shrink:0;}
+.pane-head-row span{font-size:11px;color:var(--muted);}
+.page-indicator{font-size:11px;color:var(--muted);}
+.input-char-count{font-size:12px;font-weight:500;color:var(--text);}
+#source-frame{border:2px solid var(--navy);border-radius:4px;background:var(--white);flex-shrink:0;overflow:hidden;}
+#source-display{overflow:hidden;}
+.src-row{display:flex;align-items:stretch;}
+.src-text{font-family:'Noto Sans JP','Hiragino Sans',sans-serif;white-space:pre;color:var(--text);flex:1;}
+/* 課題文の区切り線：累積字数エリアの左に薄い縦線 */
+.src-count-wrap{display:flex;align-items:center;flex-shrink:0;border-left:1px solid var(--border);}
+.src-count{font-size:10px;color:#aab4cc;text-align:right;padding:0 6px;}
+#ta-frame{border:2px solid var(--navy);border-radius:4px;background:var(--white);flex-shrink:0;overflow:hidden;}
+#ta-wrapper{overflow:hidden;background:var(--white);}
+/* textareaのスクロールバーが文字幅に干渉しないよう、
+   wrapper幅 = PAD_L + charW×COLS + scrollbarW + PAD_R
+   textarea幅 = charW×COLS（スクロールバー領域は別枠）*/
+#typing-area{
+  display:block;border:none;resize:none;
+  padding:0;margin:0;
+  font-family:'Noto Sans JP','Hiragino Sans',sans-serif;
+  background:var(--white);color:var(--text);
+  outline:none;
+  overflow-y:scroll; /* 常にスクロールバー領域を確保 */
+  overflow-x:hidden;
+}
+.flash-border{position:fixed;pointer-events:none;top:0;left:0;right:0;bottom:0;z-index:999;animation:flashB .5s step-end infinite;}
+@keyframes flashB{0%,100%{box-shadow:inset 0 0 0 7px rgba(248,113,113,.8);}50%{box-shadow:inset 0 0 0 7px transparent;}}
+#result-screen{min-height:100vh;background:var(--navy);}
+.res-inner{max-width:680px;margin:0 auto;padding:1.5rem 1.25rem;}
+.res-top{text-align:center;padding:.5rem 0 1.25rem;}
+.res-top h1{font-size:20px;font-weight:500;color:var(--white);margin-bottom:.75rem;}
+.score-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.score-card{background:rgba(255,255,255,0.07);border:1px solid rgba(128,152,214,0.25);border-radius:8px;padding:12px;}
+.sc-label{font-size:11px;color:var(--blue-mid);margin-bottom:3px;}
+.sc-value{font-size:28px;font-weight:500;color:var(--white);}
+.score-card.pure .sc-value{color:#93c5fd;}
+.diff-card{background:rgba(255,255,255,0.05);border:1px solid rgba(128,152,214,0.25);border-radius:10px;padding:1rem 1.25rem;margin-bottom:1rem;}
+.diff-card h2{font-size:12px;font-weight:500;color:var(--blue);margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em;}
+.legend{display:flex;gap:14px;margin-bottom:8px;}
+.ld{display:flex;align-items:center;gap:4px;font-size:12px;color:var(--blue-mid);}
+.ld-dot{width:12px;height:12px;border-radius:2px;}
+.diff-content{font-size:13px;line-height:2;white-space:pre-wrap;font-family:'Noto Sans JP',sans-serif;color:rgba(255,255,255,0.8);}
+.d-del{background:var(--del-bg);color:var(--del-text);text-decoration:line-through;border-radius:2px;}
+.d-ins{background:var(--ins-bg);color:var(--ins-text);border-radius:2px;}
+.btn-row{display:flex;flex-direction:column;gap:8px;}
+.retry-btn{padding:12px;background:transparent;color:var(--blue-mid);border:1px solid rgba(128,152,214,0.4);border-radius:8px;font-size:14px;cursor:pointer;font-family:inherit;transition:all .15s;}
+.retry-btn:hover{background:rgba(128,152,214,0.15);border-color:var(--blue);color:var(--white);}
+.home-btn{padding:12px;background:var(--blue);color:var(--navy);border:none;border-radius:8px;font-size:14px;font-weight:500;cursor:pointer;font-family:inherit;transition:all .15s;}
+.home-btn:hover{background:#a0b4e0;}
+</style>
+
+<div id="app">
+<div id="menu-screen" class="screen active">
+<div class="menu-inner">
+  <div class="menu-hero"><h1>実用タイピング採点用ツール</h1></div>
+  <div class="notice-box">
+    <b>はじめにご確認ください</b><br>
+    課題文・入力欄の文字サイズはブラウザのウィンドウ幅をもとに自動設定されます。<b>まずサンプル文章でゲームを開始し</b>、文字サイズや表示が適切かどうかを確認してください。
+  </div>
+  <div class="mcard">
+    <div class="mcard-title">競技ルール</div>
+    <ul class="rule-list">
+      <li>制限時間 <b>10分間</b>。課題文を正確に入力し純字数を競う。</li>
+      <li><b>純字数</b> ＝ 総字数 − エラー数</li>
+      <li>残り <b>2分</b>（8分経過）および残り <b>10秒</b> で画面周囲が1秒間赤く点滅して通知</li>
+      <li>課題文は <b>1行30文字・30行ずつ</b>ページ切り替え表示</li>
+    </ul>
+  </div>
+  <div class="mcard">
+    <div class="mcard-title">エラー種別</div>
+    <table class="err-table">
+      <thead><tr><th>種別</th><th>内容</th></tr></thead>
+      <tbody>
+        <tr><td>誤字</td><td>誤入力箇所の<b style="color:rgba(255,255,255,0.7);font-weight:500">課題文側</b>の文字数分がエラー</td></tr>
+        <tr><td>脱字</td><td>入力しなかった文字数分がエラー</td></tr>
+        <tr class="warn-row"><td>脱行</td><td>1行（30文字）まるごと抜けた場合、その行の文字数分（最大30字）がエラーになる。見落としに注意。</td></tr>
+        <tr><td>余分字</td><td>余分に入力した箇所を1エラー</td></tr>
+        <tr><td>スペース</td><td>不正なスペースの増減で1エラー</td></tr>
+        <tr><td>改行</td><td>改行のミス1箇所につき1エラー</td></tr>
+      </tbody>
+    </table>
+    <div class="err-example">
+      <b>誤字エラーの例</b>：「最新」を「さいしん」「saisin」「細心」と誤入力した場合、元の文字列である「最新」が2文字であることからすべて2エラーとして計算します。
+    </div>
+  </div>
+  <div class="mcard">
+    <div class="mcard-title">課題文を選択</div>
+    <div class="text-select" id="text-select">
+      <button class="text-btn" data-idx="0">① 富士山（サンプル）</button>
+      <button class="text-btn" data-idx="1">② 地球温暖化（サンプル）</button>
+    </div>
+    <div class="upload-area" onclick="document.getElementById('file-input').click()">txtファイルをアップロード</div>
+    <input type="file" id="file-input" accept=".txt">
+    <div id="selected-info"></div>
+  </div>
+  <button class="start-btn" id="start-btn" disabled>ゲームを開始する</button>
+</div>
+</div>
+
+<div id="play-screen" class="screen">
+  <div class="play-header" id="play-header">
+    <div class="timer-wrap">
+      <span class="timer-label">残り</span>
+      <span class="timer-display" id="timer">10:00</span>
+    </div>
+    <div class="stats-bar">
+      <div class="stat-item">入力行：<span id="cur-line">1</span></div>
+      <div class="stat-item">文字：<span id="cur-chars">0</span></div>
+    </div>
+    <button class="end-btn" onclick="endGame()">終了</button>
+  </div>
+  <div class="play-body">
+    <div class="source-pane" id="source-pane">
+      <div class="pane-head-row" id="src-head-row">
+        <span>課題文</span>
+        <span class="page-indicator" id="page-indicator"></span>
+      </div>
+      <div id="source-frame"><div id="source-display"></div></div>
+    </div>
+    <div class="input-pane" id="input-pane">
+      <div class="pane-head-row" id="ta-head-row">
+        <span>入力欄</span>
+        <span class="input-char-count">総字：<span id="total-chars">0</span></span>
+      </div>
+      <div id="ta-frame">
+        <div id="ta-wrapper">
+          <textarea id="typing-area" spellcheck="false" autocomplete="off" autocorrect="off" autocapitalize="off" placeholder="ここに入力してください…"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="result-screen" class="screen">
+<div class="res-inner">
+  <div class="res-top">
+    <h1>結果</h1>
+    <div class="score-grid">
+      <div class="score-card"><div class="sc-label">総字数</div><div class="sc-value" id="res-total">0</div></div>
+      <div class="score-card"><div class="sc-label">エラー数</div><div class="sc-value" id="res-errors">0</div></div>
+      <div class="score-card pure"><div class="sc-label">純字数</div><div class="sc-value" id="res-pure">0</div></div>
+    </div>
+  </div>
+  <div class="diff-card">
+    <h2>入力内容の比較</h2>
+    <div class="legend">
+      <div class="ld"><div class="ld-dot" style="background:var(--del-bg);border:1px solid #f87171;"></div>削除（脱字・誤字）</div>
+      <div class="ld"><div class="ld-dot" style="background:var(--ins-bg);border:1px solid #4ade80;"></div>追加（余分字）</div>
+    </div>
+    <div class="diff-content" id="diff-output"></div>
+  </div>
+  <div class="btn-row">
+    <button class="retry-btn" id="retry-btn">同じ課題文でもう一度</button>
+    <button class="home-btn" onclick="showMenu()">メニューに戻る</button>
+  </div>
+</div>
+</div>
+</div>
+
+<script>
+const COLS=30, PAGE_ROWS=30;
+const PAD_L=14, PAD_R=14, COUNT_W=40;
+const SCROLLBAR_W=17; // スクロールバー用に確保する幅
+
+const TEXTS=[
+  {name:"① 富士山",content:`　富士山の高さは３７７６メートル。子どものころに学校で習ったこの数字は、大正時代の測量により決定されたもので、長い間この数字が使われてきた。\n　ところが、最新の技術を利用して正確に測り直したところ、従来の高さより６５センチ程度低いことがわかった。`},
+  {name:"② 地球温暖化",content:`　もしも、地球の温暖化により現在の海面が上昇すると、農業においてはどのような影響が出るだろうか。これについて検討している国際機関では、４０年後には地球の平均海面が、今より１８センチ上がると推定している。\n　農地は平野に多く、水位が上がると塩による被害にさらされる。現実に１８センチも上昇すると、広い地域にわたって堤防のかさ上げや、強力な排水ポンプが必要になるということだ。温暖化による被害は、想像よりも深刻になりそうだ。`}
+];
+
+let selectedText=null, timerInterval=null, secondsLeft=600;
+let warningShown=false, lastSecFlashShown=false;
+let flashEl=null, flashTimeout=null;
+let currentFontSize=14, currentLhPx=22, measuredCharW=14;
+let allSourceLines=[], currentPage=0;
+
+function lineHRatio(fs){
+  if(fs>=18) return 1.45;
+  if(fs>=14) return 1.50;
+  return 1.55;
+}
+
+/* 実際の文字幅を測定：テスト用要素を使い全角10文字の幅を計測 */
+function measureCharWidth(fs){
+  const el=document.createElement('span');
+  el.style.cssText=`position:absolute;visibility:hidden;white-space:pre;`+
+    `font-family:'Noto Sans JP','Hiragino Sans',sans-serif;font-size:${fs}px;`;
+  el.textContent='あ'.repeat(20);
+  document.body.appendChild(el);
+  const w=el.offsetWidth/20;
+  el.remove();
+  return w;
+}
+
+function calcFontSize(){
+  const sourcePane=document.getElementById('source-pane');
+  const paneW=sourcePane.offsetWidth;
+  const paneH=sourcePane.offsetHeight;
+  const headH=document.getElementById('src-head-row').offsetHeight||20;
+
+  // 横方向：枠内パディング + 文字幅×30 + 累積字数エリア + ボーダー + ペインパディング
+  // まず近似fsを計算し、その後実測文字幅で再計算
+  const availW=paneW - PAD_L - PAD_R - COUNT_W - 4 - 16;
+  let fsApprox=availW/COLS;
+  fsApprox=Math.min(22,Math.max(10,Math.floor(fsApprox)));
+  const cw=measureCharWidth(fsApprox);
+  // 実測文字幅でfs算出：cw≒fs なので倍率補正
+  const fsFromW=Math.floor(fsApprox*(availW/(cw*COLS)));
+
+  const approxRatio=lineHRatio(fsFromW);
+  const availH=paneH - headH - 4 - 4 - 16;
+  const fsFromH=availH/(PAGE_ROWS*approxRatio);
+
+  return Math.min(22,Math.max(10,Math.floor(Math.min(fsFromW,fsFromH))));
+}
+
+function wrapToLines(text){
+  const raw=text.replace(/\r\n/g,'\n').replace(/\r/g,'\n').split('\n');
+  const out=[]; let cum=0;
+  for(const line of raw){
+    if(!line.length){out.push({text:'',cumul:cum});continue;}
+    let p=0;
+    while(p<line.length){
+      const chunk=line.slice(p,p+COLS); cum+=chunk.length;
+      out.push({text:chunk,cumul:cum}); p+=COLS;
+    }
+  }
+  return out;
+}
+
+function renderSourcePage(page, fs){
+  const lhPx=Math.round(fs*lineHRatio(fs));
+  currentLhPx=lhPx;
+  const countFs=Math.max(9,fs-3);
+  const startRow=page*PAGE_ROWS;
+  const endRow=Math.min(startRow+PAGE_ROWS, allSourceLines.length);
+  const totalPages=Math.ceil(allSourceLines.length/PAGE_ROWS);
+  const display=document.getElementById('source-display');
+  display.innerHTML='';
+  for(let i=startRow;i<endRow;i++){
+    const row=allSourceLines[i];
+    const div=document.createElement('div');
+    div.className='src-row';
+    div.style.height=lhPx+'px';
+
+    const txt=document.createElement('span');
+    txt.className='src-text';
+    txt.style.fontSize=fs+'px';
+    txt.style.lineHeight=lhPx+'px';
+    txt.style.paddingLeft=PAD_L+'px';
+    txt.textContent=row.text;
+    div.appendChild(txt);
+
+    // 区切り線付きの字数エリア
+    const cntWrap=document.createElement('span');
+    cntWrap.className='src-count-wrap';
+    cntWrap.style.width=COUNT_W+'px';
+    cntWrap.style.height=lhPx+'px';
+    if(row.text.length>0){
+      const cnt=document.createElement('span');
+      cnt.className='src-count';
+      cnt.style.fontSize=countFs+'px';
+      cnt.style.width='100%';
+      cnt.textContent=row.cumul;
+      cntWrap.appendChild(cnt);
+    }
+    div.appendChild(cntWrap);
+    display.appendChild(div);
+  }
+  document.getElementById('page-indicator').textContent=
+    totalPages>1?(page+1)+' / '+totalPages+' ページ':'';
+}
+
+function applyLayout(){
+  const fs=calcFontSize();
+  currentFontSize=fs;
+  const cw=measureCharWidth(fs);
+  measuredCharW=cw;
+  const lhPx=Math.round(fs*lineHRatio(fs));
+  currentLhPx=lhPx;
+  const frameH=lhPx*PAGE_ROWS;
+
+  // 課題文枠：PAD_L + 文字幅×30 + 区切り線+字数エリア + PAD_R
+  const textAreaW=Math.ceil(cw*COLS); // 実測文字幅ベース
+  const srcFrameW=PAD_L+textAreaW+COUNT_W+PAD_R;
+  const srcFrame=document.getElementById('source-frame');
+  srcFrame.style.width=srcFrameW+'px';
+  srcFrame.style.height=frameH+'px';
+  document.getElementById('src-head-row').style.width=srcFrameW+'px';
+  renderSourcePage(currentPage, fs);
+
+  // 入力欄枠：PAD_L + 文字幅×30 + スクロールバー幅 + PAD_R
+  const taFrameW=PAD_L+textAreaW+SCROLLBAR_W+PAD_R;
+  const taFrame=document.getElementById('ta-frame');
+  taFrame.style.width=taFrameW+'px';
+  taFrame.style.height=frameH+'px';
+  document.getElementById('ta-head-row').style.width=taFrameW+'px';
+
+  const ta=document.getElementById('typing-area');
+  const wrapper=document.getElementById('ta-wrapper');
+  wrapper.style.paddingLeft=PAD_L+'px';
+  // 右パディングはスクロールバーの外側に PAD_R を確保（wrapperの幅で管理）
+  wrapper.style.width=taFrameW+'px';
+  wrapper.style.height=frameH+'px';
+  ta.style.fontSize=fs+'px';
+  ta.style.lineHeight=lhPx+'px';
+  // textareaの幅：文字幅×30 + スクロールバー幅（overflow:scrollで常に確保）
+  ta.style.width=(textAreaW+SCROLLBAR_W)+'px';
+  ta.style.height=frameH+'px';
+  ta.style.padding='0';
+  ta.style.boxSizing='content-box';
+}
+
+/* ページ切り替え：カーソル行→対応するsourceLineIdxを積算して判定
+   Enterによる改行でも、段落内の自動折り返しでも同じロジックで動作する */
+function calcSrcLineFromInput(ta){
+  const val=ta.value;
+  const cursorPos=ta.selectionStart;
+  const textBefore=val.substring(0,cursorPos);
+  const paragraphs=textBefore.split('\n');
+
+  let srcLine=0;
+  for(let i=0;i<paragraphs.length;i++){
+    const plen=paragraphs[i].length;
+    if(i<paragraphs.length-1){
+      // 完結した段落：その段落が何ソース行を占めるか
+      srcLine+=Math.max(1,Math.ceil(plen/COLS));
+    } else {
+      // 現在入力中の段落：カーソルが何文字目か
+      srcLine+=Math.floor(plen/COLS);
+    }
+  }
+  return srcLine;
+}
+
+function updateSourcePage(){
+  const ta=document.getElementById('typing-area');
+  if(!ta)return;
+  const srcLine=calcSrcLineFromInput(ta);
+  const page=Math.floor(srcLine/PAGE_ROWS);
+  if(page!==currentPage){
+    currentPage=page;
+    renderSourcePage(currentPage, currentFontSize);
+    const frameH=currentLhPx*PAGE_ROWS;
+    document.getElementById('ta-frame').style.height=frameH+'px';
+    document.getElementById('typing-area').style.height=frameH+'px';
+    document.getElementById('ta-wrapper').style.height=frameH+'px';
+  }
+  // 行カウンタ更新
+  const allParas=ta.value.split('\n');
+  let totalSrcLines=0;
+  for(const p of allParas) totalSrcLines+=Math.max(1,Math.ceil(p.length/COLS));
+  document.getElementById('cur-line').textContent=srcLine+1;
+}
+
+function startFlash(){
+  if(flashEl)return;
+  document.getElementById('timer').classList.add('warning');
+  flashEl=document.createElement('div'); flashEl.className='flash-border';
+  document.body.appendChild(flashEl);
+}
+function stopFlash(){
+  if(flashTimeout){clearTimeout(flashTimeout);flashTimeout=null;}
+  if(flashEl){flashEl.remove();flashEl=null;}
+  document.getElementById('timer').classList.remove('warning');
+}
+function triggerFlash(){stopFlash();startFlash();flashTimeout=setTimeout(stopFlash,1000);}
+
+document.querySelectorAll('.text-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.text-btn').forEach(b=>b.classList.remove('selected'));
+    btn.classList.add('selected');
+    selectedText=TEXTS[parseInt(btn.dataset.idx)];
+    document.getElementById('selected-info').textContent='選択中：'+selectedText.name;
+    document.getElementById('start-btn').disabled=false;
+  });
+});
+document.getElementById('file-input').addEventListener('change',e=>{
+  const f=e.target.files[0]; if(!f)return;
+  const r=new FileReader();
+  r.onload=ev=>{
+    selectedText={name:f.name,content:ev.target.result};
+    document.getElementById('selected-info').textContent='選択中：'+f.name;
+    document.querySelectorAll('.text-btn').forEach(b=>b.classList.remove('selected'));
+    document.getElementById('start-btn').disabled=false;
+  };
+  r.readAsText(f,'UTF-8');
+});
+document.getElementById('start-btn').addEventListener('click',startGame);
+document.getElementById('retry-btn').addEventListener('click',startGame);
+
+function showMenu(){
+  clearInterval(timerInterval); stopFlash();
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('menu-screen').classList.add('active');
+}
+
+function startGame(){
+  if(!selectedText)return;
+  clearInterval(timerInterval); stopFlash();
+  secondsLeft=600; warningShown=false; lastSecFlashShown=false; currentPage=0;
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('play-screen').classList.add('active');
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    allSourceLines=wrapToLines(selectedText.content);
+    applyLayout();
+    const ta=document.getElementById('typing-area');
+    ta.value='';
+    document.getElementById('cur-line').textContent='1';
+    document.getElementById('cur-chars').textContent='0';
+    document.getElementById('total-chars').textContent='0';
+    document.getElementById('timer').classList.remove('warning');
+    updateTimer();
+    ta.focus();
+    const onUpdate=()=>{
+      const v=ta.value, ch=v.replace(/\n/g,'').length;
+      document.getElementById('cur-chars').textContent=ch;
+      document.getElementById('total-chars').textContent=ch;
+      updateSourcePage();
+    };
+    ta.oninput=onUpdate; ta.onkeyup=onUpdate; ta.onclick=onUpdate;
+  }));
+  timerInterval=setInterval(()=>{
+    secondsLeft--; updateTimer();
+    if(secondsLeft===120&&!warningShown){warningShown=true;triggerFlash();}
+    if(secondsLeft===10&&!lastSecFlashShown){lastSecFlashShown=true;triggerFlash();}
+    if(secondsLeft<=0)endGame();
+  },1000);
+}
+
+function updateTimer(){
+  const m=Math.floor(secondsLeft/60), s=secondsLeft%60;
+  document.getElementById('timer').textContent=m+':'+String(s).padStart(2,'0');
+}
+
+function endGame(){
+  clearInterval(timerInterval); stopFlash();
+  const input=document.getElementById('typing-area').value;
+  const result=scoreText(selectedText.content, input);
+  document.getElementById('res-total').textContent=result.totalChars;
+  document.getElementById('res-errors').textContent=result.errors;
+  document.getElementById('res-pure').textContent=Math.max(0,result.totalChars-result.errors);
+  document.getElementById('diff-output').innerHTML=result.diffHtml;
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('result-screen').classList.add('active');
+}
+
+function scoreText(original, input){
+  const origNorm=original.replace(/\r\n/g,'\n').replace(/\r/g,'\n');
+  const inputNorm=input.replace(/\r\n/g,'\n').replace(/\r/g,'\n');
+  const inputCharCount=inputNorm.replace(/\n/g,'').length;
+  const inputLen=inputNorm.length;
+  const margin=Math.max(30,Math.floor(inputCharCount*0.1));
+  const capLen=Math.min(origNorm.length, inputLen+margin);
+  const cappedOrig=origNorm.slice(0,capLen);
+  const diff=computeDiff(cappedOrig, inputNorm);
+  let origPos=0, lastOrigPos=0;
+  for(const[op,str]of diff){
+    if(op===0){origPos+=str.length; lastOrigPos=origPos;}
+    else if(op===-1){origPos+=str.length;}
+  }
+  const scoredOrig=cappedOrig.slice(0,lastOrigPos);
+  const totalChars=scoredOrig.replace(/\n/g,'').length;
+  const scoreDiff=computeDiff(scoredOrig, inputNorm);
+  let errors=0, diffHtml='', i=0;
+  while(i<scoreDiff.length){
+    const[op,str]=scoreDiff[i];
+    if(op===0){diffHtml+=esc(str); i++;}
+    else if(op===-1){
+      const delStr=str; let insStr='';
+      if(i+1<scoreDiff.length&&scoreDiff[i+1][0]===1){insStr=scoreDiff[i+1][1]; i++;}
+      errors+=delStr.replace(/\n/g,'').length;
+      diffHtml+='<span class="d-del">'+esc(delStr)+'</span>';
+      if(insStr) diffHtml+='<span class="d-ins">'+esc(insStr)+'</span>';
+      i++;
+    } else if(op===1){
+      errors+=1; diffHtml+='<span class="d-ins">'+esc(str)+'</span>'; i++;
+    }
+  }
+  return{totalChars, errors, diffHtml};
+}
+
+function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'↵\n');}
+
+function computeDiff(a,b){
+  if(a===b)return[[0,a]];
+  const m=a.length,n=b.length,MAX=m+n;
+  if(MAX===0)return[];
+  const v=new Array(2*MAX+1).fill(0); const vs=[];
+  outer:for(let d=0;d<=MAX;d++){
+    vs.push([...v]);
+    for(let k=-d;k<=d;k+=2){
+      let x=(k===-d||(k!==d&&v[k-1+MAX]<v[k+1+MAX]))?v[k+1+MAX]:v[k-1+MAX]+1;
+      let y=x-k;
+      while(x<m&&y<n&&a[x]===b[y]){x++;y++;}
+      v[k+MAX]=x;
+      if(x>=m&&y>=n){vs[d]=[...v];break outer;}
+    }
+  }
+  return backtrack(vs,a,b,MAX);
+}
+function backtrack(vs,a,b,MAX){
+  let x=a.length,y=b.length; const ops=[];
+  for(let d=vs.length-1;d>=0;d--){
+    const v=vs[d],k=x-y;
+    const prevK=(k===-d||(k!==d&&v[k-1+MAX]<v[k+1+MAX]))?k+1:k-1;
+    const prevX=v[prevK+MAX],prevY=prevX-prevK;
+    while(x>prevX&&y>prevY){ops.unshift([0,a[--x]]);y--;}
+    if(d>0){if(x===prevX)ops.unshift([1,b[--y]]);else ops.unshift([-1,a[--x]]);}
+  }
+  const merged=[];
+  for(const[op,ch]of ops){
+    if(merged.length&&merged[merged.length-1][0]===op)merged[merged.length-1][1]+=ch;
+    else merged.push([op,ch]);
+  }
+  return merged;
+}
+</script>
