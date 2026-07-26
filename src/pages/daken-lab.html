@@ -1,0 +1,1739 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>打鍵ラボ — 15ワード1セット式</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+JP:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EEF1EE; --card:#FFFFFF; --ink:#1A241F; --sub:#5C6B63; --line:#D8DFD9;
+  --teal:#0C7A64; --teal-br:#12A38A; --amber:#DE8B0A; --red:#D5455D;
+  --mono:"IBM Plex Mono",ui-monospace,monospace;
+  --sans:"IBM Plex Sans JP",system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--paper);color:var(--ink);font-family:var(--sans)}
+button{font-family:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+
+header{display:flex;align-items:center;gap:20px;padding:14px 24px;border-bottom:1px solid var(--line);background:var(--card)}
+.brand{display:flex;align-items:baseline;gap:10px}
+.mark{font-weight:700;font-size:19px;letter-spacing:.06em}
+.mark::before{content:"▮▯";color:var(--teal);letter-spacing:-2px;margin-right:7px;font-size:15px}
+.brandsub{font-size:11.5px;color:var(--sub);font-family:var(--mono)}
+nav{display:flex;gap:4px;margin-left:8px}
+nav button{border:1px solid var(--line);background:transparent;border-radius:6px;padding:6px 16px;font-size:13.5px;color:var(--sub)}
+nav button.sel{background:var(--ink);color:#fff;border-color:var(--ink)}
+.badge{margin-left:auto;font-size:11.5px;font-family:var(--mono);padding:4px 10px;border-radius:20px;border:1px solid var(--line)}
+.badge.on{color:var(--teal);border-color:var(--teal)}
+.badge.off{color:var(--sub)}
+
+main{max-width:940px;margin:0 auto;padding:20px 20px 60px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:10px}
+
+.methodbar{display:flex;align-items:center;gap:6px;margin-bottom:10px}
+.methodbar .mlab{font-size:11px;color:var(--sub);letter-spacing:.08em;margin-right:4px}
+.mbtn,.ambtn{border:1px solid var(--line);background:var(--card);border-radius:7px;padding:7px 17px;font-size:13px;color:var(--sub)}
+.mbtn.sel,.ambtn.sel{background:var(--ink);border-color:var(--ink);color:#fff;font-weight:500}
+.aother{font-size:11.5px;color:var(--sub);margin-left:8px}
+.modebar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.chip{border:1px solid var(--line);background:var(--card);border-radius:20px;padding:6px 15px;font-size:13px;color:var(--sub)}
+.chip.sel{background:var(--teal);border-color:var(--teal);color:#fff;font-weight:500}
+.lenwrap{display:flex;align-items:center;gap:4px;margin-left:auto;font-size:11.5px;color:var(--sub)}
+.lenbtn{border:1px solid var(--line);background:var(--card);border-radius:6px;padding:4px 10px;font-size:12px;color:var(--sub)}
+.lenbtn.sel{background:var(--ink);border-color:var(--ink);color:#fff}
+.lenbtn:disabled{opacity:.4;cursor:not-allowed}
+.importBtn{position:relative;display:inline-flex;align-items:center;border:1px dashed var(--line);border-radius:6px;padding:4px 10px;font-size:12px;color:var(--teal);cursor:pointer;margin-left:4px}
+.importBtn:hover{border-color:var(--teal)}
+.importBtn input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%}
+.importStatus{display:block;width:100%;font-size:11.5px;color:var(--teal);margin-top:4px}
+.importHint{display:block;width:100%;font-size:11px;color:var(--sub);margin-top:3px}
+#modeNote{width:100%;font-size:12px;color:var(--sub);min-height:16px}
+
+/* プレイ */
+#stage{padding:20px 26px 18px;transition:border-color .12s}
+#stage.miss{border-color:var(--red);animation:shake .14s}
+@keyframes shake{25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}
+@media (prefers-reduced-motion:reduce){#stage.miss{animation:none}}
+.pgtop{display:flex;align-items:baseline;gap:22px;margin-bottom:8px}
+.pgcount{font-family:var(--mono);font-size:13px;color:var(--sub)}
+.pgcount b{font-size:22px;color:var(--ink);font-weight:600}
+.pgstat{font-size:11px;color:var(--sub);letter-spacing:.06em;margin-left:auto}
+.pgstat span{font-family:var(--mono);font-size:15px;color:var(--ink);margin-left:5px}
+.pgbar{height:4px;background:#E7EBE7;border-radius:2px;overflow:hidden;margin-bottom:22px}
+#pgFill{height:100%;background:var(--teal);width:0;transition:width .18s}
+.disp{font-size:27px;font-weight:500;letter-spacing:.02em;line-height:1.5;min-height:41px;overflow-wrap:anywhere}
+.kana{font-size:25px;font-weight:700;letter-spacing:.05em;line-height:1.5;min-height:38px;margin-top:5px;overflow-wrap:anywhere}
+.kana .u.done{color:#B9C4BD}
+.kana .u.cur{color:var(--teal);border-bottom:3px solid var(--teal)}
+.guide{font-family:var(--mono);font-size:27px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;min-height:36px;margin-top:9px;padding-top:9px;border-top:1px solid #EFF2EF;overflow-wrap:anywhere}
+.g-done{color:var(--teal)}
+.g-rest{color:var(--ink)}
+.hint{font-size:11.5px;color:var(--sub);margin-top:14px;text-align:right}
+
+/* リザルト */
+.rhead{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.rhead h2{font-size:16px;letter-spacing:.04em}
+.rhead .sub{font-size:11.5px;color:var(--sub);font-family:var(--mono)}
+#againBtn{margin-left:auto;background:var(--teal);color:#fff;border:none;border-radius:7px;padding:9px 20px;font-size:13.5px;font-weight:500}
+.rhero{padding:20px 26px;margin-bottom:10px;display:flex;flex-direction:column;gap:4px}
+.rhero .lab{font-size:12px;color:var(--sub);letter-spacing:.1em}
+.rheroRow{display:flex;align-items:baseline;gap:10px}
+.rheroRow b{font-family:var(--mono);font-size:56px;font-weight:700;color:var(--teal);line-height:1}
+.rheroRow .s{font-size:14px;color:var(--sub)}
+.rcards{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px}
+.rcard{padding:13px 15px}
+.rcard .lab{font-size:10.5px;color:var(--sub);letter-spacing:.08em}
+.rcard b{display:block;font-family:var(--mono);font-size:27px;font-weight:600;margin-top:3px;line-height:1.15}
+.rcard .s{display:block;font-size:10.5px;color:var(--sub);margin-top:2px;min-height:13px}
+.rcard.rollc b{color:var(--teal-br)}
+.rcard.rollc .s{color:var(--teal)}
+.rslow{padding:12px 16px;margin-bottom:12px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.rslow .t{font-size:11.5px;color:var(--sub);letter-spacing:.06em;margin-right:4px}
+.pill{font-family:var(--mono);font-size:12px;border:1px solid var(--line);border-radius:20px;padding:3px 11px;background:#FAFBFA}
+.pill b{color:var(--ink);font-weight:600}
+.pill i{color:var(--sub);font-style:normal;font-size:10.5px;margin-left:3px}
+.rslow .empty{font-size:12px;color:var(--sub)}
+
+.rowsHead{display:flex;align-items:center;gap:14px;padding:12px 16px 8px}
+.rowsHead h3{font-size:13px;letter-spacing:.04em}
+.rowsHead .legend{display:flex;gap:13px;font-size:10.5px;color:var(--sub);font-family:var(--mono);flex-wrap:wrap}
+.rowsHead .legend i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:4px;vertical-align:-1px}
+.zoomwrap{margin-left:auto;display:flex;align-items:center;gap:7px;font-size:11.5px;color:var(--sub);font-family:var(--mono)}
+.zoomwrap input{accent-color:var(--teal);width:96px}
+#rows{overflow-x:auto;padding:0 16px 16px}
+#rowsInner{width:100%}
+.wrow{padding:9px 0;border-top:1px solid #EFF2EF}
+.wh{display:flex;align-items:baseline;gap:9px;margin-bottom:5px;flex-wrap:wrap}
+.wn{font-family:var(--mono);font-size:10.5px;color:#fff;background:var(--sub);border-radius:3px;padding:1px 5px}
+.wt{font-size:13.5px;font-weight:500}
+.wk{font-size:11.5px;color:var(--sub)}
+.wr{font-family:var(--mono);font-size:11px;color:#9AA69E;letter-spacing:.03em}
+.wm{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--sub);white-space:nowrap}
+.wm i{font-style:normal;font-size:9.5px;margin-left:1px}
+.band{position:relative;background:#151E1A;border-radius:3px}
+.blk{position:absolute;height:15px;background:#8A968F;border-left:1px solid #151E1A;color:#fff;font-family:var(--mono);font-size:9.5px;line-height:15px;text-align:center;overflow:hidden;border-radius:1px}
+.blk.roll{background:var(--teal-br)}
+.blk.afterblank{box-shadow:inset 2px 0 0 var(--amber)}
+.gap{position:absolute;height:2px;background:var(--amber);border-radius:1px}
+.missmark{position:absolute;top:0;width:2px;background:var(--red)}
+
+/* 分析 */
+.acallout{padding:12px 16px;margin-bottom:12px;border-left:3px solid var(--teal-br);background:#F3FAF8}
+.acallout p{font-size:12.5px;color:var(--ink);line-height:1.7}
+.acallout p b{color:var(--teal)}
+.acards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px}
+.acard{padding:14px 16px}
+.acard .lab{font-size:11px;color:var(--sub);letter-spacing:.08em}
+.acard b{display:block;font-family:var(--mono);font-size:26px;font-weight:600;margin-top:4px}
+.acard.rollcard b{color:var(--teal-br)}
+.acard .band2{display:block;font-size:10px;color:var(--teal);margin-top:1px;min-height:12px}
+.agrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.apanel{padding:16px 18px}
+.apanel h3{font-size:13px;margin-bottom:10px;letter-spacing:.04em}
+.apanel h3 small{font-weight:400;color:var(--sub);margin-left:8px;font-size:11px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;font-size:11px;color:var(--sub);font-weight:500;letter-spacing:.08em;padding:5px 8px;border-bottom:1px solid var(--line)}
+td{padding:6px 8px;border-bottom:1px solid #EFF2EF}
+td.num,th.num{text-align:right;font-family:var(--mono)}
+td .unit{font-size:10px;color:var(--sub);margin-left:3px}
+td.mono{font-family:var(--mono)}
+td.empty{color:var(--sub);font-size:12.5px;text-align:center;padding:14px}
+#kbd{display:flex;flex-direction:column;gap:5px;font-family:var(--mono)}
+.krow{display:flex;gap:5px}
+.krow.r1{padding-left:14px}.krow.r2{padding-left:34px}
+.kcap{width:34px;height:34px;border:1px solid var(--line);border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:13px;background:#F7F9F7}
+#kbd.kana{font-family:var(--sans)}
+#kbd.kana .krow.r0{padding-left:0}
+#kbd.kana .krow.r1{padding-left:10px}
+#kbd.kana .krow.r2{padding-left:20px}
+#kbd.kana .krow.r3{padding-left:30px}
+#kbd.kana .kcap{width:27px;height:27px;font-size:12.5px;border-radius:4px}
+#posChart{display:flex;align-items:flex-end;gap:6px;height:110px}
+.pcol{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;gap:3px}
+.pval{font-family:var(--mono);font-size:9.5px;color:var(--sub)}
+.pbar{width:100%;max-width:26px;background:var(--teal);opacity:.75;border-radius:3px 3px 0 0}
+.pbar.worst{background:var(--amber);opacity:1}
+.pbar.none{height:3px;background:var(--line)}
+.plab{font-family:var(--mono);font-size:9.5px;color:var(--sub)}
+#posNote{font-size:11.5px;color:var(--sub);margin-top:8px;line-height:1.6}
+.trendwrap{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.trendwrap h4{font-size:11.5px;color:var(--sub);font-weight:500;margin-bottom:6px;letter-spacing:.06em}
+#trend,#rollTrend{display:flex;align-items:flex-end;gap:2px;height:72px}
+.tbar{flex:1;max-width:12px;background:var(--teal);border-radius:2px 2px 0 0;opacity:.85}
+.tbar.roll{background:var(--teal-br)}
+#trend .empty,#rollTrend .empty,#posChart .empty{color:var(--sub);font-size:12.5px;align-self:center}
+.afoot{display:flex;align-items:center;gap:14px;margin-top:6px}
+#resetBtn{border:1px solid var(--red);color:var(--red);background:transparent;border-radius:6px;padding:6px 14px;font-size:12.5px}
+.anote{font-size:11.5px;color:var(--sub);line-height:1.7}
+
+/* ワード一覧 */
+.wlbar{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+#wlSearch{flex:1;min-width:180px;border:1px solid var(--line);border-radius:7px;padding:8px 12px;font-size:13px;background:var(--card);color:var(--ink)}
+#wlSearch:focus{outline:2px solid var(--teal);outline-offset:-1px}
+.wlchips{display:flex;gap:4px}
+.wlchip{border:1px solid var(--line);background:var(--card);border-radius:20px;padding:5px 14px;font-size:12.5px;color:var(--sub)}
+.wlchip.sel{background:var(--teal);border-color:var(--teal);color:#fff;font-weight:500}
+.wlcount{font-size:12px;color:var(--sub);font-family:var(--mono);white-space:nowrap}
+.wltablewrap{max-height:560px;overflow-y:auto;padding:4px 0}
+.wltablewrap table{font-size:13px}
+.wltablewrap thead th{position:sticky;top:0;background:var(--card);z-index:1}
+.wltablewrap td.w{font-weight:500}
+.wltablewrap td.mono{font-family:var(--mono);color:var(--sub)}
+
+#toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);background:var(--ink);color:#fff;font-size:12.5px;padding:9px 18px;border-radius:20px;z-index:9}
+
+@media (max-width:760px){
+  .rcards{grid-template-columns:repeat(2,1fr)}
+  .acards{grid-template-columns:repeat(2,1fr)}
+  .agrid,.trendwrap{grid-template-columns:1fr}
+  .disp{font-size:22px;min-height:34px}
+  .kana{font-size:20px;min-height:31px}
+  .guide{font-size:21px}
+  .wr{display:none}
+  .lenwrap{margin-left:0}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand"><span class="mark">打鍵ラボ</span><span class="brandsub">15-WORD SET / IKI · ROLLOVER</span></div>
+  <nav>
+    <button id="tabPlay" class="sel">練習</button>
+    <button id="tabAnalysis">分析</button>
+    <button id="tabWords">ワード一覧</button>
+  </nav>
+  <span class="badge" id="saveBadge">…</span>
+</header>
+<main>
+
+<div id="playWrap">
+  <div class="methodbar">
+    <span class="mlab">入力方式</span>
+    <button class="mbtn sel" data-method="romaji">ローマ字入力</button>
+    <button class="mbtn" data-method="kana">かな入力</button>
+  </div>
+  <div class="modebar">
+    <button class="chip sel" data-mode="normal">通常</button>
+    <button class="chip" data-mode="weak">弱点ドリル</button>
+    <span class="lenwrap">出題
+      <button class="lenbtn sel" data-len="long">長文</button>
+      <button class="lenbtn" data-len="short">短語</button>
+      <button class="lenbtn" data-len="mix">混合</button>
+      <button class="lenbtn" data-len="imported" disabled title="ワードを読み込むと選択できる">読み込み</button>
+      <label class="importBtn" title="Typelighter対応のtplファイル、Weather Typing対応のxml/txtファイルに対応">ファイルを読み込む<input type="file" id="importFile" accept=".tpl,.xml,.txt"></label>
+    </span>
+    <span class="importHint">対応形式：Typelighterのtplファイル／Weather Typingのxml・txtファイル</span>
+    <span id="modeNote"></span>
+    <span id="importStatus" class="importStatus" hidden></span>
+  </div>
+
+  <section id="viewPlay">
+    <div class="card" id="stage">
+      <div class="pgtop">
+        <span class="pgcount"><b id="pgNum">0</b> / <span id="pgTotal">15</span> ワード</span>
+        <span class="pgstat">現在<span id="lvKpm">–</span></span>
+        <span class="pgstat" style="margin-left:18px">セット平均<span id="pgKpm">–</span></span>
+        <span class="pgstat" style="margin-left:18px">ミス<span id="pgMiss">0</span></span>
+        <span class="pgstat" style="margin-left:18px">重複<span id="pgRoll">–</span></span>
+      </div>
+      <div class="pgbar"><div id="pgFill"></div></div>
+      <div class="disp" id="disp"></div>
+      <div class="kana" id="kana"></div>
+      <div class="guide" id="guide"></div>
+      <div class="hint">Esc: このセットを破棄してやり直す（分析データには反映しない）</div>
+    </div>
+  </section>
+
+  <section id="viewResult" hidden>
+    <div class="rhead">
+      <h2>セット結果</h2>
+      <span class="sub"><span id="rMethod"></span>／15ワード／分析データに加算済み</span>
+      <button id="againBtn">次のセットへ（Enter）</button>
+    </div>
+    <div class="card rhero">
+      <span class="lab">平均速度</span>
+      <div class="rheroRow"><b id="rKpm">–</b><span class="s" id="rKps"></span></div>
+    </div>
+    <div class="rcards">
+      <div class="card rcard rollc"><span class="lab">ロールオーバー率</span><b id="rRoll">–</b><span class="s" id="rRollBand"></span></div>
+      <div class="card rcard"><span class="lab">正確率</span><b id="rAcc">–</b><span class="s" id="rMiss"></span></div>
+      <div class="card rcard"><span class="lab">ブランク</span><b id="rBlank">–</b><span class="s" id="rBlankSub"></span></div>
+      <div class="card rcard"><span class="lab">打鍵時間</span><b id="rTime">–</b><span class="s">ワード間を除く</span></div>
+    </div>
+    <div class="card rslow"><span class="t">このセットの最遅遷移</span><span id="rSlow"></span></div>
+
+    <div class="card">
+      <div class="rowsHead">
+        <h3>ワード別 打鍵タイムライン</h3>
+        <div class="legend">
+          <span><i style="background:var(--teal-br)"></i>重複打鍵</span>
+          <span><i style="background:#8A968F"></i>単独打鍵</span>
+          <span><i style="background:var(--amber)"></i>ブランク &gt;250ms</span>
+          <span><i style="background:var(--red)"></i>ミス</span>
+        </div>
+        <span class="zoomwrap">拡大 <input type="range" id="zoom" min="1" max="6" step="0.5" value="1"> <span id="zoomV">1.0×</span></span>
+      </div>
+      <div id="rows"><div id="rowsInner"></div></div>
+    </div>
+  </section>
+</div>
+
+<section id="viewAnalysis" hidden>
+  <div class="methodbar">
+    <span class="mlab">分析対象</span>
+    <button class="ambtn sel" data-method="romaji">ローマ字入力</button>
+    <button class="ambtn" data-method="kana">かな入力</button>
+    <span class="aother" id="aOther"></span>
+  </div>
+  <div class="card acallout">
+    <p><b>ロールオーバー率</b>＝前のキーを離す前に次のキーを押した打鍵の割合。打鍵動作の時間的重複を直接表す指標で、大規模研究では速いタイピストほど高い傾向が確認されている。帯域ラベル（重なりほぼ無し／部分的に重複／重複が常態化／高重複域）は本ツール独自の目安。</p>
+  </div>
+  <div class="acards">
+    <div class="card acard"><span class="lab">記録打鍵数</span><b id="aKeys">–</b></div>
+    <div class="card acard"><span class="lab">平均KPM（IKI基準）</span><b id="aKpm">–</b></div>
+    <div class="card acard rollcard"><span class="lab">ロールオーバー率</span><b id="aRoll">–</b><span class="band2" id="aRollBand"></span></div>
+    <div class="card acard"><span class="lab">ミス率</span><b id="aErr">–</b></div>
+  </div>
+  <div class="agrid">
+    <div class="card apanel">
+      <h3>最遅遷移<small>平均IKI降順・5回以上記録</small></h3>
+      <table><thead><tr><th>遷移</th><th class="num">平均IKI</th><th class="num">回数</th><th class="num">ミス率</th></tr></thead><tbody id="slowBody"></tbody></table>
+    </div>
+    <div class="card apanel">
+      <h3>ミス多発遷移</h3>
+      <table><thead><tr><th>遷移</th><th class="num">ミス</th></tr></thead><tbody id="missBody"></tbody></table>
+    </div>
+  </div>
+  <div class="agrid">
+    <div class="card apanel">
+      <h3><span id="kbdTitle">キー別 平均発信IKI</span><small>緑=速い / 橙=遅い</small></h3>
+      <div id="kbd"></div>
+    </div>
+    <div class="card apanel">
+      <h3>ワード内位置別 平均IKI<small>1=序盤 → 10=終盤</small></h3>
+      <div id="posChart"></div>
+      <p id="posNote"></p>
+    </div>
+  </div>
+  <div class="card apanel" style="margin-bottom:14px">
+    <h3>推移<small>直近60ワード</small></h3>
+    <div class="trendwrap">
+      <div><h4>速度（kpm）</h4><div id="trend"></div></div>
+      <div><h4>ロールオーバー率</h4><div id="rollTrend"></div></div>
+    </div>
+  </div>
+  <div class="afoot">
+    <button id="resetBtn">分析データを削除</button>
+    <p class="anote">分析データはセットを完走したときにのみ加算される。</p>
+  </div>
+</section>
+
+<section id="viewWords" hidden>
+  <div class="wlbar">
+    <input type="text" id="wlSearch" placeholder="表記またはかなで検索">
+    <span class="wlchips">
+      <button class="wlchip sel" data-cat="all">すべて</button>
+      <button class="wlchip" data-cat="短語">短語</button>
+      <button class="wlchip" data-cat="長文">長文</button>
+    </span>
+    <span id="wlCount" class="wlcount"></span>
+  </div>
+  <div class="card wltablewrap">
+    <table>
+      <thead><tr><th class="num">#</th><th>表記</th><th>かな</th><th>種別</th><th class="num">文字数</th></tr></thead>
+      <tbody id="wlBody"></tbody>
+    </table>
+  </div>
+  <p class="anote" style="margin-top:10px">このアプリに収録されている単語（短語・長文）の一覧。ファイルから読み込んだワードはここには含まれない。</p>
+</section>
+
+<div id="toast" hidden></div>
+</main>
+<script>
+// ===== Romaji input engine =====
+// かな文字列 → 受理可能なローマ字打鍵列の逐次判定器。
+// っ（子音重複/ltu系）、ん（n/nn/xn、遅延確定）、拗音（結合綴り＋分解打ち）に対応。
+
+const BASE = {
+  'あ':['a'],'い':['i','yi'],'う':['u','wu','whu'],'え':['e'],'お':['o'],
+  'か':['ka','ca'],'き':['ki'],'く':['ku','cu','qu'],'け':['ke'],'こ':['ko','co'],
+  'さ':['sa'],'し':['si','shi','ci'],'す':['su'],'せ':['se','ce'],'そ':['so'],
+  'た':['ta'],'ち':['ti','chi'],'つ':['tu','tsu'],'て':['te'],'と':['to'],
+  'な':['na'],'に':['ni'],'ぬ':['nu'],'ね':['ne'],'の':['no'],
+  'は':['ha'],'ひ':['hi'],'ふ':['hu','fu'],'へ':['he'],'ほ':['ho'],
+  'ま':['ma'],'み':['mi'],'む':['mu'],'め':['me'],'も':['mo'],
+  'や':['ya'],'ゆ':['yu'],'よ':['yo'],
+  'ら':['ra'],'り':['ri'],'る':['ru'],'れ':['re'],'ろ':['ro'],
+  'わ':['wa'],'を':['wo'],
+  'が':['ga'],'ぎ':['gi'],'ぐ':['gu'],'げ':['ge'],'ご':['go'],
+  'ざ':['za'],'じ':['zi','ji'],'ず':['zu'],'ぜ':['ze'],'ぞ':['zo'],
+  'だ':['da'],'ぢ':['di'],'づ':['du'],'で':['de'],'ど':['do'],
+  'ば':['ba'],'び':['bi'],'ぶ':['bu'],'べ':['be'],'ぼ':['bo'],
+  'ぱ':['pa'],'ぴ':['pi'],'ぷ':['pu'],'ぺ':['pe'],'ぽ':['po'],
+  'ー':['-'],
+};
+
+const SMALL = {
+  'ゃ':['lya','xya'],'ゅ':['lyu','xyu'],'ょ':['lyo','xyo'],
+  'ぁ':['la','xa'],'ぃ':['li','xi','lyi','xyi'],'ぅ':['lu','xu'],
+  'ぇ':['le','xe','lye','xye'],'ぉ':['lo','xo'],
+};
+
+const COMBO = {
+  'きゃ':['kya'],'きゅ':['kyu'],'きょ':['kyo'],'きぇ':['kye'],
+  'しゃ':['sya','sha'],'しゅ':['syu','shu'],'しょ':['syo','sho'],'しぇ':['sye','she'],
+  'ちゃ':['tya','cha','cya'],'ちゅ':['tyu','chu','cyu'],'ちょ':['tyo','cho','cyo'],'ちぇ':['tye','che','cye'],
+  'にゃ':['nya'],'にゅ':['nyu'],'にょ':['nyo'],
+  'ひゃ':['hya'],'ひゅ':['hyu'],'ひょ':['hyo'],
+  'みゃ':['mya'],'みゅ':['myu'],'みょ':['myo'],
+  'りゃ':['rya'],'りゅ':['ryu'],'りょ':['ryo'],
+  'ぎゃ':['gya'],'ぎゅ':['gyu'],'ぎょ':['gyo'],
+  'じゃ':['ja','zya','jya'],'じゅ':['ju','zyu','jyu'],'じょ':['jo','zyo','jyo'],'じぇ':['je','zye','jye'],
+  'びゃ':['bya'],'びゅ':['byu'],'びょ':['byo'],
+  'ぴゃ':['pya'],'ぴゅ':['pyu'],'ぴょ':['pyo'],
+  'ふぁ':['fa'],'ふぃ':['fi'],'ふぇ':['fe'],'ふぉ':['fo'],
+  'うぃ':['wi','whi'],'うぇ':['we','whe'],'うぉ':['who'],
+  'てぃ':['thi'],'でぃ':['dhi'],'でゅ':['dhu'],'とぅ':['twu'],'どぅ':['dwu'],
+};
+
+const SMALL_CHARS = 'ゃゅょぁぃぅぇぉ';
+// ん を1打の n で確定できない後続かな（母音・な行・や行・ん・小書き母音）
+const N_BLOCK = 'あいうえおなにぬねのやゆよんぁぃぅぇぉゃゅょ';
+
+function splitUnits(word){
+  const units = [];
+  let i = 0;
+  while (i < word.length){
+    const c = word[i], n = word[i+1];
+    if (n && SMALL_CHARS.includes(n) && c !== 'っ' && c !== 'ん'){
+      units.push(c + n); i += 2;
+    } else {
+      units.push(c); i += 1;
+    }
+  }
+  return units;
+}
+
+function normalOptions(unit){
+  let opts = [];
+  if (unit.length === 2){
+    if (COMBO[unit]) opts = COMBO[unit].slice();
+    const b = BASE[unit[0]], s = SMALL[unit[1]];
+    if (b && s){
+      for (const x of b) for (const y of s) opts.push(x + y);
+    }
+  } else if (BASE[unit]){
+    opts = BASE[unit].slice();
+  }
+  return [...new Set(opts)];
+}
+
+// 全ユニットの選択肢を右から左へ計算（っ・ん が後続に依存するため）
+function computeOptions(units){
+  const arr = new Array(units.length);
+  for (let i = units.length - 1; i >= 0; i--){
+    const u = units[i];
+    if (u === 'ん'){
+      const opts = ['nn','xn'];
+      const next = units[i+1];
+      if (next && !N_BLOCK.includes(next[0])) opts.unshift('n');
+      arr[i] = opts;
+    } else if (u === 'っ'){
+      const opts = [];
+      const nextOpts = arr[i+1];
+      if (nextOpts){
+        const seen = new Set();
+        for (const o of nextOpts){
+          const c = o[0];
+          if ('bcdfghjkmpqrstvwz'.includes(c) && !seen.has(c)){
+            seen.add(c); opts.push(c);
+          }
+        }
+      }
+      opts.push('ltu','xtu','ltsu','xtsu');
+      arr[i] = opts;
+    } else {
+      arr[i] = normalOptions(u);
+    }
+  }
+  return arr;
+}
+
+class WordMatcher {
+  constructor(word){
+    this.word = word;
+    this.units = splitUnits(word);
+    this.optsArr = computeOptions(this.units);
+    this.ui = 0;          // 現在ユニット
+    this.buf = '';        // 現在ユニットの入力途中バッファ
+    this.constraint = null; // っ を子音1打で確定したときの後続制約
+    this.typed = '';      // 確定＋バッファの表示用
+    this.typedUnits = []; // 各ユニットの確定綴り
+  }
+  activeOpts(){
+    let opts = this.optsArr[this.ui] || [];
+    if (this.constraint) opts = opts.filter(o => o[0] === this.constraint);
+    return opts;
+  }
+  done(){ return this.ui >= this.units.length; }
+
+  _complete(opt){
+    const u = this.units[this.ui];
+    this.typedUnits.push(opt);
+    if (u === 'っ' && opt.length === 1){
+      this.constraint = opt;
+    } else {
+      this.constraint = null;
+    }
+    this.ui += 1;
+    this.buf = '';
+  }
+
+  // 戻り値: {ok:boolean}
+  typeKey(ch){
+    if (this.done()) return { ok: false };
+    const opts = this.activeOpts();
+    const nb = this.buf + ch;
+    const cand = opts.filter(o => o.startsWith(nb));
+    if (cand.length > 0){
+      const exact = cand.includes(nb);
+      const longer = cand.some(o => o.length > nb.length);
+      this.typed = this.typedUnits.join('') + nb;
+      if (exact && !longer){
+        this._complete(nb);
+        this.typed = this.typedUnits.join('');
+        return { ok: true };
+      }
+      this.buf = nb;
+      return { ok: true };
+    }
+    // バッファ自体が確定可能なら（例: ん の 'n'）確定して次ユニットで再試行
+    if (this.buf && opts.includes(this.buf)){
+      this._complete(this.buf);
+      this.typed = this.typedUnits.join('');
+      return this.typeKey(ch);
+    }
+    return { ok: false };
+  }
+
+  // 残り打鍵の推奨表示（最短優先）。ユニットごとの配列で返す。
+  remainingParts(){
+    const parts = [];
+    let constraint = this.constraint;
+    let buf = this.buf;
+    for (let i = this.ui; i < this.units.length; i++){
+      let opts = this.optsArr[i];
+      if (constraint) opts = opts.filter(o => o[0] === constraint);
+      if (buf) opts = opts.filter(o => o.startsWith(buf));
+      if (opts.length === 0) return parts; // 不整合（起きないはず）
+      let best = opts[0];
+      for (const o of opts) if (o.length < best.length) best = o;
+      parts.push({ unit: i, str: best.slice(buf.length) });
+      constraint = (this.units[i] === 'っ' && best.length === 1) ? best : null;
+      buf = '';
+    }
+    return parts;
+  }
+  remaining(){
+    return this.remainingParts().map(p => p.str).join('');
+  }
+
+  // ---- かな入力エンジンと共通のインターフェース ----
+  accept(ev){
+    const r = this.typeKey(ev.key);
+    return { ok: r.ok, label: ev.key };
+  }
+  expected(){ return (this.remaining() || '?')[0]; }
+  guideParts(){
+    return {
+      done: this.typed.split('').map(c => ({ l: c, sh: false })),
+      rest: this.remaining().split('').map(c => ({ l: c, sh: false })),
+    };
+  }
+}
+
+// ワード全体の推奨打鍵列（ドリル採点・ペーサー用）
+function defaultKeys(word){
+  return new WordMatcher(word).remaining();
+}
+
+// ===== JISかな入力エンジン =====
+// 物理キー位置（KeyboardEvent.code）＋Shiftでかなを判定する。
+// OS側をかな入力に切り替える必要はない。
+
+const KANA_LAYOUT = {
+  Digit1:['ぬ',null], Digit2:['ふ',null], Digit3:['あ','ぁ'], Digit4:['う','ぅ'], Digit5:['え','ぇ'],
+  Digit6:['お','ぉ'], Digit7:['や','ゃ'], Digit8:['ゆ','ゅ'], Digit9:['よ','ょ'], Digit0:['わ','を'],
+  Minus:['ほ',null], Equal:['へ',null], IntlYen:['ー',null],
+  KeyQ:['た',null], KeyW:['て',null], KeyE:['い','ぃ'], KeyR:['す',null], KeyT:['か',null],
+  KeyY:['ん',null], KeyU:['な',null], KeyI:['に',null], KeyO:['ら',null], KeyP:['せ',null],
+  BracketLeft:['゛',null], BracketRight:['゜',null],
+  KeyA:['ち',null], KeyS:['と',null], KeyD:['し',null], KeyF:['は',null], KeyG:['き',null],
+  KeyH:['く',null], KeyJ:['ま',null], KeyK:['の',null], KeyL:['り',null],
+  Semicolon:['れ',null], Quote:['け',null], Backslash:['む',null],
+  KeyZ:['つ','っ'], KeyX:['さ',null], KeyC:['そ',null], KeyV:['ひ',null], KeyB:['こ',null],
+  KeyN:['み',null], KeyM:['も',null], Comma:['ね',null], Period:['る',null], Slash:['め',null],
+  IntlRo:['ろ',null],
+};
+
+// 分析画面のヒートマップ用（JIS配列の並び）
+const KANA_ROWS = [
+  ['ぬ','ふ','あ','う','え','お','や','ゆ','よ','わ','ほ','へ','ー'],
+  ['た','て','い','す','か','ん','な','に','ら','せ','゛','゜'],
+  ['ち','と','し','は','き','く','ま','の','り','れ','け','む'],
+  ['つ','さ','そ','ひ','こ','み','も','ね','る','め','ろ'],
+];
+
+const DAKU = { が:'か',ぎ:'き',ぐ:'く',げ:'け',ご:'こ',ざ:'さ',じ:'し',ず:'す',ぜ:'せ',ぞ:'そ',
+  だ:'た',ぢ:'ち',づ:'つ',で:'て',ど:'と',ば:'は',び:'ひ',ぶ:'ふ',べ:'へ',ぼ:'ほ',ゔ:'う' };
+const HANDAKU = { ぱ:'は',ぴ:'ひ',ぷ:'ふ',ぺ:'へ',ぽ:'ほ' };
+
+// かな → {code, shift}
+const KANA_KEY = {};
+for (const code in KANA_LAYOUT){
+  const [plain, shifted] = KANA_LAYOUT[code];
+  if (plain && !(plain in KANA_KEY)) KANA_KEY[plain] = { code, shift:false };
+  if (shifted && !(shifted in KANA_KEY)) KANA_KEY[shifted] = { code, shift:true };
+}
+
+// 1文字 → 打鍵列
+function strokesForChar(ch){
+  if (KANA_KEY[ch]){
+    const s = KANA_KEY[ch];
+    return [{ code:s.code, shift:s.shift, label:ch }];
+  }
+  if (DAKU[ch]){
+    const b = KANA_KEY[DAKU[ch]];
+    if (b) return [{ code:b.code, shift:b.shift, label:DAKU[ch] }, { code:'BracketLeft', shift:false, label:'゛' }];
+  }
+  if (HANDAKU[ch]){
+    const b = KANA_KEY[HANDAKU[ch]];
+    if (b) return [{ code:b.code, shift:b.shift, label:HANDAKU[ch] }, { code:'BracketRight', shift:false, label:'゜' }];
+  }
+  return null;
+}
+
+class KanaMatcher {
+  constructor(word){
+    this.word = word;
+    this.units = word.split('');
+    this.seq = [];
+    this.units.forEach((ch, ui) => {
+      const st = strokesForChar(ch);
+      if (st) for (const s of st) this.seq.push({ ...s, unit: ui });
+    });
+    this.si = 0;
+    this.ui = 0;
+  }
+  done(){ return this.si >= this.seq.length; }
+  // ev: {code, shift}
+  accept(ev){
+    if (this.done()) return { ok:false };
+    const want = this.seq[this.si];
+    if (want.code === ev.code && want.shift === !!ev.shift){
+      this.si++;
+      this.ui = this.done() ? this.units.length : this.seq[this.si].unit;
+      return { ok:true, label: want.label };
+    }
+    return { ok:false };
+  }
+  expected(){ return this.done() ? '?' : this.seq[this.si].label; }
+  guideParts(){
+    return {
+      done: this.seq.slice(0, this.si).map(s => ({ l:s.label, sh:s.shift })),
+      rest: this.seq.slice(this.si).map(s => ({ l:s.label, sh:s.shift })),
+    };
+  }
+}
+
+// 予測・検証用：ワード全体の打鍵ラベル列
+function kanaStrokes(word){
+  const m = new KanaMatcher(word);
+  return m.seq.map(s => s.label);
+}
+function kanaSeq(word){ return new KanaMatcher(word).seq; }
+
+// ===== ローマ字⇔かな 相互変換 / 混在文字列（数字・記号）対応 =====
+'use strict';
+
+// Node実行時のみ require で取得。ブラウザ結合ビルドでは同一スクリプト内の
+// 既存の const（engine.js/kana.jsで宣言済み）をそのまま参照する（再宣言はしない）。
+const MX_ENGINE = (typeof module !== 'undefined' && module.exports)
+  ? require('./engine.js') : { BASE, COMBO, SMALL, WordMatcher };
+const MX_KANA = (typeof module !== 'undefined' && module.exports)
+  ? require('./kana.js') : { KanaMatcher };
+
+// --- 逆変換用テーブル（BASE/COMBO/SMALLの逆引き。長い綴りを優先してgreedy match）---
+const REV_SRC = Object.assign({}, MX_ENGINE.BASE, MX_ENGINE.COMBO, MX_ENGINE.SMALL);
+const REV_TABLE = {}; // romaji -> kana
+for (const kana in REV_SRC){
+  for (const r of REV_SRC[kana]){
+    if (!(r in REV_TABLE)) REV_TABLE[r] = kana;
+  }
+}
+REV_TABLE['ltu'] = 'っ'; REV_TABLE['xtu'] = 'っ'; REV_TABLE['ltsu'] = 'っ'; REV_TABLE['xtsu'] = 'っ';
+const REV_LENS = [...new Set(Object.keys(REV_TABLE).map(k => k.length))].sort((a,b) => b-a);
+const SOKUON_CONS = new Set('bcdfghjkmpqrstvwz'.split(''));
+
+// 全角→半角（数字・主な記号）。読みに埋め込まれた記号を実キー判定できる形にする。
+const FULL2HALF = {
+  '０':'0','１':'1','２':'2','３':'3','４':'4','５':'5','６':'6','７':'7','８':'8','９':'9',
+  '！':'!','？':'?','，':',','．':'.','：':':','；':';','（':'(','）':')','／':'/','・':'/',
+};
+function normalizeLiteral(ch){ return FULL2HALF[ch] !== undefined ? FULL2HALF[ch] : ch; }
+// 片仮名 → 平仮名（読み文字列に片仮名の外来語表記が混じっていても内部処理は平仮名に統一する）
+function kataToHira(s){
+  let out = '';
+  for (const ch of s){
+    const c = ch.codePointAt(0);
+    out += (c >= 0x30A1 && c <= 0x30F6) ? String.fromCodePoint(c - 0x60) : ch;
+  }
+  return out;
+}
+const HIRAGANA_RE = /[\u3041-\u3096\u309D-\u309F\u30FC]/;
+
+// roman文字列 → {kana, ok}  （ok=falseなら一部変換不能＝そのまま読みとして保持するが かな入力非対応）
+function romajiToKana(roman){
+  let i = 0, out = '', ok = true;
+  const s = roman.toLowerCase();
+  while (i < s.length){
+    if (s.slice(i, i+2) === 'nn' || s.slice(i, i+2) === 'xn'){ out += 'ん'; i += 2; continue; }
+    let matched = false;
+    for (const len of REV_LENS){
+      if (len > s.length - i) continue;
+      const tok = s.slice(i, i+len);
+      if (REV_TABLE[tok]){ out += REV_TABLE[tok]; i += len; matched = true; break; }
+    }
+    if (matched) continue;
+    const c = s[i];
+    if (SOKUON_CONS.has(c) && s[i+1] === c){ out += 'っ'; i += 1; continue; }
+    if (c === 'n'){ out += 'ん'; i += 1; continue; }
+    if (/[a-z]/.test(c)) ok = false; // アルファベットなのに解決できない＝未対応綴り
+    out += roman[i];
+    i += 1;
+  }
+  return { kana: out, ok };
+}
+
+// --- 文字列を「かな連」と「リテラル連」に分割 ---
+function splitRuns(str){
+  const runs = [];
+  let cur = '', curType = null;
+  for (const ch of str){
+    const t = HIRAGANA_RE.test(ch) ? 'kana' : 'lit';
+    if (t !== curType){ if (cur) runs.push({ type: curType, text: cur }); cur = ''; curType = t; }
+    cur += ch;
+  }
+  if (cur) runs.push({ type: curType, text: cur });
+  return runs;
+}
+
+// --- リテラル単打鍵マッチャー（数字・記号を1文字1打鍵として要求）---
+class LiteralMatcher {
+  constructor(text){
+    this.units = text.split('');
+    this.ui = 0;
+  }
+  done(){ return this.ui >= this.units.length; }
+  accept(ev){
+    if (this.done()) return { ok:false };
+    const want = normalizeLiteral(this.units[this.ui]);
+    const got = ev.key !== undefined ? ev.key : '';
+    if (got === want){ this.ui++; return { ok:true, label: want, lit:true }; }
+    return { ok:false };
+  }
+  expected(){ return this.done() ? '?' : normalizeLiteral(this.units[this.ui]); }
+  guideParts(){
+    return {
+      done: this.units.slice(0, this.ui).map(c => ({ l:c, sh:false })),
+      rest: this.units.slice(this.ui).map(c => ({ l:normalizeLiteral(c), sh:false })),
+    };
+  }
+  remaining(){ return this.units.slice(this.ui).map(normalizeLiteral).join(''); }
+}
+
+// --- 複数のサブマッチャー（かな連はWordMatcher/KanaMatcher、リテラル連はLiteralMatcher）を連結 ---
+class MixedMatcher {
+  constructor(text, kanaEngine){ // kanaEngine: 'romaji' | 'kana'
+    const runs = splitRuns(text);
+    this.subs = runs.map(r => r.type === 'kana'
+      ? (kanaEngine === 'kana' ? new MX_KANA.KanaMatcher(r.text) : new MX_ENGINE.WordMatcher(r.text))
+      : new LiteralMatcher(r.text));
+    this.units = [];
+    this.subUnitRange = [];
+    for (const sub of this.subs){
+      const start = this.units.length;
+      this.units.push(...sub.units);
+      this.subUnitRange.push([start, this.units.length]);
+    }
+    this.si = 0;
+  }
+  get ui(){
+    if (this.si >= this.subs.length) return this.units.length;
+    const [start] = this.subUnitRange[this.si];
+    return start + this.subs[this.si].ui;
+  }
+  done(){ return this.si >= this.subs.length; }
+  accept(ev){
+    if (this.done()) return { ok:false };
+    const sub = this.subs[this.si];
+    const isLit = sub instanceof LiteralMatcher;
+    const r = sub.accept(ev);
+    if (!r.ok) return { ok:false };
+    if (sub.done()) this.si++;
+    return { ok:true, label: r.label !== undefined ? r.label : ev.key, lit: isLit };
+  }
+  expected(){ return this.done() ? '?' : this.subs[this.si].expected(); }
+  expectedIsLit(){ return !this.done() && this.subs[this.si] instanceof LiteralMatcher; }
+  guideParts(){
+    if (this.done()) return { done: [], rest: [] };
+    const done = [], rest = [];
+    for (let i = 0; i < this.subs.length; i++){
+      const g = this.subs[i].guideParts();
+      if (i < this.si){ done.push(...g.done, ...g.rest); }
+      else if (i === this.si){ done.push(...g.done); rest.push(...g.rest); }
+      else { rest.push(...g.done, ...g.rest); }
+    }
+    return { done, rest };
+  }
+  remaining(){
+    if (this.done()) return '';
+    let out = this.subs[this.si].remaining();
+    for (let i = this.si+1; i < this.subs.length; i++) out += this.subs[i].remaining();
+    return out;
+  }
+  // 進捗に関わらず、ワード全体の打鍵ラベル列を返す（弱点ドリルのスコアリング用）
+  allLabels(){
+    const out = [];
+    for (const sub of this.subs){
+      if (sub instanceof LiteralMatcher){ out.push(...sub.units.map(normalizeLiteral)); }
+      else if (sub.seq){ out.push(...sub.seq.map(s => s.label)); } // KanaMatcher
+      else { out.push(...sub.remaining().split('')); } // WordMatcher（構築直後＝未入力の前提）
+    }
+    return out;
+  }
+}
+
+if (typeof module !== 'undefined') module.exports = {
+  romajiToKana, splitRuns, normalizeLiteral, kataToHira, LiteralMatcher, MixedMatcher, HIRAGANA_RE,
+};
+// ===== ワード読み込み（tpl / WT-xml / WT-txt） =====
+'use strict';
+
+const MX2 = (typeof module !== 'undefined' && module.exports)
+  ? require('./mixed.js') : { romajiToKana: romajiToKana, HIRAGANA_RE: HIRAGANA_RE, kataToHira: kataToHira };
+
+// 文字列の一部でも仮名（HIRAGANA_RE）でなければ「純ひらがなではない」= 数字/記号/漢字混入
+function isPureHiragana(s){
+  for (const ch of s) if (!MX2.HIRAGANA_RE.test(ch)) return false;
+  return s.length > 0;
+}
+
+// ---- 判別 ----
+function sniffFormat(text){
+  const t = text.replace(/^\uFEFF/, '').trimStart();
+  if (t.startsWith('<')){
+    return /<Word\s+word=/.test(t) ? 'tpl' : 'wtxml';
+  }
+  return 'wttxt';
+}
+
+// ---- TPL ----
+// <Word word="蜘蛛の子を散らす" roman="kumonokowotirasu" star="1"/>
+function parseTPL(text){
+  const words = [];
+  const re = /<Word\s+word="([^"]*)"\s+roman="([^"]*)"[^/]*\/>/g;
+  let m;
+  while ((m = re.exec(text))){
+    const d = decodeXmlEntities(m[1]);
+    const roman = decodeXmlEntities(m[2]);
+    const { kana, ok } = MX2.romajiToKana(roman);
+    words.push({ d, k: ok ? kana : null, r: roman, kanaOK: ok });
+  }
+  return { kind: 'flat', words, warnings: words.filter(w => !w.kanaOK).length
+    ? [`${words.filter(w => !w.kanaOK).length}件はローマ字綴りをかな読みに変換できず、かな入力では利用できない。`] : [] };
+}
+function decodeXmlEntities(s){
+  return s.replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&apos;/g,"'").replace(/&amp;/g,'&');
+}
+
+// ---- WT-XML ----
+// <Words>...<Part><Word><Display>..</Display><Characters>..</Characters></Word>...</Part>...</Words>
+// Part が1個以下＝フラットな単語リスト。Part が2個以上＝各Partから1つずつ選んで連結する「組み合わせ型」1件。
+function parseWTXml(text){
+  const t = text.replace(/^\uFEFF/, '');
+  const parts = [];
+  const partRe = /<Part>([\s\S]*?)<\/Part>/g;
+  let pm;
+  while ((pm = partRe.exec(t))){
+    const words = [];
+    const wordRe = /<Word>([\s\S]*?)<\/Word>/g;
+    let wm;
+    while ((wm = wordRe.exec(pm[1]))){
+      const disp = (wm[1].match(/<Display>([\s\S]*?)<\/Display>/) || [,''])[1];
+      const chars = (wm[1].match(/<Characters>([\s\S]*?)<\/Characters>/) || [,''])[1];
+      words.push({ d: decodeXmlEntities(disp.trim()), k: MX2.kataToHira(decodeXmlEntities(chars.trim())) });
+    }
+    if (words.length) parts.push(words);
+  }
+  if (parts.length === 0) return { kind: 'flat', words: [], warnings: ['読み込める<Part>が見つからなかった。'] };
+  if (parts.length === 1) return { kind: 'flat', words: parts[0], warnings: [] };
+  return { kind: 'combo', parts, warnings: [] };
+}
+
+// ---- WT-TXT ----
+// 2行1組（表記／読み）の連続。空行がPartの区切り。
+// Part が1個（空行なし）＝フラットな単語リスト。Part が2個以上＝組み合わせ型1件。
+function parseWTTxt(text){
+  const t = text.replace(/^\uFEFF/, '');
+  const lines = t.split('\n').map(l => l.replace(/\r$/, ''));
+  const blocks = [[]];
+  for (const line of lines){
+    if (line.trim() === ''){ if (blocks[blocks.length-1].length) blocks.push([]); continue; }
+    blocks[blocks.length-1].push(line);
+  }
+  const parts = blocks.filter(b => b.length).map(block => {
+    const words = [];
+    for (let i = 0; i + 1 < block.length; i += 2){
+      words.push({ d: block[i].trim(), k: MX2.kataToHira(block[i+1].trim()) });
+    }
+    return words;
+  }).filter(w => w.length);
+  if (parts.length === 0) return { kind: 'flat', words: [], warnings: ['読み込めるワードが見つからなかった。'] };
+  if (parts.length === 1) return { kind: 'flat', words: parts[0], warnings: [] };
+  return { kind: 'combo', parts, warnings: [] };
+}
+
+// ---- 統合エントリポイント ----
+function parseWordFile(text, filename){
+  const fmt = sniffFormat(text);
+  let result;
+  if (fmt === 'tpl') result = parseTPL(text);
+  else if (fmt === 'wtxml') result = parseWTXml(text);
+  else result = parseWTTxt(text);
+  result.format = fmt;
+  result.filename = filename;
+  return result;
+}
+
+// combo（複数Part）を1件の具体的な{d,k}へランダム解決する
+function resolveCombo(parts){
+  let d = '', k = '';
+  for (const part of parts){
+    const pick = part[Math.floor(Math.random() * part.length)];
+    d += pick.d; k += pick.k;
+  }
+  return { d, k };
+}
+
+if (typeof module !== 'undefined') module.exports = {
+  sniffFormat, parseTPL, parseWTXml, parseWTTxt, parseWordFile, resolveCombo, isPureHiragana,
+};
+// 練習ワード（短語）。d=通常表記 / k=ひらがな表記
+const WORDS = [
+{d:'朝ご飯',k:'あさごはん'},{d:'太陽',k:'たいよう'},{d:'電車',k:'でんしゃ'},{d:'学校',k:'がっこう'},{d:'図書館',k:'としょかん'},
+{d:'教室',k:'きょうしつ'},{d:'先生',k:'せんせい'},{d:'友達',k:'ともだち'},{d:'家族',k:'かぞく'},{d:'旅行',k:'りょこう'},
+{d:'宿題',k:'しゅくだい'},{d:'野球',k:'やきゅう'},{d:'天気',k:'てんき'},{d:'晴れ',k:'はれ'},{d:'曇り',k:'くもり'},
+{d:'雨',k:'あめ'},{d:'雪',k:'ゆき'},{d:'雷',k:'かみなり'},{d:'虹',k:'にじ'},{d:'山',k:'やま'},
+{d:'川',k:'かわ'},{d:'海',k:'うみ'},{d:'空',k:'そら'},{d:'森',k:'もり'},{d:'林',k:'はやし'},
+{d:'花',k:'はな'},{d:'桜',k:'さくら'},{d:'紅葉',k:'もみじ'},{d:'猫',k:'ねこ'},{d:'犬',k:'いぬ'},
+{d:'鳥',k:'とり'},{d:'魚',k:'さかな'},{d:'虫',k:'むし'},{d:'うさぎ',k:'うさぎ'},{d:'きつね',k:'きつね'},
+{d:'たぬき',k:'たぬき'},{d:'ぞう',k:'ぞう'},{d:'きりん',k:'きりん'},{d:'ライオン',k:'らいおん'},{d:'パンダ',k:'ぱんだ'},
+{d:'ゴリラ',k:'ごりら'},{d:'クジラ',k:'くじら'},{d:'イルカ',k:'いるか'},{d:'飛行機',k:'ひこうき'},{d:'自動車',k:'じどうしゃ'},
+{d:'自転車',k:'じてんしゃ'},{d:'新幹線',k:'しんかんせん'},{d:'地下鉄',k:'ちかてつ'},{d:'バス',k:'ばす'},{d:'船',k:'ふね'},
+{d:'駅',k:'えき'},{d:'空港',k:'くうこう'},{d:'道',k:'みち'},{d:'橋',k:'はし'},{d:'公園',k:'こうえん'},
+{d:'病院',k:'びょういん'},{d:'郵便局',k:'ゆうびんきょく'},{d:'銀行',k:'ぎんこう'},{d:'コンビニ',k:'こんびに'},{d:'本屋',k:'ほんや'},
+{d:'八百屋',k:'やおや'},{d:'肉',k:'にく'},{d:'野菜',k:'やさい'},{d:'果物',k:'くだもの'},{d:'りんご',k:'りんご'},
+{d:'みかん',k:'みかん'},{d:'バナナ',k:'ばなな'},{d:'ぶどう',k:'ぶどう'},{d:'いちご',k:'いちご'},{d:'すいか',k:'すいか'},
+{d:'メロン',k:'めろん'},{d:'桃',k:'もも'},{d:'梨',k:'なし'},{d:'柿',k:'かき'},{d:'さくらんぼ',k:'さくらんぼ'},
+{d:'パン',k:'ぱん'},{d:'ご飯',k:'ごはん'},{d:'味噌汁',k:'みそしる'},{d:'ラーメン',k:'らーめん'},{d:'うどん',k:'うどん'},
+{d:'そば',k:'そば'},{d:'寿司',k:'すし'},{d:'天ぷら',k:'てんぷら'},{d:'カレーライス',k:'かれーらいす'},{d:'おにぎり',k:'おにぎり'},
+{d:'卵',k:'たまご'},{d:'牛乳',k:'ぎゅうにゅう'},{d:'お茶',k:'おちゃ'},{d:'コーヒー',k:'こーひー'},{d:'ジュース',k:'じゅーす'},
+{d:'水',k:'みず'},{d:'砂糖',k:'さとう'},{d:'塩',k:'しお'},{d:'醤油',k:'しょうゆ'},{d:'みりん',k:'みりん'},
+{d:'油',k:'あぶら'},{d:'こしょう',k:'こしょう'},{d:'わさび',k:'わさび'},{d:'からし',k:'からし'},{d:'机',k:'つくえ'},
+{d:'椅子',k:'いす'},{d:'窓',k:'まど'},{d:'ドア',k:'どあ'},{d:'壁',k:'かべ'},{d:'床',k:'ゆか'},
+{d:'天井',k:'てんじょう'},{d:'台所',k:'だいどころ'},{d:'風呂',k:'ふろ'},{d:'トイレ',k:'といれ'},{d:'玄関',k:'げんかん'},
+{d:'庭',k:'にわ'},{d:'部屋',k:'へや'},{d:'本',k:'ほん'},{d:'鉛筆',k:'えんぴつ'},{d:'消しゴム',k:'けしごむ'},
+{d:'定規',k:'じょうぎ'},{d:'はさみ',k:'はさみ'},{d:'のり',k:'のり'},{d:'紙',k:'かみ'},{d:'ノート',k:'のーと'},
+{d:'ランドセル',k:'らんどせる'},{d:'かばん',k:'かばん'},{d:'筆箱',k:'ふでばこ'},{d:'時計',k:'とけい'},{d:'眼鏡',k:'めがね'},
+{d:'帽子',k:'ぼうし'},{d:'靴',k:'くつ'},{d:'靴下',k:'くつした'},{d:'手袋',k:'てぶくろ'},{d:'マスク',k:'ますく'},
+{d:'シャツ',k:'しゃつ'},{d:'ズボン',k:'ずぼん'},{d:'スカート',k:'すかーと'},{d:'上着',k:'うわぎ'},{d:'コート',k:'こーと'},
+{d:'春',k:'はる'},{d:'夏',k:'なつ'},{d:'秋',k:'あき'},{d:'冬',k:'ふゆ'},{d:'正月',k:'しょうがつ'},
+{d:'誕生日',k:'たんじょうび'},{d:'クリスマス',k:'くりすます'},{d:'花火',k:'はなび'},{d:'祭り',k:'まつり'},{d:'盆踊り',k:'ぼんおどり'},
+{d:'運動会',k:'うんどうかい'},{d:'遠足',k:'えんそく'},{d:'修学旅行',k:'しゅうがくりょこう'},{d:'入学式',k:'にゅうがくしき'},{d:'卒業式',k:'そつぎょうしき'},
+{d:'今日',k:'きょう'},{d:'明日',k:'あした'},{d:'昨日',k:'きのう'},{d:'一昨日',k:'おととい'},{d:'明後日',k:'あさって'},
+{d:'今週',k:'こんしゅう'},{d:'来週',k:'らいしゅう'},{d:'先週',k:'せんしゅう'},{d:'今月',k:'こんげつ'},{d:'来月',k:'らいげつ'},
+{d:'今年',k:'ことし'},{d:'去年',k:'きょねん'},{d:'来年',k:'らいねん'},{d:'時間',k:'じかん'},{d:'朝',k:'あさ'},
+{d:'昼',k:'ひる'},{d:'夜',k:'よる'},{d:'夕方',k:'ゆうがた'},{d:'真夜中',k:'まよなか'},{d:'北',k:'きた'},
+{d:'南',k:'みなみ'},{d:'東',k:'ひがし'},{d:'西',k:'にし'},{d:'上',k:'うえ'},{d:'下',k:'した'},
+{d:'右',k:'みぎ'},{d:'左',k:'ひだり'},{d:'前',k:'まえ'},{d:'後ろ',k:'うしろ'},{d:'中',k:'なか'},
+{d:'外',k:'そと'},{d:'近く',k:'ちかく'},{d:'遠く',k:'とおく'},{d:'速い',k:'はやい'},{d:'遅い',k:'おそい'},
+{d:'高い',k:'たかい'},{d:'低い',k:'ひくい'},{d:'大きい',k:'おおきい'},{d:'小さい',k:'ちいさい'},{d:'長い',k:'ながい'},
+{d:'短い',k:'みじかい'},{d:'暑い',k:'あつい'},{d:'寒い',k:'さむい'},{d:'暖かい',k:'あたたかい'},{d:'涼しい',k:'すずしい'},
+{d:'明るい',k:'あかるい'},{d:'暗い',k:'くらい'},{d:'新しい',k:'あたらしい'},{d:'古い',k:'ふるい'},{d:'楽しい',k:'たのしい'},
+{d:'嬉しい',k:'うれしい'},{d:'悲しい',k:'かなしい'},{d:'面白い',k:'おもしろい'},{d:'難しい',k:'むずかしい'},{d:'優しい',k:'やさしい'},
+{d:'きれい',k:'きれい'},{d:'静か',k:'しずか'},{d:'にぎやか',k:'にぎやか'},{d:'元気',k:'げんき'},{d:'便利',k:'べんり'},
+{d:'大切',k:'たいせつ'},{d:'有名',k:'ゆうめい'},{d:'上手',k:'じょうず'},{d:'下手',k:'へた'},{d:'好き',k:'すき'},
+{d:'嫌い',k:'きらい'},{d:'こんにちは',k:'こんにちは'},{d:'ありがとう',k:'ありがとう'},{d:'さようなら',k:'さようなら'},{d:'おはよう',k:'おはよう'},
+{d:'おやすみ',k:'おやすみ'},{d:'いただきます',k:'いただきます'},{d:'ごちそうさま',k:'ごちそうさま'},{d:'すみません',k:'すみません'},{d:'失礼します',k:'しつれいします'},
+{d:'はじめまして',k:'はじめまして'},{d:'よろしく',k:'よろしく'},{d:'おめでとう',k:'おめでとう'},{d:'頑張って',k:'がんばって'},{d:'気をつけて',k:'きをつけて'},
+{d:'切符',k:'きっぷ'},{d:'切手',k:'きって'},{d:'出発',k:'しゅっぱつ'},{d:'出張',k:'しゅっちょう'},{d:'貯金',k:'ちょきん'},
+{d:'駐車場',k:'ちゅうしゃじょう'},{d:'じゃがいも',k:'じゃがいも'},{d:'餃子',k:'ぎょうざ'},{d:'写真',k:'しゃしん'},{d:'授業',k:'じゅぎょう'},
+{d:'料理',k:'りょうり'},{d:'牛丼',k:'ぎゅうどん'},{d:'恐竜',k:'きょうりゅう'},{d:'しょっぱい',k:'しょっぱい'},{d:'百円',k:'ひゃくえん'},
+{d:'三百',k:'さんびゃく'},{d:'発表',k:'はっぴょう'},{d:'結婚',k:'けっこん'},{d:'石鹸',k:'せっけん'},{d:'雑誌',k:'ざっし'},
+{d:'実験',k:'じっけん'},{d:'物価',k:'ぶっか'},{d:'抹茶',k:'まっちゃ'},{d:'コップ',k:'こっぷ'},{d:'ぽかぽか',k:'ぽかぽか'},
+{d:'云々',k:'うんぬん'},{d:'究極',k:'きゅうきょく'},{d:'罰金',k:'ばっきん'},{d:'鉄板',k:'てっぱん'},{d:'ちょっと',k:'ちょっと'},
+{d:'入力',k:'にゅうりょく'},{d:'打鍵列',k:'だげきれつ'},{d:'最適化',k:'さいてきか'},{d:'先読み',k:'さきよみ'},{d:'音楽鑑賞',k:'おんがくかんしょう'},
+{d:'国際交流',k:'こくさいこうりゅう'},{d:'消防車',k:'しょうぼうしゃ'},{d:'警察官',k:'けいさつかん'},{d:'大学院',k:'だいがくいん'},{d:'研究室',k:'けんきゅうしつ'},
+{d:'給食',k:'きゅうしょく'},{d:'掃除当番',k:'そうじとうばん'},{d:'保健室',k:'ほけんしつ'},{d:'運転手',k:'うんてんしゅ'},{d:'看護師',k:'かんごし'},
+{d:'弁護士',k:'べんごし'},{d:'技術者',k:'ぎじゅつしゃ'},{d:'建築家',k:'けんちくか'},{d:'通訳',k:'つうやく'},{d:'翻訳',k:'ほんやく'},
+{d:'ひまわりが咲いている',k:'ひまわりがさいている'},{d:'僕が昔住んでいた',k:'ぼくがむかしすんでいた'},{d:'家の隣に',k:'いえのとなりに'},
+{d:'今日はいい天気だ',k:'きょうはいいてんきだ'},{d:'明日は雨が降るらしい',k:'あしたはあめがふるらしい'},{d:'電車に乗ってお出かけ',k:'でんしゃにのっておでかけ'},
+{d:'新しいキーボード',k:'あたらしいきーぼーど'},{d:'タイピングの練習',k:'たいぴんぐのれんしゅう'},{d:'記録更新中',k:'きろくこうしんちゅう'},
+{d:'集中力が大切',k:'しゅうちゅうりょくがたいせつ'},
+];
+// 練習ワード（長文）。d=通常表記 / k=ひらがな表記
+const LONGS = [
+{d:'今日の天気は晴れのち曇りらしい',k:'きょうのてんきははれのちくもりらしい'},
+{d:'新しいキーボードを買いに行く',k:'あたらしいきーぼーどをかいにいく'},
+{d:'電車に乗って展覧会へ出かける',k:'でんしゃにのっててんらんかいへでかける'},
+{d:'ひまわりが庭一面に咲いている',k:'ひまわりがにわいちめんにさいている'},
+{d:'僕が昔住んでいた家の隣',k:'ぼくがむかしすんでいたいえのとなり'},
+{d:'週末は図書館で本を読む',k:'しゅうまつはとしょかんでほんをよむ'},
+{d:'ラーメン屋の餃子はえび入りだった',k:'らーめんやのぎょうざはえびいりだった'},
+{d:'新幹線で京都まで出張',k:'しんかんせんできょうとまでしゅっちょう'},
+{d:'毎朝コーヒーを淹れてから仕事',k:'まいあさこーひーをいれてからしごと'},
+{d:'夕方の公園を犬と散歩する',k:'ゆうがたのこうえんをいぬとさんぽする'},
+{d:'金曜日の夜は映画館に行く',k:'きんようびのよるはえいがかんにいく'},
+{d:'夏休みの宿題が終わらない',k:'なつやすみのしゅくだいがおわらない'},
+{d:'運動会の練習でくたくただ',k:'うんどうかいのれんしゅうでくたくただ'},
+{d:'誕生日にケーキを焼いてもらった',k:'たんじょうびにけーきをやいてもらった'},
+{d:'駐車場が満車で入れない',k:'ちゅうしゃじょうがまんしゃではいれない'},
+{d:'教室の窓から富士山が見える',k:'きょうしつのまどからふじさんがみえる'},
+{d:'音楽を聴きながら勉強する',k:'おんがくをききながらべんきょうする'},
+{d:'牛乳と卵を買い忘れた',k:'ぎゅうにゅうとたまごをかいわすれた'},
+{d:'発表会の準備に追われている',k:'はっぴょうかいのじゅんびにおわれている'},
+{d:'研究室の先輩に相談する',k:'けんきゅうしつのせんぱいにそうだんする'},
+{d:'自転車のタイヤがパンクしてしまった',k:'じてんしゃのたいやがぱんくしてしまった'},
+{d:'今週中にレポートを提出',k:'こんしゅうちゅうにれぽーとをていしゅつ'},
+{d:'野球の試合は延長戦になった',k:'やきゅうのしあいはえんちょうせんになった'},
+{d:'沖縄旅行の計画を立てる',k:'おきなわりょこうのけいかくをたてる'},
+{d:'台所からカレーの匂いがする',k:'だいどころからかれーのにおいがする'},
+{d:'雪が降ったので電車が遅れた',k:'ゆきがふったのででんしゃがおくれた'},
+{d:'図書委員の仕事を任された',k:'としょいいんのしごとをまかされた'},
+{d:'給食の献立は揚げパンだった',k:'きゅうしょくのこんだてはあげぱんだった'},
+{d:'消防車のサイレンが聞こえる',k:'しょうぼうしゃのさいれんがきこえる'},
+{d:'警察官に道を尋ねられた',k:'けいさつかんにみちをたずねられた'},
+{d:'朝ご飯を食べてから歯を磨く',k:'あさごはんをたべてからはをみがく'},
+{d:'手紙を郵便局から送った',k:'てがみをゆうびんきょくからおくった'},
+{d:'銀行の窓口は混んでいた',k:'ぎんこうのまどぐちはこんでいた'},
+{d:'コンビニで新しいお菓子を見つけた',k:'こんびにであたらしいおかしをみつけた'},
+{d:'水族館でイルカのショーを見た',k:'すいぞくかんでいるかのしょーをみた'},
+{d:'動物園のパンダが寝てばかりいた',k:'どうぶつえんのぱんだがねてばかりいた'},
+{d:'花火大会は人でいっぱいだった',k:'はなびたいかいはひとでいっぱいだった'},
+{d:'盆踊りの太鼓の音が響く',k:'ぼんおどりのたいこのおとがひびく'},
+{d:'卒業式で友達と写真を撮る',k:'そつぎょうしきでともだちとしゃしんをとる'},
+{d:'入学式の朝は晴れていた',k:'にゅうがくしきのあさははれていた'},
+{d:'来週の会議の資料を作る',k:'らいしゅうのかいぎのしりょうをつくる'},
+{d:'去年の冬は雪が多かった',k:'きょねんのふゆはゆきがおおかった'},
+{d:'山の頂上から海が見えた',k:'やまのちょうじょうからうみがみえた'},
+{d:'河原でバーベキューを楽しんだ',k:'かわらでばーべきゅーをたのしんだ'},
+{d:'森の中できつねを見かけた',k:'もりのなかできつねをみかけた'},
+{d:'桜の花びらが風に舞っている',k:'さくらのはなびらがかぜにまっている'},
+{d:'秋は紅葉狩りに出かけたい',k:'あきはもみじがりにでかけたい'},
+{d:'冬はこたつでみかんを食べる',k:'ふゆはこたつでみかんをたべる'},
+{d:'タイピングの記録が伸び悩んでいる',k:'たいぴんぐのきろくがのびなやんでいる'},
+{d:'最適化の練習を始めた',k:'さいてきかのれんしゅうをはじめた'},
+{d:'先読みが崩れてタイムロスが出た',k:'さきよみがくずれてたいむろすがでた'},
+{d:'打鍵列を頭の中で組み立てる',k:'だけんれつをあたまのなかでくみたてる'},
+{d:'ロールオーバー率を高めたい',k:'ろーるおーばーりつをたかめたい'},
+{d:'集中力が切れてミスが増えた',k:'しゅうちゅうりょくがきれてみすがふえた'},
+{d:'キーボードの掃除を忘れずにする',k:'きーぼーどのそうじをわすれずにする'},
+{d:'国際交流会に参加した',k:'こくさいこうりゅうかいにさんかした'},
+{d:'通訳の仕事は頭を使う',k:'つうやくのしごとはあたまをつかう'},
+{d:'弁護士に契約書を見てもらう',k:'べんごしにけいやくしょをみてもらう'},
+{d:'看護師の夢を追いかけている',k:'かんごしのゆめをおいかけている'},
+{d:'ブランクタイムを減らす意識を持つ',k:'ぶらんくたいむをへらすいしきをもつ'},
+];
+// ===== 打鍵ラボ 本体 v4（ローマ字入力 / かな入力） =====
+'use strict';
+
+const SET_SIZE = 15;
+const BLANK_MS = 250;
+const PRIOR_MS = 115, PRIOR_N = 3;
+const HOLD_FALLBACK = 60;
+const STORE_KEY = 'dakenlab-stats-v2';
+const STORE_KEY_OLD = 'dakenlab-stats-v1';
+
+// ---- 永続データ（方式別） ----
+const blankStat = () => ({ big:{}, keysN:0, rollHit:0, errN:0, words:[], pos:Array.from({length:10},()=>[0,0]) });
+const stats = { romaji: blankStat(), kana: blankStat() };
+let storageOK = false;
+
+// ---- セッション状態 ----
+let method = 'romaji';      // romaji | kana
+let aMethod = 'romaji';     // 分析画面で表示中の方式
+let mode = 'normal';
+let lenMode = 'long';
+let matcher = null, curWord = null;
+let setWords = [];
+let usedWords = new Set();
+let cur = null;
+let prevT = 0, prevCode = '', consecErr = 0;
+const physDown = new Map();
+const keyCache = new Map();
+let screen = 'play';
+let imported = null; // { kind, words|parts, filename, warnings }
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[c]));
+const S = m => stats[m || method];
+const METHOD_LABEL = { romaji:'ローマ字入力', kana:'かな入力' };
+
+function fixStat(s){
+  if (!s || typeof s !== 'object') return blankStat();
+  const b = blankStat();
+  b.big = s.big || {}; b.keysN = s.keysN||0; b.rollHit = s.rollHit||0; b.errN = s.errN||0;
+  b.words = Array.isArray(s.words) ? s.words : [];
+  b.pos = (Array.isArray(s.pos) && s.pos.length === 10) ? s.pos : b.pos;
+  return b;
+}
+
+// ---- 保存 ----
+async function loadStats(){
+  try {
+    if (!window.storage) throw new Error('no storage');
+    storageOK = true;
+    let r = null;
+    try { r = await window.storage.get(STORE_KEY); } catch(e){ r = null; }
+    if (r && r.value){
+      const s = JSON.parse(r.value);
+      stats.romaji = fixStat(s.romaji); stats.kana = fixStat(s.kana);
+    } else {
+      // 旧形式（ローマ字のみ）からの移行
+      let o = null;
+      try { o = await window.storage.get(STORE_KEY_OLD); } catch(e){ o = null; }
+      if (o && o.value){
+        const s = JSON.parse(o.value);
+        if (s && s.big) stats.romaji = fixStat(s);
+      }
+    }
+  } catch(e){ storageOK = false; }
+  $('saveBadge').textContent = storageOK ? '記録の保存: 有効' : '記録の保存: この画面のみ';
+  $('saveBadge').className = 'badge ' + (storageOK ? 'on' : 'off');
+}
+let saveTimer = null;
+function saveStats(){
+  if (!storageOK) return;
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(async () => {
+    try { await window.storage.set(STORE_KEY, JSON.stringify(stats)); } catch(e){}
+  }, 400);
+}
+async function resetStats(){
+  if (!confirm(`${METHOD_LABEL[aMethod]}の分析データを削除する。よいか？（もう一方の方式のデータは残る）`)) return;
+  stats[aMethod] = blankStat();
+  saveStats();
+  renderAnalysis();
+}
+
+// ---- ワード選択 ----
+function wordPool(){
+  if (lenMode === 'imported' && imported){
+    if (imported.kind === 'flat') return imported.words;
+    return []; // combo は pickWord() 内で直接解決する
+  }
+  return lenMode === 'long' ? LONGS : lenMode === 'short' ? WORDS : WORDS.concat(LONGS);
+}
+function strokeLabels(kana){
+  const ck = method + '|' + kana;
+  if (!keyCache.has(ck)) keyCache.set(ck, new MixedMatcher(kana, method).allLabels());
+  return keyCache.get(ck);
+}
+function predictWord(kana){
+  const labels = strokeLabels(kana);
+  const big = S().big;
+  let sum = 0, n = 0;
+  for (let i = 1; i < labels.length; i++){
+    const s = big[labels[i-1] + '>' + labels[i]];
+    const mean = s ? (s[1] + PRIOR_MS * PRIOR_N) / (s[0] + PRIOR_N) : PRIOR_MS;
+    sum += mean; n++;
+  }
+  return n ? sum / n : PRIOR_MS;
+}
+function pickWord(){
+  if (lenMode === 'imported' && imported && imported.kind === 'combo'){
+    // 組み合わせ型：都度ランダム解決。直前と同じ結果が続いたら再抽選する（軽い重複回避）
+    let r = resolveCombo(imported.parts);
+    for (let i = 0; i < 5 && usedWords.has(r.k); i++) r = resolveCombo(imported.parts);
+    return r;
+  }
+  let pool = wordPool().filter(w => w.k && !usedWords.has(w.k) && (method !== 'kana' || w.kanaOK !== false));
+  if (pool.length === 0){
+    usedWords.clear();
+    pool = wordPool().filter(w => w.k && (method !== 'kana' || w.kanaOK !== false));
+  }
+  if (pool.length === 0){
+    // 読み込んだワードが現在の入力方式に対応していない場合は内蔵ワードへフォールバック
+    toast(`読み込んだワードは${METHOD_LABEL[method]}に対応する読みがないため、内蔵ワードを使用する`);
+    pool = (lenMode === 'imported' ? LONGS : wordPool()).filter(w => !usedWords.has(w.k));
+    if (pool.length === 0) pool = lenMode === 'imported' ? LONGS : wordPool();
+  }
+  if (mode === 'weak' && S().keysN >= 200){
+    const scored = pool.map(w => [predictWord(w.k), w]).sort((a,b) => b[0] - a[0]);
+    const top = scored.slice(0, Math.max(8, Math.floor(scored.length * 0.2)));
+    return top[Math.floor(Math.random() * top.length)][1];
+  }
+  return pool[Math.floor(Math.random() * pool.length)];
+}
+function updateModeNote(){
+  let t;
+  if (mode === 'weak'){
+    t = S().keysN >= 200
+      ? `${METHOD_LABEL[method]}の遅い遷移を多く含むワードを優先して出題する。`
+      : `弱点ドリルには${METHOD_LABEL[method]}の分析データが必要（あと${200 - S().keysN}打）。それまでは通常出題で代替する。`;
+  } else {
+    t = `${SET_SIZE}ワードで1セット。打ち終えるとリザルトが出て、その記録が${METHOD_LABEL[method]}の分析に加算される。`;
+  }
+  if (lenMode === 'imported' && imported){
+    const kind = imported.kind === 'combo' ? '組み合わせ型（各パートからランダムに選び連結）' : `${imported.words.length}件のフラットな単語`;
+    t += ` 読み込みワード「${imported.filename}」（${kind}）を出題中。`;
+  }
+  $('modeNote').textContent = t;
+}
+
+// ---- セット制御 ----
+function startSet(){
+  setWords = []; usedWords = new Set();
+  screen = 'play';
+  $('viewResult').hidden = true;
+  $('viewPlay').hidden = false;
+  updateModeNote();
+  nextWord();
+  updateProgress();
+}
+function nextWord(){
+  curWord = pickWord();
+  usedWords.add(curWord.k);
+  matcher = new MixedMatcher(curWord.k, method);
+  cur = { disp: curWord.d, kana: curWord.k, method, keys: [], misses: [], missBig: [], start: 0 };
+  prevT = 0; prevCode = ''; consecErr = 0;
+  renderWord();
+}
+function abortSet(){
+  toast(`セットを破棄した（${setWords.length}ワード分の記録は分析に反映しない）`);
+  startSet();
+}
+function updateProgress(){
+  $('pgNum').textContent = setWords.length;
+  $('pgTotal').textContent = SET_SIZE;
+  $('pgFill').style.width = (setWords.length / SET_SIZE * 100) + '%';
+  if (setWords.length){
+    const strokes = setWords.reduce((a,w) => a + w.keys.length - 1, 0);
+    const dur = setWords.reduce((a,w) => a + w.dur, 0);
+    const miss = setWords.reduce((a,w) => a + w.misses.length, 0);
+    const rolls = setWords.reduce((a,w) => a + w.keys.filter(k => k.roll).length, 0);
+    $('pgKpm').textContent = dur > 0 ? Math.round(strokes / (dur/1000) * 60) : '–';
+    $('pgMiss').textContent = miss;
+    $('pgRoll').textContent = strokes > 0 ? Math.round(rolls / strokes * 100) + '%' : '–';
+  } else {
+    $('pgKpm').textContent = '–'; $('pgMiss').textContent = '0'; $('pgRoll').textContent = '–';
+  }
+}
+
+// ---- 描画（プレイ中） ----
+function renderWord(){
+  if (!matcher) return;
+  $('disp').textContent = curWord.d;
+  let html = '';
+  for (let i = 0; i < matcher.units.length; i++){
+    const cls = i < matcher.ui ? 'u done' : i === matcher.ui ? 'u cur' : 'u';
+    html += `<span class="${cls}">${esc(matcher.units[i])}</span>`;
+  }
+  $('kana').innerHTML = html;
+  if (method === 'kana'){
+    $('guide').hidden = true;
+    $('guide').innerHTML = '';
+  } else {
+    $('guide').hidden = false;
+    const g = matcher.guideParts();
+    const one = (p, cls) => `<span class="${cls}${p.sh ? ' sh' : ''}">${esc(p.l)}</span>`;
+    $('guide').innerHTML =
+      g.done.map(p => one(p, 'g-done')).join('') + g.rest.map(p => one(p, 'g-rest')).join('');
+    $('guide').className = 'guide';
+  }
+}
+
+// ---- 打鍵処理 ----
+function isRomajiKey(e){
+  return e.key.length === 1 && /[a-z0-9\-'!?,.:;()\/]/.test(e.key) && !e.ctrlKey && !e.metaKey && !e.altKey;
+}
+function isKanaKey(e){
+  return !!KANA_LAYOUT[e.code] && !e.ctrlKey && !e.metaKey && !e.altKey;
+}
+window.addEventListener('keydown', e => {
+  if (e.key === 'Escape'){
+    if (screen === 'play' && !$('viewPlay').hidden) abortSet();
+    return;
+  }
+  if (screen === 'result' && (e.key === 'Enter' || e.key === ' ')){
+    e.preventDefault(); startSet(); return;
+  }
+  if (!$('viewAnalysis').hidden || screen !== 'play') return;
+
+  const kana = method === 'kana';
+  if (kana ? !isKanaKey(e) : !isRomajiKey(e)) return;
+  e.preventDefault();
+  if (e.repeat) return;
+
+  const t = performance.now();
+  const code = e.code || e.key;
+  const heldPrev = prevCode && physDown.has(prevCode);
+  physDown.set(code, t);
+  if (!matcher || matcher.done()) return;
+
+  const r = matcher.accept({ key: e.key, code: e.code, shift: e.shiftKey });
+  if (r.ok){
+    consecErr = 0;
+    const first = cur.keys.length === 0;
+    if (first) cur.start = t;
+    cur.keys.push({ k: r.label, code, t0: t, t1: null, roll: first ? false : !!heldPrev, iki: first ? null : t - prevT, lit: !!r.lit });
+    prevT = t; prevCode = code;
+    if (matcher.done()) finishWord(t); else renderWord();
+  } else {
+    consecErr++;
+    const expected = matcher.expected();
+    const expLit = matcher.expectedIsLit();
+    cur.misses.push({ t, k: labelForEvent(e, kana), expected });
+    const prevKs = cur.keys[cur.keys.length-1];
+    if (prevKs && !prevKs.lit && !expLit) cur.missBig.push(prevKs.k + '>' + expected);
+    flashMiss();
+  }
+  updateLive();
+});
+function labelForEvent(e, kana){
+  if (!kana) return e.key;
+  const l = KANA_LAYOUT[e.code];
+  if (!l) return '?';
+  return (e.shiftKey ? l[1] : l[0]) || l[0] || '?';
+}
+window.addEventListener('keyup', e => {
+  const t = performance.now();
+  const code = e.code || e.key;
+  physDown.delete(code);
+  if (!cur) return;
+  for (let i = cur.keys.length - 1; i >= 0; i--){
+    if (cur.keys[i].code === code && cur.keys[i].t1 === null){ cur.keys[i].t1 = t; break; }
+  }
+});
+function flashMiss(){
+  const el = $('stage');
+  el.classList.remove('miss'); void el.offsetWidth; el.classList.add('miss');
+}
+function updateLive(){
+  if (!cur || cur.keys.length < 2) return;
+  const ikis = cur.keys.filter(k => k.iki !== null).slice(-16).map(k => k.iki);
+  const mean = ikis.reduce((a,b) => a+b, 0) / ikis.length;
+  $('lvKpm').textContent = Math.round(1000 / mean * 60);
+}
+
+function finishWord(t){
+  for (const k of cur.keys) if (k.t1 === null) k.t1 = k.t0 + HOLD_FALLBACK;
+  cur.end = t;
+  cur.dur = t - cur.start;
+  const strokes = cur.keys.length - 1;
+  cur.kps = cur.dur > 0 ? strokes / (cur.dur / 1000) : 0;
+  cur.acc = cur.keys.length / (cur.keys.length + cur.misses.length);
+  cur.rollRate = strokes > 0 ? cur.keys.filter(k => k.roll).length / strokes : 0;
+  setWords.push(cur);
+  updateProgress();
+  $('lvKpm').textContent = '–';
+  if (setWords.length >= SET_SIZE) commitSet();
+  else nextWord();
+}
+
+// ---- セット確定 → 方式別の分析へコミット ----
+function commitSet(){
+  const st = S(setWords[0].method);
+  for (const w of setWords){
+    const total = w.keys.length;
+    for (let i = 1; i < w.keys.length; i++){
+      if (w.keys[i-1].lit || w.keys[i].lit) continue; // 数字・記号を含む連接は分析対象外
+      const iki = w.keys[i].iki;
+      const bg = w.keys[i-1].k + '>' + w.keys[i].k;
+      const s = st.big[bg] || (st.big[bg] = [0,0,0]);
+      s[0]++; s[1] += iki;
+      st.keysN++;
+      if (w.keys[i].roll) st.rollHit++;
+      const bkt = Math.min(9, Math.floor((i - 1) / Math.max(total, 1) * 10));
+      st.pos[bkt][0]++; st.pos[bkt][1] += iki;
+    }
+    for (const bg of w.missBig){
+      const s = st.big[bg] || (st.big[bg] = [0,0,0]);
+      s[2]++;
+    }
+    st.errN += w.misses.length;
+    st.words.push({ ts: Date.now(), kps: +w.kps.toFixed(2), acc: +w.acc.toFixed(3), roll: +w.rollRate.toFixed(3), mode, word: w.disp, kana: w.kana });
+  }
+  if (st.words.length > 300) st.words.splice(0, st.words.length - 300);
+  saveStats();
+  showResult();
+}
+
+// ---- リザルト ----
+function showResult(){
+  screen = 'result';
+  $('viewPlay').hidden = true;
+  $('viewResult').hidden = false;
+
+  const strokes = setWords.reduce((a,w) => a + w.keys.length - 1, 0);
+  const keysAll = setWords.reduce((a,w) => a + w.keys.length, 0);
+  const dur = setWords.reduce((a,w) => a + w.dur, 0);
+  const missN = setWords.reduce((a,w) => a + w.misses.length, 0);
+  const rolls = setWords.reduce((a,w) => a + w.keys.filter(k => k.roll).length, 0);
+  const blanks = setWords.reduce((a,w) => a + w.keys.filter(k => k.iki !== null && k.iki > BLANK_MS).length, 0);
+  const kps = dur > 0 ? strokes / (dur/1000) : 0;
+  const rollRate = strokes ? rolls / strokes : 0;
+
+  $('rMethod').textContent = METHOD_LABEL[setWords[0].method];
+  $('rKpm').textContent = Math.round(kps * 60);
+  $('rKps').textContent = kps.toFixed(1) + ' 打/秒';
+  $('rAcc').textContent = (keysAll / (keysAll + missN) * 100).toFixed(1) + '%';
+  $('rMiss').textContent = missN + ' 打';
+  $('rRoll').textContent = Math.round(rollRate * 100) + '%';
+  $('rRollBand').textContent = rollBand(rollRate);
+  $('rBlank').textContent = blanks;
+  $('rBlankSub').textContent = strokes ? (blanks / strokes * 100).toFixed(1) + '% の打鍵' : '';
+  $('rTime').textContent = (dur / 1000).toFixed(1) + '秒';
+
+  const agg = {};
+  for (const w of setWords){
+    for (let i = 1; i < w.keys.length; i++){
+      if (w.keys[i-1].lit || w.keys[i].lit) continue;
+      const bg = w.keys[i-1].k + '>' + w.keys[i].k;
+      const a = agg[bg] || (agg[bg] = [0,0]);
+      a[0]++; a[1] += w.keys[i].iki;
+    }
+  }
+  const slow = Object.entries(agg).filter(([,v]) => v[0] >= 3)
+    .map(([k,v]) => [k, v[1]/v[0], v[0]]).sort((a,b) => b[1]-a[1]).slice(0, 5);
+  $('rSlow').innerHTML = slow.length
+    ? slow.map(([k,m,n]) => {
+        const [a,c] = k.split('>');
+        return `<span class="pill"><b>${esc(a)}→${esc(c)}</b> ${Math.round(m)}ms <i>${n}回</i></span>`;
+      }).join('')
+    : '<span class="empty">3回以上出現した遷移がなかった。</span>';
+
+  renderRows();
+}
+
+function rollBand(r){
+  if (r < 0.10) return '重なりほぼ無し';
+  if (r < 0.25) return '部分的に重複';
+  if (r < 0.45) return '重複が常態化';
+  return '高重複域';
+}
+
+function renderRows(){
+  const zoom = parseFloat($('zoom').value);
+  const maxDur = Math.max(...setWords.map(w => w.dur), 1);
+  let html = '';
+  setWords.forEach((w, idx) => {
+    const laneEnd = [];
+    const lanes = w.keys.map(k => {
+      let li = laneEnd.findIndex(e => e <= k.t0);
+      if (li === -1) li = laneEnd.length;
+      laneEnd[li] = k.t1;
+      return Math.min(li, 2);
+    });
+    const nLane = Math.min(Math.max(...lanes) + 1, 3);
+
+    let bars = '';
+    w.keys.forEach((k, i) => {
+      const x = (k.t0 - w.start) / maxDur * 100;
+      const wd = Math.max((k.t1 - k.t0) / maxDur * 100, 0.12);
+      const cls = 'blk' + (k.roll ? ' roll' : '') + (k.iki !== null && k.iki > BLANK_MS ? ' afterblank' : '') + (k.lit ? ' lit' : '');
+      const px = wd / 100 * 820 * zoom;
+      const label = px >= 9 ? esc(k.k) : '';
+      bars += `<span class="${cls}" style="left:${x}%;width:${wd}%;top:${lanes[i] * 17}px" title="${esc(k.k)} 保持${Math.round(k.t1-k.t0)}ms${k.iki !== null ? ' / 間隔'+Math.round(k.iki)+'ms' : ''}${k.roll ? ' / 重複' : ''}${k.lit ? ' / 数字・記号（分析対象外）' : ''}">${label}</span>`;
+    });
+    w.keys.forEach((k, i) => {
+      if (k.iki !== null && k.iki > BLANK_MS){
+        const prev = w.keys[i-1];
+        const x = (prev.t0 - w.start) / maxDur * 100;
+        const wd = (k.t0 - prev.t0) / maxDur * 100;
+        bars += `<span class="gap" style="left:${x}%;width:${wd}%;top:${nLane * 17 + 1}px" title="ブランク ${Math.round(k.iki)}ms"></span>`;
+      }
+    });
+    for (const m of w.misses){
+      const x = Math.max((m.t - w.start) / maxDur * 100, 0);
+      bars += `<span class="missmark" style="left:${x}%;height:${nLane * 17 + 6}px" title="ミス: ${esc(m.k)}（正解 ${esc(m.expected)}）"></span>`;
+    }
+
+    const seq = w.keys.map(k => k.k).join(w.method === 'kana' ? ' ' : '');
+
+    html += `<div class="wrow">
+      <div class="wh">
+        <span class="wn">${idx+1}</span>
+        <span class="wt">${esc(w.disp)}</span>
+        <span class="wk">${esc(w.kana)}</span>
+        <span class="wr">${esc(seq)}</span>
+        <span class="wm">${Math.round(w.kps*60)}<i>kpm</i> · ${(w.acc*100).toFixed(0)}%<i>正確</i> · ${Math.round(w.rollRate*100)}%<i>重複</i> · ${(w.dur/1000).toFixed(1)}<i>秒</i></span>
+      </div>
+      <div class="band" style="height:${nLane * 17 + 8}px">${bars}</div>
+    </div>`;
+  });
+  $('rowsInner').innerHTML = html;
+  $('rowsInner').style.width = (zoom * 100) + '%';
+}
+$('zoom').addEventListener('input', () => {
+  $('zoomV').textContent = parseFloat($('zoom').value).toFixed(1) + '×';
+  if (setWords.length) renderRows();
+});
+$('againBtn').addEventListener('click', startSet);
+
+// ---- トースト ----
+let toastTimer = null;
+function toast(msg){
+  const el = $('toast');
+  el.textContent = msg; el.hidden = false;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { el.hidden = true; }, 2400);
+}
+
+// ---- 入力方式・モード・出題長 ----
+document.querySelectorAll('.mbtn').forEach(b => {
+  b.addEventListener('click', () => {
+    if (b.dataset.method === method) return;
+    document.querySelectorAll('.mbtn').forEach(x => x.classList.remove('sel'));
+    b.classList.add('sel');
+    method = b.dataset.method;
+    keyCache.clear();
+    if (screen === 'play' && setWords.length > 0) toast('入力方式を変更したのでセットを最初からやり直す');
+    startSet();
+  });
+});
+document.querySelectorAll('.chip').forEach(ch => {
+  ch.addEventListener('click', () => {
+    if (ch.dataset.mode === mode) return;
+    document.querySelectorAll('.chip').forEach(c => c.classList.remove('sel'));
+    ch.classList.add('sel');
+    mode = ch.dataset.mode;
+    if (screen === 'play' && setWords.length > 0) toast('モードを変更したのでセットを最初からやり直す');
+    startSet();
+  });
+});
+document.querySelectorAll('.lenbtn').forEach(b => {
+  b.addEventListener('click', () => {
+    if (b.dataset.len === lenMode) return;
+    if (b.dataset.len === 'imported' && !imported) return;
+    document.querySelectorAll('.lenbtn').forEach(x => x.classList.remove('sel'));
+    b.classList.add('sel');
+    lenMode = b.dataset.len;
+    if (screen === 'play' && setWords.length > 0) toast('出題を変更したのでセットを最初からやり直す');
+    startSet();
+  });
+});
+
+// ---- ワード読み込み ----
+function describeImport(res){
+  if (res.kind === 'combo'){
+    const combos = res.parts.reduce((a,p) => a * p.length, 1);
+    return `組み合わせ型（${res.parts.length}パート・最大${combos}通り）を読み込んだ`;
+  }
+  return `${res.words.length}件の単語を読み込んだ`;
+}
+function applyImport(text, filename){
+  let res;
+  try { res = parseWordFile(text, filename); }
+  catch (err){ toast('読み込みに失敗した（ファイル形式を確認してほしい）'); return false; }
+  if (res.kind === 'flat' && res.words.length === 0){
+    toast('読み込めるワードが見つからなかった');
+    return false;
+  }
+  imported = res;
+  const kanaOKN = res.kind === 'flat' ? res.words.filter(w => w.k && w.kanaOK !== false).length : null;
+  let msg = `「${filename}」から${describeImport(res)}（形式: ${{tpl:'tpl', wtxml:'WT用xml', wttxt:'WT用txt'}[res.format]}）。`;
+  if (res.kind === 'flat' && kanaOKN !== null && kanaOKN < res.words.length){
+    msg += ` うちかな入力対応: ${kanaOKN}件。`;
+  }
+  if (res.warnings.length) msg += ' ' + res.warnings.join(' ');
+  $('importStatus').textContent = msg;
+  $('importStatus').hidden = false;
+  const lb = document.querySelector('.lenbtn[data-len="imported"]');
+  lb.disabled = false;
+  document.querySelectorAll('.lenbtn').forEach(x => x.classList.remove('sel'));
+  lb.classList.add('sel');
+  lenMode = 'imported';
+  startSet();
+  return true;
+}
+$('importFile').addEventListener('change', (e) => {
+  const file = e.target.files && e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => applyImport(String(reader.result), file.name);
+  reader.onerror = () => toast('ファイルの読み込みに失敗した');
+  reader.readAsText(file);
+  e.target.value = '';
+});
+// テスト・外部連携用に公開（実ファイル選択を介さずテキストを直接読み込む）
+if (typeof window !== 'undefined') window.__importWordText = applyImport;
+
+// ---- タブ ----
+$('tabPlay').addEventListener('click', () => switchTab('play'));
+$('tabAnalysis').addEventListener('click', () => { aMethod = method; syncAMethodBtns(); switchTab('analysis'); });
+$('tabWords').addEventListener('click', () => switchTab('words'));
+function switchTab(tab){
+  $('playWrap').hidden = tab !== 'play';
+  $('viewAnalysis').hidden = tab !== 'analysis';
+  $('viewWords').hidden = tab !== 'words';
+  $('tabPlay').classList.toggle('sel', tab === 'play');
+  $('tabAnalysis').classList.toggle('sel', tab === 'analysis');
+  $('tabWords').classList.toggle('sel', tab === 'words');
+  if (tab === 'analysis') renderAnalysis();
+  if (tab === 'words') renderWordList();
+}
+function syncAMethodBtns(){
+  document.querySelectorAll('.ambtn').forEach(b => b.classList.toggle('sel', b.dataset.method === aMethod));
+}
+document.querySelectorAll('.ambtn').forEach(b => {
+  b.addEventListener('click', () => {
+    aMethod = b.dataset.method;
+    syncAMethodBtns();
+    renderAnalysis();
+  });
+});
+
+// ---- 分析（方式別） ----
+function renderAnalysis(){
+  const st = stats[aMethod];
+  const list = Object.entries(st.big).map(([k,v]) => ({ key:k, n:v[0], mean: v[0] ? v[1]/v[0] : 0, err:v[2] }));
+  const total = list.reduce((a,b) => a + b.n, 0);
+  const sum = list.reduce((a,b) => a + b.mean * b.n, 0);
+  $('aKeys').textContent = total.toLocaleString();
+  $('aKpm').textContent = total ? Math.round(1000 / (sum/total) * 60) : '–';
+  const rollRate = st.keysN ? st.rollHit / st.keysN : null;
+  $('aRoll').textContent = rollRate !== null ? Math.round(rollRate*100) + '%' : '–';
+  $('aRollBand').textContent = rollRate !== null ? rollBand(rollRate) : '';
+  const allN = st.keysN + st.errN;
+  $('aErr').textContent = allN ? (st.errN / allN * 100).toFixed(1) + '%' : '–';
+  $('aOther').textContent = (() => {
+    const o = aMethod === 'romaji' ? stats.kana : stats.romaji;
+    const on = Object.values(o.big).reduce((a,v) => a + v[0], 0);
+    return on ? `${METHOD_LABEL[aMethod === 'romaji' ? 'kana' : 'romaji']}にも ${on.toLocaleString()}打の記録がある。` : '';
+  })();
+
+  const slow = list.filter(b => b.n >= 5).sort((a,b) => b.mean - a.mean).slice(0, 12);
+  $('slowBody').innerHTML = slow.length
+    ? slow.map(b => {
+        const [a,c] = b.key.split('>');
+        const er = b.err / (b.n + b.err) * 100;
+        return `<tr><td class="mono">${esc(a)} → ${esc(c)}</td><td class="num">${Math.round(b.mean)}<span class="unit">ms</span></td><td class="num">${b.n}</td><td class="num">${er.toFixed(0)}%</td></tr>`;
+      }).join('')
+    : '<tr><td colspan="4" class="empty">データ不足。各遷移5回以上でここに載る。</td></tr>';
+
+  const miss = list.filter(b => b.err >= 2).sort((a,b) => b.err - a.err).slice(0, 8);
+  $('missBody').innerHTML = miss.length
+    ? miss.map(b => { const [a,c] = b.key.split('>'); return `<tr><td class="mono">${esc(a)} → ${esc(c)}</td><td class="num">${b.err}回</td></tr>`; }).join('')
+    : '<tr><td colspan="2" class="empty">ミスの記録なし。</td></tr>';
+
+  // キー別ヒートマップ（方式ごとに配列を変える）
+  const out = {};
+  for (const b of list){
+    const a = b.key.split('>')[0];
+    const o = out[a] || (out[a] = [0,0]);
+    o[0] += b.n; o[1] += b.mean * b.n;
+  }
+  const rows = aMethod === 'kana' ? KANA_ROWS : ['qwertyuiop-'.split(''),'asdfghjkl'.split(''),'zxcvbnm'.split('')];
+  $('kbdTitle').textContent = aMethod === 'kana' ? 'キー別 平均発信IKI（JISかな配列）' : 'キー別 平均発信IKI（QWERTY）';
+  $('kbd').className = aMethod === 'kana' ? 'kana' : '';
+  $('kbd').innerHTML = rows.map((row, ri) =>
+    `<div class="krow r${ri}">` + row.map(k => {
+      const o = out[k];
+      let style = '', label = '';
+      if (o && o[0] >= 5){
+        const mean = o[1] / o[0];
+        const f = Math.max(0, Math.min(1, (mean - 60) / 140));
+        const col = f < 0.5 ? mix('#12A38A','#E8E4D4', f*2) : mix('#E8E4D4','#DE8B0A', (f-0.5)*2);
+        style = `background:${col}`;
+        label = ` title="平均 ${Math.round(mean)}ms（${o[0]}打）"`;
+      }
+      return `<span class="kcap" style="${style}"${label}>${esc(k)}</span>`;
+    }).join('') + '</div>').join('');
+
+  const pos = st.pos.map(([n,s]) => n >= 5 ? s/n : null);
+  const vals = pos.filter(v => v !== null);
+  if (vals.length >= 3){
+    const lo = Math.min(...vals), hi = Math.max(...vals);
+    $('posChart').innerHTML = pos.map((v,i) => {
+      if (v === null) return `<span class="pcol"><span class="pbar none"></span><span class="plab">${i+1}</span></span>`;
+      const h = hi > lo ? 20 + (v - lo)/(hi - lo)*80 : 60;
+      return `<span class="pcol"><span class="pval">${Math.round(v)}</span><span class="pbar${v===hi?' worst':''}" style="height:${h}%"></span><span class="plab">${i+1}</span></span>`;
+    }).join('');
+    const f = avgB(0,5), s2 = avgB(5,10);
+    $('posNote').textContent = (f && s2)
+      ? `前半平均 ${Math.round(f)}ms ／ 後半平均 ${Math.round(s2)}ms。` +
+        (s2 > f*1.08 ? '後半で失速している。先読み供給の枯渇が疑われる。'
+         : f > s2*1.08 ? '序盤が遅い。ため打ち（開始前の組立完了）の余地がある。'
+         : '位置によるムラは小さい。供給は概ね追いついている。')
+      : '';
+  } else {
+    $('posChart').innerHTML = '<span class="empty">データ不足。セットを完走すると蓄積される。</span>';
+    $('posNote').textContent = '';
+  }
+  function avgB(a,b){ let n=0,s=0; for(let i=a;i<b;i++){ n+=st.pos[i][0]; s+=st.pos[i][1]; } return n>=10 ? s/n : null; }
+
+  const ws = st.words.slice(-60);
+  const maxK = Math.max(4, ...ws.map(w => w.kps));
+  $('trend').innerHTML = ws.map(w => `<span class="tbar" style="height:${Math.max(3, w.kps/maxK*100)}%" title="${esc(w.word)}: ${Math.round(w.kps*60)}kpm"></span>`).join('')
+    || '<span class="empty">まだ記録がない。</span>';
+  $('rollTrend').innerHTML = ws.map(w => `<span class="tbar roll" style="height:${Math.max(3,(w.roll||0)*100)}%" title="${esc(w.word)}: 重複 ${Math.round((w.roll||0)*100)}%"></span>`).join('')
+    || '<span class="empty">まだ記録がない。</span>';
+
+  $('resetBtn').textContent = `${METHOD_LABEL[aMethod]}の分析データを削除`;
+}
+function mix(c1,c2,f){
+  const p = h => [1,3,5].map(i => parseInt(h.slice(i,i+2),16));
+  const [a,b] = [p(c1), p(c2)];
+  return 'rgb(' + a.map((v,i) => Math.round(v + (b[i]-v)*f)).join(',') + ')';
+}
+$('resetBtn').addEventListener('click', resetStats);
+
+// ---- ワード一覧 ----
+const ALL_BUILTIN_WORDS = WORDS.map(w => ({ d: w.d, k: w.k, cat: '短語' }))
+  .concat(LONGS.map(w => ({ d: w.d, k: w.k, cat: '長文' })));
+let wlQuery = '', wlCat = 'all';
+function renderWordList(){
+  const list = ALL_BUILTIN_WORDS.filter(w => {
+    if (wlCat !== 'all' && w.cat !== wlCat) return false;
+    if (wlQuery && !w.d.includes(wlQuery) && !w.k.includes(wlQuery)) return false;
+    return true;
+  });
+  $('wlCount').textContent = `${list.length} / ${ALL_BUILTIN_WORDS.length} 件`;
+  $('wlBody').innerHTML = list.length
+    ? list.map((w, i) => `<tr><td class="num">${i+1}</td><td class="w">${esc(w.d)}</td><td class="mono">${esc(w.k)}</td><td>${w.cat}</td><td class="num">${w.k.length}</td></tr>`).join('')
+    : '<tr><td colspan="5" class="empty">該当するワードがない。</td></tr>';
+}
+$('wlSearch').addEventListener('input', (e) => { wlQuery = e.target.value.trim(); renderWordList(); });
+document.querySelectorAll('.wlchip').forEach(b => {
+  b.addEventListener('click', () => {
+    document.querySelectorAll('.wlchip').forEach(x => x.classList.remove('sel'));
+    b.classList.add('sel');
+    wlCat = b.dataset.cat;
+    renderWordList();
+  });
+});
+
+// ---- 起動 ----
+(async function init(){
+  await loadStats();
+  syncAMethodBtns();
+  startSet();
+})();
+</script>
+</body>
+</html>
