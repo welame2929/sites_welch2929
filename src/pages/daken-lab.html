@@ -709,12 +709,15 @@ REV_TABLE['ltu'] = 'っ'; REV_TABLE['xtu'] = 'っ'; REV_TABLE['ltsu'] = 'っ'; R
 const REV_LENS = [...new Set(Object.keys(REV_TABLE).map(k => k.length))].sort((a,b) => b-a);
 const SOKUON_CONS = new Set('bcdfghjkmpqrstvwz'.split(''));
 
-// 全角→半角（数字・主な記号）。読みに埋め込まれた記号を実キー判定できる形にする。
-const FULL2HALF = {
-  '０':'0','１':'1','２':'2','３':'3','４':'4','５':'5','６':'6','７':'7','８':'8','９':'9',
-  '！':'!','？':'?','，':',','．':'.','：':':','；':';','（':'(','）':')','／':'/','・':'/',
-};
-function normalizeLiteral(ch){ return FULL2HALF[ch] !== undefined ? FULL2HALF[ch] : ch; }
+// 全角→半角。読みに埋め込まれた記号・英数字を実キー判定できる形にする。
+// 全角英数字・記号（U+FF01–U+FF5E）は半角と1:1対応するのでコードポイント変換で一括処理し、
+// その範囲外の全角文字（全角スペース・中黒など）だけ個別に対応する。
+const FULL2HALF_EXTRA = { '　':' ', '・':'/', '、':',', '。':'.' };
+function normalizeLiteral(ch){
+  if (FULL2HALF_EXTRA[ch] !== undefined) return FULL2HALF_EXTRA[ch];
+  const c = ch.codePointAt(0);
+  return (c >= 0xFF01 && c <= 0xFF5E) ? String.fromCodePoint(c - 0xFEE0) : ch;
+}
 // 片仮名 → 平仮名（読み文字列に片仮名の外来語表記が混じっていても内部処理は平仮名に統一する）
 function kataToHira(s){
   let out = '';
