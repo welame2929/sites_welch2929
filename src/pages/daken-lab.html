@@ -68,6 +68,9 @@ main{max-width:940px;margin:0 auto;padding:20px 20px 60px}
 .kana{font-size:25px;font-weight:700;letter-spacing:.05em;line-height:1.5;min-height:38px;margin-top:5px;overflow-wrap:anywhere}
 .kana .u.done{color:#B9C4BD}
 .kana .u.cur{color:var(--teal);border-bottom:3px solid var(--teal)}
+/* 英語入力：語の途中で折り返さず、空白もそのまま1打鍵として見せる */
+.kana.en{font-family:var(--mono);font-size:23px;font-weight:600;letter-spacing:.01em;white-space:pre-wrap;overflow-wrap:break-word}
+.disp.en{font-size:19px;font-weight:400;color:var(--sub);min-height:29px}
 .guide{font-family:var(--mono);font-size:27px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;min-height:36px;margin-top:9px;padding-top:9px;border-top:1px solid #EFF2EF;overflow-wrap:anywhere}
 .g-done{color:var(--teal)}
 .g-rest{color:var(--ink)}
@@ -169,6 +172,12 @@ td.empty{color:var(--sub);font-size:12.5px;text-align:center;padding:14px}
 #resetBtn{border:1px solid var(--red);color:var(--red);background:transparent;border-radius:6px;padding:6px 14px;font-size:12.5px}
 .anote{font-size:11.5px;color:var(--sub);line-height:1.7}
 
+.about{padding:16px 20px;margin-bottom:16px}
+.about h2{font-size:15px;letter-spacing:.04em;margin-bottom:8px}
+.about p{font-size:13px;color:var(--ink);line-height:1.7}
+.about ul{margin:10px 0 0;padding-left:1.3em;display:flex;flex-direction:column;gap:5px}
+.about li{font-size:12.5px;color:var(--sub);line-height:1.6}
+
 /* ワード一覧 */
 .wlbar{display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap}
 #wlSearch{flex:1;min-width:180px;border:1px solid var(--line);border-radius:7px;padding:8px 12px;font-size:13px;background:var(--card);color:var(--ink)}
@@ -191,6 +200,8 @@ td.empty{color:var(--sub);font-size:12.5px;text-align:center;padding:14px}
   .agrid,.trendwrap{grid-template-columns:1fr}
   .disp{font-size:22px;min-height:34px}
   .kana{font-size:20px;min-height:31px}
+  .kana.en{font-size:17px}
+  .disp.en{font-size:16px;min-height:25px}
   .guide{font-size:21px}
   .wr{display:none}
   .lenwrap{margin-left:0}
@@ -199,7 +210,7 @@ td.empty{color:var(--sub);font-size:12.5px;text-align:center;padding:14px}
 </head>
 <body>
 <header>
-  <div class="brand"><span class="mark">打鍵ラボ</span><span class="brandsub">15-WORD SET / IKI · ROLLOVER</span></div>
+  <div class="brand"><span class="mark">打鍵ラボ</span></div>
   <nav>
     <button id="tabPlay" class="sel">練習</button>
     <button id="tabAnalysis">分析</button>
@@ -209,23 +220,34 @@ td.empty{color:var(--sub);font-size:12.5px;text-align:center;padding:14px}
 </header>
 <main>
 
+<div class="card about" id="aboutBox">
+  <h2>打鍵ラボとは</h2>
+  <p>打鍵ラボは、競技タイピングの打鍵分析・トレーニング用のツールです。</p>
+  <ul>
+    <li>ローマ字入力・かな入力・英語入力の3方式に対応し、打鍵の内容を分析します。</li>
+    <li>結果画面では各キーを押した瞬間・離した瞬間をタイムライン上に並べ、視覚化します。</li>
+    <li>集計した打鍵データを分析画面で確認できます。遅い遷移を優先して出題する弱点ドリル機能も実装。</li>
+  </ul>
+</div>
+
 <div id="playWrap">
   <div class="methodbar">
     <span class="mlab">入力方式</span>
     <button class="mbtn sel" data-method="romaji">ローマ字入力</button>
     <button class="mbtn" data-method="kana">かな入力</button>
+    <button class="mbtn" data-method="english">英語入力</button>
   </div>
   <div class="modebar">
     <button class="chip sel" data-mode="normal">通常</button>
     <button class="chip" data-mode="weak">弱点ドリル</button>
     <span class="lenwrap">出題
-      <button class="lenbtn sel" data-len="long">長文</button>
-      <button class="lenbtn" data-len="short">短語</button>
+      <button class="lenbtn sel" data-len="long" id="lenLong">長文</button>
+      <button class="lenbtn" data-len="short" id="lenShort">短語</button>
       <button class="lenbtn" data-len="mix">混合</button>
       <button class="lenbtn" data-len="imported" disabled title="ワードを読み込むと選択できる">読み込み</button>
       <label class="importBtn" title="Typelighter対応のtplファイル、Weather Typing対応のxml/txtファイルに対応">ファイルを読み込む<input type="file" id="importFile" accept=".tpl,.xml,.txt"></label>
     </span>
-    <span class="importHint">対応形式：Typelighterのtplファイル／Weather Typingのxml・txtファイル</span>
+    <span class="importHint">読み込みファイルの対応形式：Typelighterのtplファイル／Weather Typingのxml・txtファイル</span>
     <span id="modeNote"></span>
     <span id="importStatus" class="importStatus" hidden></span>
   </div>
@@ -257,10 +279,13 @@ td.empty{color:var(--sub);font-size:12.5px;text-align:center;padding:14px}
       <span class="lab">平均速度</span>
       <div class="rheroRow"><b id="rKpm">–</b><span class="s" id="rKps"></span></div>
     </div>
+    <div class="card acallout">
+      <p><b>ロールオーバー率</b>＝前のキーを離す前に次のキーを押した打鍵の割合。<b>平均キー押下時間</b>＝キーを押してから離すまでの時間の平均。</p>
+    </div>
     <div class="rcards">
       <div class="card rcard rollc"><span class="lab">ロールオーバー率</span><b id="rRoll">–</b><span class="s" id="rRollBand"></span></div>
       <div class="card rcard"><span class="lab">正確率</span><b id="rAcc">–</b><span class="s" id="rMiss"></span></div>
-      <div class="card rcard"><span class="lab">ブランク</span><b id="rBlank">–</b><span class="s" id="rBlankSub"></span></div>
+      <div class="card rcard"><span class="lab">平均キー押下時間</span><b id="rHold">–</b><span class="s" id="rHoldSub"></span></div>
       <div class="card rcard"><span class="lab">打鍵時間</span><b id="rTime">–</b><span class="s">ワード間を除く</span></div>
     </div>
     <div class="card rslow"><span class="t">このセットの最遅遷移</span><span id="rSlow"></span></div>
@@ -286,6 +311,7 @@ td.empty{color:var(--sub);font-size:12.5px;text-align:center;padding:14px}
     <span class="mlab">分析対象</span>
     <button class="ambtn sel" data-method="romaji">ローマ字入力</button>
     <button class="ambtn" data-method="kana">かな入力</button>
+    <button class="ambtn" data-method="english">英語入力</button>
     <span class="aother" id="aOther"></span>
   </div>
   <div class="card acallout">
@@ -338,6 +364,8 @@ td.empty{color:var(--sub);font-size:12.5px;text-align:center;padding:14px}
       <button class="wlchip sel" data-cat="all">すべて</button>
       <button class="wlchip" data-cat="短語">短語</button>
       <button class="wlchip" data-cat="長文">長文</button>
+      <button class="wlchip" data-cat="英単語">英単語</button>
+      <button class="wlchip" data-cat="英文">英文</button>
     </span>
     <span id="wlCount" class="wlcount"></span>
   </div>
@@ -347,7 +375,7 @@ td.empty{color:var(--sub);font-size:12.5px;text-align:center;padding:14px}
       <tbody id="wlBody"></tbody>
     </table>
   </div>
-  <p class="anote" style="margin-top:10px">このアプリに収録されている単語（短語・長文）の一覧。ファイルから読み込んだワードはここには含まれない。</p>
+  <p class="anote" style="margin-top:10px">このアプリに収録されているワード（短語・長文・英単語・英文）の一覧。ファイルから読み込んだワードはここには含まれない。</p>
 </section>
 
 <div id="toast" hidden></div>
@@ -633,7 +661,10 @@ class KanaMatcher {
   accept(ev){
     if (this.done()) return { ok:false };
     const want = this.seq[this.si];
-    if (want.code === ev.code && want.shift === !!ev.shift){
+    const layout = KANA_LAYOUT[want.code];
+    const hasShiftVariant = !!(layout && layout[1] !== null);
+    const shiftOk = hasShiftVariant ? (want.shift === !!ev.shift) : true;
+    if (want.code === ev.code && shiftOk){
       this.si++;
       this.ui = this.done() ? this.units.length : this.seq[this.si].unit;
       return { ok:true, label: want.label };
@@ -755,6 +786,49 @@ class LiteralMatcher {
   remaining(){ return this.units.slice(this.ui).map(normalizeLiteral).join(''); }
 }
 
+// --- 英語入力マッチャー ---
+// 英文を1文字1打鍵でそのまま要求する（大文字はShift併用が必要）。
+// 英字だけを分析対象とし、スペース・記号・数字は lit=true にして遷移集計から外す。
+const EN_ANALYZE_RE = /[A-Za-z]/;
+// 引用符・ダッシュなどの約物をASCIIへ寄せる（実キーで打てる形にする）
+const EN_PUNCT = { '‘':"'", '’':"'", '“':'"', '”':'"', '–':'-', '—':'-', ' ':' ' };
+function normalizeEnglish(s){
+  return s.replace(/[‘’“”–— ]/g, c => EN_PUNCT[c])
+          .replace(/…/g, '...').replace(/\s+/g, ' ').trim();
+}
+// ASCII印字可能文字のみ＋英字を1つ以上含む
+function isEnglishText(s){ return /[A-Za-z]/.test(s) && !/[^\x20-\x7E]/.test(s); }
+// 「英文らしさ」の判定。ローマ字読み（空白なし全小文字）と区別するため空白か大文字を要求する。
+function looksEnglish(s){ return isEnglishText(s) && (/\s/.test(s) || /[A-Z]/.test(s)); }
+
+class EnglishMatcher {
+  constructor(text){
+    this.text = text;
+    this.units = text.split('');
+    this.ui = 0;
+  }
+  done(){ return this.ui >= this.units.length; }
+  accept(ev){
+    if (this.done()) return { ok:false };
+    const want = this.units[this.ui];
+    if (ev.key === want){
+      this.ui++;
+      return { ok:true, label: want, lit: !EN_ANALYZE_RE.test(want) };
+    }
+    return { ok:false };
+  }
+  expected(){ return this.done() ? '?' : this.units[this.ui]; }
+  expectedIsLit(){ return !this.done() && !EN_ANALYZE_RE.test(this.units[this.ui]); }
+  guideParts(){
+    return {
+      done: this.units.slice(0, this.ui).map(c => ({ l:c, sh:false })),
+      rest: this.units.slice(this.ui).map(c => ({ l:c, sh:false })),
+    };
+  }
+  remaining(){ return this.units.slice(this.ui).join(''); }
+  allLabels(){ return this.units.slice(); }
+}
+
 // --- 複数のサブマッチャー（かな連はWordMatcher/KanaMatcher、リテラル連はLiteralMatcher）を連結 ---
 class MixedMatcher {
   constructor(text, kanaEngine){ // kanaEngine: 'romaji' | 'kana'
@@ -819,17 +893,39 @@ class MixedMatcher {
 
 if (typeof module !== 'undefined') module.exports = {
   romajiToKana, splitRuns, normalizeLiteral, kataToHira, LiteralMatcher, MixedMatcher, HIRAGANA_RE,
+  EnglishMatcher, normalizeEnglish, isEnglishText, looksEnglish,
 };
 // ===== ワード読み込み（tpl / WT-xml / WT-txt） =====
 'use strict';
 
 const MX2 = (typeof module !== 'undefined' && module.exports)
-  ? require('./mixed.js') : { romajiToKana: romajiToKana, HIRAGANA_RE: HIRAGANA_RE, kataToHira: kataToHira };
+  ? require('./mixed.js')
+  : { romajiToKana, HIRAGANA_RE, kataToHira, normalizeEnglish, isEnglishText, looksEnglish };
 
 // 文字列の一部でも仮名（HIRAGANA_RE）でなければ「純ひらがなではない」= 数字/記号/漢字混入
 function isPureHiragana(s){
   for (const ch of s) if (!MX2.HIRAGANA_RE.test(ch)) return false;
   return s.length > 0;
+}
+
+// 読み文字列を打鍵対象へ確定する。k=かな（ローマ字/かな入力用）、e=英文（英語入力用）。
+// 英語かどうかは1件ずつではなくファイル単位で決める。ローマ字読みの単語集（空白なし全小文字）が
+// たまたま英単語に見えるケースで取り違えないようにするため。
+// raws: [{d, reading}] / srcKind: 'romaji'（読みがローマ字綴り）| 'kana'（読みがかな）
+function finalizeWords(raws, srcKind){
+  const norm = raws.map(w => ({ d: w.d, reading: w.reading, en: MX2.normalizeEnglish(w.reading) }));
+  const enN = norm.filter(w => MX2.looksEnglish(w.en)).length;
+  const fileIsEnglish = norm.length > 0 && enN / norm.length >= 0.8;
+  return norm.map(w => {
+    if (fileIsEnglish && MX2.isEnglishText(w.en)){
+      return { d: w.d || w.en, k: null, e: w.en, kanaOK: false };
+    }
+    if (srcKind === 'romaji'){
+      const { kana, ok } = MX2.romajiToKana(w.reading);
+      return { d: w.d, k: ok ? kana : null, e: null, r: w.reading, kanaOK: ok };
+    }
+    return { d: w.d, k: MX2.kataToHira(w.reading), e: null };
+  });
 }
 
 // ---- 判別 ----
@@ -844,17 +940,20 @@ function sniffFormat(text){
 // ---- TPL ----
 // <Word word="蜘蛛の子を散らす" roman="kumonokowotirasu" star="1"/>
 function parseTPL(text){
-  const words = [];
+  const raws = [];
   const re = /<Word\s+word="([^"]*)"\s+roman="([^"]*)"[^/]*\/>/g;
   let m;
   while ((m = re.exec(text))){
-    const d = decodeXmlEntities(m[1]);
-    const roman = decodeXmlEntities(m[2]);
-    const { kana, ok } = MX2.romajiToKana(roman);
-    words.push({ d, k: ok ? kana : null, r: roman, kanaOK: ok });
+    raws.push({ d: decodeXmlEntities(m[1]), reading: decodeXmlEntities(m[2]) });
   }
-  return { kind: 'flat', words, warnings: words.filter(w => !w.kanaOK).length
-    ? [`${words.filter(w => !w.kanaOK).length}件はローマ字綴りをかな読みに変換できず、かな入力では利用できない。`] : [] };
+  const words = finalizeWords(raws, 'romaji');
+  const enN = words.filter(w => w.e).length;
+  const warnings = [];
+  if (!enN){
+    const bad = words.filter(w => !w.k).length;
+    if (bad) warnings.push(`${bad}件はローマ字綴りをかな読みに変換できず、かな入力では利用できない。`);
+  }
+  return { kind: 'flat', words, warnings };
 }
 function decodeXmlEntities(s){
   return s.replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&apos;/g,"'").replace(/&amp;/g,'&');
@@ -875,9 +974,9 @@ function parseWTXml(text){
     while ((wm = wordRe.exec(pm[1]))){
       const disp = (wm[1].match(/<Display>([\s\S]*?)<\/Display>/) || [,''])[1];
       const chars = (wm[1].match(/<Characters>([\s\S]*?)<\/Characters>/) || [,''])[1];
-      words.push({ d: decodeXmlEntities(disp.trim()), k: MX2.kataToHira(decodeXmlEntities(chars.trim())) });
+      words.push({ d: decodeXmlEntities(disp.trim()), reading: decodeXmlEntities(chars.trim()) });
     }
-    if (words.length) parts.push(words);
+    if (words.length) parts.push(finalizeWords(words, 'kana'));
   }
   if (parts.length === 0) return { kind: 'flat', words: [], warnings: ['読み込める<Part>が見つからなかった。'] };
   if (parts.length === 1) return { kind: 'flat', words: parts[0], warnings: [] };
@@ -898,9 +997,9 @@ function parseWTTxt(text){
   const parts = blocks.filter(b => b.length).map(block => {
     const words = [];
     for (let i = 0; i + 1 < block.length; i += 2){
-      words.push({ d: block[i].trim(), k: MX2.kataToHira(block[i+1].trim()) });
+      words.push({ d: block[i].trim(), reading: block[i+1].trim() });
     }
-    return words;
+    return finalizeWords(words, 'kana');
   }).filter(w => w.length);
   if (parts.length === 0) return { kind: 'flat', words: [], warnings: ['読み込めるワードが見つからなかった。'] };
   if (parts.length === 1) return { kind: 'flat', words: parts[0], warnings: [] };
@@ -921,16 +1020,19 @@ function parseWordFile(text, filename){
 
 // combo（複数Part）を1件の具体的な{d,k}へランダム解決する
 function resolveCombo(parts){
-  let d = '', k = '';
+  let d = '', k = '', e = '';
+  let kOK = true, eOK = true;
   for (const part of parts){
     const pick = part[Math.floor(Math.random() * part.length)];
-    d += pick.d; k += pick.k;
+    d += pick.d;
+    if (pick.k) k += pick.k; else kOK = false;
+    if (pick.e) e += pick.e; else eOK = false;
   }
-  return { d, k };
+  return { d, k: kOK ? k : null, e: eOK ? e : null };
 }
 
 if (typeof module !== 'undefined') module.exports = {
-  sniffFormat, parseTPL, parseWTXml, parseWTTxt, parseWordFile, resolveCombo, isPureHiragana,
+  sniffFormat, parseTPL, parseWTXml, parseWTTxt, parseWordFile, resolveCombo, isPureHiragana, finalizeWords,
 };
 // 練習ワード（短語）。d=通常表記 / k=ひらがな表記
 const WORDS = [
@@ -986,7 +1088,7 @@ const WORDS = [
 {d:'三百',k:'さんびゃく'},{d:'発表',k:'はっぴょう'},{d:'結婚',k:'けっこん'},{d:'石鹸',k:'せっけん'},{d:'雑誌',k:'ざっし'},
 {d:'実験',k:'じっけん'},{d:'物価',k:'ぶっか'},{d:'抹茶',k:'まっちゃ'},{d:'コップ',k:'こっぷ'},{d:'ぽかぽか',k:'ぽかぽか'},
 {d:'云々',k:'うんぬん'},{d:'究極',k:'きゅうきょく'},{d:'罰金',k:'ばっきん'},{d:'鉄板',k:'てっぱん'},{d:'ちょっと',k:'ちょっと'},
-{d:'入力',k:'にゅうりょく'},{d:'打鍵列',k:'だげきれつ'},{d:'最適化',k:'さいてきか'},{d:'先読み',k:'さきよみ'},{d:'音楽鑑賞',k:'おんがくかんしょう'},
+{d:'入力',k:'にゅうりょく'},{d:'打鍵列',k:'だけんれつ'},{d:'最適化',k:'さいてきか'},{d:'先読み',k:'さきよみ'},{d:'音楽鑑賞',k:'おんがくかんしょう'},
 {d:'国際交流',k:'こくさいこうりゅう'},{d:'消防車',k:'しょうぼうしゃ'},{d:'警察官',k:'けいさつかん'},{d:'大学院',k:'だいがくいん'},{d:'研究室',k:'けんきゅうしつ'},
 {d:'給食',k:'きゅうしょく'},{d:'掃除当番',k:'そうじとうばん'},{d:'保健室',k:'ほけんしつ'},{d:'運転手',k:'うんてんしゅ'},{d:'看護師',k:'かんごし'},
 {d:'弁護士',k:'べんごし'},{d:'技術者',k:'ぎじゅつしゃ'},{d:'建築家',k:'けんちくか'},{d:'通訳',k:'つうやく'},{d:'翻訳',k:'ほんやく'},
@@ -1058,6 +1160,98 @@ const LONGS = [
 {d:'看護師の夢を追いかけている',k:'かんごしのゆめをおいかけている'},
 {d:'ブランクタイムを減らす意識を持つ',k:'ぶらんくたいむをへらすいしきをもつ'},
 ];
+// 練習ワード（英単語）。e=打鍵対象。表記も同一なので d は省略し、参照時に e を使う。
+const EN_WORDS = [
+'about','above','accept','across','action','actually','address','advice','afraid','after',
+'again','against','agree','ahead','allow','almost','alone','along','already','always',
+'among','amount','animal','another','answer','anyone','appear','apple','around','arrive',
+'article','artist','asleep','attempt','attend','author','autumn','avoid','aware','balance',
+'basket','battle','beach','beauty','because','become','before','begin','behind','believe',
+'below','benefit','beside','better','between','beyond','bicycle','bridge','bright','bring',
+'broken','brother','budget','build','button','camera','cancel','candle','career','careful',
+'carry','castle','catch','center','change','charge','cheese','chicken','choice','circle',
+'clean','clever','climb','close','cloud','coffee','collect','color','common','company',
+'compare','complete','concert','connect','consider','contain','context','continue','control','corner',
+'correct','country','couple','course','create','credit','crowd','culture','current','custom',
+'damage','dance','danger','decide','decision','degree','deliver','demand','depend','describe',
+'design','desire','detail','develop','device','differ','dinner','direct','discuss','distance',
+'doctor','double','doubt','dream','drive','during','early','effort','either','element',
+'empty','energy','engine','enough','enter','entire','equal','escape','evening','event',
+'every','exact','example','except','exchange','exercise','exist','expect','expert','explain',
+'express','extend','factor','family','famous','farmer','fashion','father','feature','figure',
+'finally','finger','finish','flight','flower','follow','forest','forget','formal','fortune',
+'forward','freedom','friend','future','garden','gather','gentle','global','golden','ground',
+'growth','guitar','handle','happen','health','history','honest','impact','improve','include',
+'income','indeed','injury','inside','invite','island','junior','justice','kitchen','ladder',
+'language','laugh','launch','leader','league','learn','leave','legend','lesson','letter',
+'level','library','license','listen','little','local','lucky','machine','manage','manner',
+'market','master','matter','measure','member','memory','mention','method','middle','minute',
+'mirror','mistake','moment','monitor','morning','mother','motion','mountain','moving','murder',
+];
+// 練習ワード（英文）。30字前後。
+const EN_SENTS = [
+'The quick brown fox jumps.',
+'She left the door wide open.',
+'We arrived just before sunset.',
+'He forgot to bring his notes.',
+'They walked along the river.',
+'My brother lives in the city.',
+'The coffee was still too hot.',
+'Please close the window now.',
+'I found my keys under the bed.',
+'The meeting starts at nine.',
+'She writes letters every week.',
+'We should leave in ten minutes.',
+'The garden looks better today.',
+'He plays guitar in a small band.',
+'Nobody answered the telephone.',
+'The train was delayed by snow.',
+'I would rather stay at home.',
+'Her answer surprised everyone.',
+'The old bridge needs repair.',
+'We watched the sun go down.',
+'This book changed my mind.',
+'He speaks three languages well.',
+'The children ran across the yard.',
+'She ordered a cup of tea.',
+'Our flight leaves early tomorrow.',
+'The room smelled of fresh paint.',
+'I never learned to swim.',
+'They built the house last year.',
+'The music grew louder and louder.',
+'He asked for a second chance.',
+'Winter came earlier than usual.',
+'She kept the letter for years.',
+'We need more time to finish.',
+'The camera stopped working.',
+'His story did not add up.',
+'Please write your name here.',
+'The market closes at seven.',
+'I left my umbrella on the bus.',
+'She smiled without saying much.',
+'The path leads to the lake.',
+'We talked until after midnight.',
+'He carried the box upstairs.',
+'The teacher praised her essay.',
+'A cold wind blew from the north.',
+'They agreed to meet on Friday.',
+'The screen went black suddenly.',
+'I can hear the rain outside.',
+'She packed a lunch for the trip.',
+'The lesson lasted two hours.',
+'He returned the book to me.',
+'Everything felt strange that day.',
+'The bakery opens before dawn.',
+'We shared a table by the window.',
+'Her voice was calm and steady.',
+'The dog waited at the gate.',
+'I forgot what I wanted to say.',
+'They cleaned the whole kitchen.',
+'The letter arrived on Monday.',
+'He looked up from his desk.',
+'Silence filled the empty hall.',
+].map(s => ({ d: s, e: s }));
+const EN_WORD_LIST = EN_WORDS.map(s => ({ d: s, e: s }));
 // ===== 打鍵ラボ 本体 v4（ローマ字入力 / かな入力） =====
 'use strict';
 
@@ -1070,11 +1264,12 @@ const STORE_KEY_OLD = 'dakenlab-stats-v1';
 
 // ---- 永続データ（方式別） ----
 const blankStat = () => ({ big:{}, keysN:0, rollHit:0, errN:0, words:[], pos:Array.from({length:10},()=>[0,0]) });
-const stats = { romaji: blankStat(), kana: blankStat() };
+const stats = { romaji: blankStat(), kana: blankStat(), english: blankStat() };
+const METHODS = ['romaji', 'kana', 'english'];
 let storageOK = false;
 
 // ---- セッション状態 ----
-let method = 'romaji';      // romaji | kana
+let method = 'romaji';      // romaji | kana | english
 let aMethod = 'romaji';     // 分析画面で表示中の方式
 let mode = 'normal';
 let lenMode = 'long';
@@ -1087,11 +1282,14 @@ const physDown = new Map();
 const keyCache = new Map();
 let screen = 'play';
 let imported = null; // { kind, words|parts, filename, warnings }
+const fallbackNoticeShown = new Set(); // 読み込みワード非対応の通知を出した入力方式（方式ごとに1度だけ）
 
 const $ = id => document.getElementById(id);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[c]));
 const S = m => stats[m || method];
-const METHOD_LABEL = { romaji:'ローマ字入力', kana:'かな入力' };
+const METHOD_LABEL = { romaji:'ローマ字入力', kana:'かな入力', english:'英語入力' };
+// 分析用ラベル。英語入力は大文字・小文字を同じキーとしてまとめる。
+const analysisLabel = (l, m) => ((m || method) === 'english' ? String(l).toLowerCase() : l);
 
 function fixStat(s){
   if (!s || typeof s !== 'object') return blankStat();
@@ -1111,7 +1309,7 @@ async function loadStats(){
     try { r = await window.storage.get(STORE_KEY); } catch(e){ r = null; }
     if (r && r.value){
       const s = JSON.parse(r.value);
-      stats.romaji = fixStat(s.romaji); stats.kana = fixStat(s.kana);
+      for (const m of METHODS) stats[m] = fixStat(s[m]);
     } else {
       // 旧形式（ローマ字のみ）からの移行
       let o = null;
@@ -1134,31 +1332,45 @@ function saveStats(){
   }, 400);
 }
 async function resetStats(){
-  if (!confirm(`${METHOD_LABEL[aMethod]}の分析データを削除する。よいか？（もう一方の方式のデータは残る）`)) return;
+  if (!confirm(`${METHOD_LABEL[aMethod]}の分析データを削除する。よいか？（他の方式のデータは残る）`)) return;
   stats[aMethod] = blankStat();
   saveStats();
   renderAnalysis();
 }
 
 // ---- ワード選択 ----
+// 現在の入力方式で実際に打鍵する文字列。英語入力は e、それ以外は かな読み k。
+function targetOf(w){ return (method === 'english' ? w.e : w.k) || null; }
+function makeMatcher(target){
+  return method === 'english' ? new EnglishMatcher(target) : new MixedMatcher(target, method);
+}
+function builtinPool(){
+  if (method === 'english'){
+    return lenMode === 'short' ? EN_WORD_LIST : lenMode === 'long' ? EN_SENTS : EN_WORD_LIST.concat(EN_SENTS);
+  }
+  return lenMode === 'long' ? LONGS : lenMode === 'short' ? WORDS : WORDS.concat(LONGS);
+}
+function builtinFallback(){ return method === 'english' ? EN_SENTS : LONGS; }
 function wordPool(){
   if (lenMode === 'imported' && imported){
     if (imported.kind === 'flat') return imported.words;
     return []; // combo は pickWord() 内で直接解決する
   }
-  return lenMode === 'long' ? LONGS : lenMode === 'short' ? WORDS : WORDS.concat(LONGS);
+  return builtinPool();
 }
-function strokeLabels(kana){
-  const ck = method + '|' + kana;
-  if (!keyCache.has(ck)) keyCache.set(ck, new MixedMatcher(kana, method).allLabels());
+function strokeLabels(target){
+  const ck = method + '|' + target;
+  if (!keyCache.has(ck)) keyCache.set(ck, makeMatcher(target).allLabels());
   return keyCache.get(ck);
 }
-function predictWord(kana){
-  const labels = strokeLabels(kana);
+function predictWord(target){
+  const labels = strokeLabels(target);
   const big = S().big;
+  const usable = l => method !== 'english' || EN_ANALYZE_RE.test(l);
   let sum = 0, n = 0;
   for (let i = 1; i < labels.length; i++){
-    const s = big[labels[i-1] + '>' + labels[i]];
+    if (!usable(labels[i-1]) || !usable(labels[i])) continue; // スペース・記号の遷移は評価対象外
+    const s = big[analysisLabel(labels[i-1]) + '>' + analysisLabel(labels[i])];
     const mean = s ? (s[1] + PRIOR_MS * PRIOR_N) / (s[0] + PRIOR_N) : PRIOR_MS;
     sum += mean; n++;
   }
@@ -1168,41 +1380,53 @@ function pickWord(){
   if (lenMode === 'imported' && imported && imported.kind === 'combo'){
     // 組み合わせ型：都度ランダム解決。直前と同じ結果が続いたら再抽選する（軽い重複回避）
     let r = resolveCombo(imported.parts);
-    for (let i = 0; i < 5 && usedWords.has(r.k); i++) r = resolveCombo(imported.parts);
-    return r;
+    for (let i = 0; i < 5 && targetOf(r) && usedWords.has(targetOf(r)); i++) r = resolveCombo(imported.parts);
+    if (targetOf(r)) return r;
+    // 現在の入力方式に対応しない組み合わせ型は内蔵ワードで代替する
+    if (!fallbackNoticeShown.has(method)){
+      fallbackNoticeShown.add(method);
+      toast(`読み込んだワードは${METHOD_LABEL[method]}に対応していないため、内蔵ワードを使用する`);
+    }
+    const fb = builtinFallback().filter(w => !usedWords.has(targetOf(w)));
+    const pool0 = fb.length ? fb : builtinFallback();
+    return pool0[Math.floor(Math.random() * pool0.length)];
   }
-  let pool = wordPool().filter(w => w.k && !usedWords.has(w.k) && (method !== 'kana' || w.kanaOK !== false));
+  const usable = w => targetOf(w) && (method !== 'kana' || w.kanaOK !== false);
+  let pool = wordPool().filter(w => usable(w) && !usedWords.has(targetOf(w)));
   if (pool.length === 0){
     usedWords.clear();
-    pool = wordPool().filter(w => w.k && (method !== 'kana' || w.kanaOK !== false));
+    pool = wordPool().filter(usable);
   }
   if (pool.length === 0){
     // 読み込んだワードが現在の入力方式に対応していない場合は内蔵ワードへフォールバック
-    toast(`読み込んだワードは${METHOD_LABEL[method]}に対応する読みがないため、内蔵ワードを使用する`);
-    pool = (lenMode === 'imported' ? LONGS : wordPool()).filter(w => !usedWords.has(w.k));
-    if (pool.length === 0) pool = lenMode === 'imported' ? LONGS : wordPool();
+    if (!fallbackNoticeShown.has(method)){
+      fallbackNoticeShown.add(method);
+      toast(`読み込んだワードは${METHOD_LABEL[method]}に対応する読みがないため、内蔵ワードを使用する`);
+    }
+    const base = lenMode === 'imported' ? builtinFallback() : builtinPool();
+    pool = base.filter(w => !usedWords.has(targetOf(w)));
+    if (pool.length === 0) pool = base;
   }
   if (mode === 'weak' && S().keysN >= 200){
-    const scored = pool.map(w => [predictWord(w.k), w]).sort((a,b) => b[0] - a[0]);
+    const scored = pool.map(w => [predictWord(targetOf(w)), w]).sort((a,b) => b[0] - a[0]);
     const top = scored.slice(0, Math.max(8, Math.floor(scored.length * 0.2)));
     return top[Math.floor(Math.random() * top.length)][1];
   }
   return pool[Math.floor(Math.random() * pool.length)];
 }
 function updateModeNote(){
-  let t;
+  let t = '';
   if (mode === 'weak'){
     t = S().keysN >= 200
       ? `${METHOD_LABEL[method]}の遅い遷移を多く含むワードを優先して出題する。`
       : `弱点ドリルには${METHOD_LABEL[method]}の分析データが必要（あと${200 - S().keysN}打）。それまでは通常出題で代替する。`;
-  } else {
-    t = `${SET_SIZE}ワードで1セット。打ち終えるとリザルトが出て、その記録が${METHOD_LABEL[method]}の分析に加算される。`;
   }
   if (lenMode === 'imported' && imported){
     const kind = imported.kind === 'combo' ? '組み合わせ型（各パートからランダムに選び連結）' : `${imported.words.length}件のフラットな単語`;
     t += ` 読み込みワード「${imported.filename}」（${kind}）を出題中。`;
   }
-  $('modeNote').textContent = t;
+  if (method === 'english') t += ' 大文字はShift併用。スペースと記号は遷移の集計から除外する。';
+  $('modeNote').textContent = t.trim();
 }
 
 // ---- セット制御 ----
@@ -1211,15 +1435,17 @@ function startSet(){
   screen = 'play';
   $('viewResult').hidden = true;
   $('viewPlay').hidden = false;
+  $('aboutBox').hidden = false;
   updateModeNote();
   nextWord();
   updateProgress();
 }
 function nextWord(){
   curWord = pickWord();
-  usedWords.add(curWord.k);
-  matcher = new MixedMatcher(curWord.k, method);
-  cur = { disp: curWord.d, kana: curWord.k, method, keys: [], misses: [], missBig: [], start: 0 };
+  const target = targetOf(curWord);
+  usedWords.add(target);
+  matcher = makeMatcher(target);
+  cur = { disp: curWord.d || target, kana: target, method, keys: [], misses: [], missBig: [], start: 0 };
   prevT = 0; prevCode = ''; consecErr = 0;
   renderWord();
 }
@@ -1247,14 +1473,17 @@ function updateProgress(){
 // ---- 描画（プレイ中） ----
 function renderWord(){
   if (!matcher) return;
-  $('disp').textContent = curWord.d;
+  const en = method === 'english';
+  $('disp').textContent = cur ? cur.disp : (curWord.d || '');
+  $('disp').className = 'disp' + (en ? ' en' : '');
   let html = '';
   for (let i = 0; i < matcher.units.length; i++){
     const cls = i < matcher.ui ? 'u done' : i === matcher.ui ? 'u cur' : 'u';
     html += `<span class="${cls}">${esc(matcher.units[i])}</span>`;
   }
   $('kana').innerHTML = html;
-  if (method === 'kana'){
+  $('kana').className = 'kana' + (en ? ' en' : '');
+  if (method === 'kana' || en){
     $('guide').hidden = true;
     $('guide').innerHTML = '';
   } else {
@@ -1274,6 +1503,10 @@ function isRomajiKey(e){
 function isKanaKey(e){
   return !!KANA_LAYOUT[e.code] && !e.ctrlKey && !e.metaKey && !e.altKey;
 }
+// 英語入力は印字可能なASCII全域（大文字・空白・約物を含む）を受け付ける
+function isEnglishKey(e){
+  return e.key.length === 1 && e.key >= ' ' && e.key <= '~' && !e.ctrlKey && !e.metaKey && !e.altKey;
+}
 window.addEventListener('keydown', e => {
   if (e.key === 'Escape'){
     if (screen === 'play' && !$('viewPlay').hidden) abortSet();
@@ -1285,7 +1518,11 @@ window.addEventListener('keydown', e => {
   if (!$('viewAnalysis').hidden || screen !== 'play') return;
 
   const kana = method === 'kana';
-  if (kana ? !isKanaKey(e) : !isRomajiKey(e)) return;
+  // 読みに英語の語句が混じっている場合、その区間（リテラル扱い）はスペース・大文字なども
+  // 方式に関わらずそのまま打鍵できるようにする（ローマ字/かな入力中でも同様）。
+  const expectingLiteral = !!(matcher && !matcher.done() && matcher.expectedIsLit && matcher.expectedIsLit());
+  const accepts = expectingLiteral ? isEnglishKey : kana ? isKanaKey : method === 'english' ? isEnglishKey : isRomajiKey;
+  if (!accepts(e)) return;
   e.preventDefault();
   if (e.repeat) return;
 
@@ -1300,7 +1537,7 @@ window.addEventListener('keydown', e => {
     consecErr = 0;
     const first = cur.keys.length === 0;
     if (first) cur.start = t;
-    cur.keys.push({ k: r.label, code, t0: t, t1: null, roll: first ? false : !!heldPrev, iki: first ? null : t - prevT, lit: !!r.lit });
+    cur.keys.push({ k: r.label, a: analysisLabel(r.label), code, t0: t, t1: null, roll: first ? false : !!heldPrev, iki: first ? null : t - prevT, lit: !!r.lit });
     prevT = t; prevCode = code;
     if (matcher.done()) finishWord(t); else renderWord();
   } else {
@@ -1309,7 +1546,7 @@ window.addEventListener('keydown', e => {
     const expLit = matcher.expectedIsLit();
     cur.misses.push({ t, k: labelForEvent(e, kana), expected });
     const prevKs = cur.keys[cur.keys.length-1];
-    if (prevKs && !prevKs.lit && !expLit) cur.missBig.push(prevKs.k + '>' + expected);
+    if (prevKs && !prevKs.lit && !expLit) cur.missBig.push(prevKs.a + '>' + analysisLabel(expected));
     flashMiss();
   }
   updateLive();
@@ -1361,9 +1598,9 @@ function commitSet(){
   for (const w of setWords){
     const total = w.keys.length;
     for (let i = 1; i < w.keys.length; i++){
-      if (w.keys[i-1].lit || w.keys[i].lit) continue; // 数字・記号を含む連接は分析対象外
+      if (w.keys[i-1].lit || w.keys[i].lit) continue; // 数字・記号・スペースを含む連接は分析対象外
       const iki = w.keys[i].iki;
-      const bg = w.keys[i-1].k + '>' + w.keys[i].k;
+      const bg = w.keys[i-1].a + '>' + w.keys[i].a;
       const s = st.big[bg] || (st.big[bg] = [0,0,0]);
       s[0]++; s[1] += iki;
       st.keysN++;
@@ -1388,15 +1625,17 @@ function showResult(){
   screen = 'result';
   $('viewPlay').hidden = true;
   $('viewResult').hidden = false;
+  $('aboutBox').hidden = true;
 
   const strokes = setWords.reduce((a,w) => a + w.keys.length - 1, 0);
   const keysAll = setWords.reduce((a,w) => a + w.keys.length, 0);
   const dur = setWords.reduce((a,w) => a + w.dur, 0);
   const missN = setWords.reduce((a,w) => a + w.misses.length, 0);
   const rolls = setWords.reduce((a,w) => a + w.keys.filter(k => k.roll).length, 0);
-  const blanks = setWords.reduce((a,w) => a + w.keys.filter(k => k.iki !== null && k.iki > BLANK_MS).length, 0);
+  const holdSum = setWords.reduce((a,w) => a + w.keys.reduce((b,k) => b + (k.t1 - k.t0), 0), 0);
   const kps = dur > 0 ? strokes / (dur/1000) : 0;
   const rollRate = strokes ? rolls / strokes : 0;
+  const holdMs = keysAll ? holdSum / keysAll : 0;
 
   $('rMethod').textContent = METHOD_LABEL[setWords[0].method];
   $('rKpm').textContent = Math.round(kps * 60);
@@ -1405,15 +1644,15 @@ function showResult(){
   $('rMiss').textContent = missN + ' 打';
   $('rRoll').textContent = Math.round(rollRate * 100) + '%';
   $('rRollBand').textContent = rollBand(rollRate);
-  $('rBlank').textContent = blanks;
-  $('rBlankSub').textContent = strokes ? (blanks / strokes * 100).toFixed(1) + '% の打鍵' : '';
+  $('rHold').textContent = Math.round(holdMs);
+  $('rHoldSub').textContent = 'ms';
   $('rTime').textContent = (dur / 1000).toFixed(1) + '秒';
 
   const agg = {};
   for (const w of setWords){
     for (let i = 1; i < w.keys.length; i++){
       if (w.keys[i-1].lit || w.keys[i].lit) continue;
-      const bg = w.keys[i-1].k + '>' + w.keys[i].k;
+      const bg = w.keys[i-1].a + '>' + w.keys[i].a;
       const a = agg[bg] || (agg[bg] = [0,0]);
       a[0]++; a[1] += w.keys[i].iki;
     }
@@ -1479,7 +1718,7 @@ function renderRows(){
       <div class="wh">
         <span class="wn">${idx+1}</span>
         <span class="wt">${esc(w.disp)}</span>
-        <span class="wk">${esc(w.kana)}</span>
+        <span class="wk">${w.kana === w.disp ? '' : esc(w.kana)}</span>
         <span class="wr">${esc(seq)}</span>
         <span class="wm">${Math.round(w.kps*60)}<i>kpm</i> · ${(w.acc*100).toFixed(0)}%<i>正確</i> · ${Math.round(w.rollRate*100)}%<i>重複</i> · ${(w.dur/1000).toFixed(1)}<i>秒</i></span>
       </div>
@@ -1505,14 +1744,26 @@ function toast(msg){
 }
 
 // ---- 入力方式・モード・出題長 ----
+// 出題長ボタンの見出しは方式で言い換える（英語入力は 単語／文）
+function syncLenLabels(){
+  const en = method === 'english';
+  $('lenLong').textContent = en ? '文' : '長文';
+  $('lenShort').textContent = en ? '単語' : '短語';
+}
+function setMethod(m){
+  if (m === method) return false;
+  method = m;
+  document.querySelectorAll('.mbtn').forEach(x => x.classList.toggle('sel', x.dataset.method === m));
+  keyCache.clear();
+  syncLenLabels();
+  return true;
+}
 document.querySelectorAll('.mbtn').forEach(b => {
   b.addEventListener('click', () => {
     if (b.dataset.method === method) return;
-    document.querySelectorAll('.mbtn').forEach(x => x.classList.remove('sel'));
-    b.classList.add('sel');
-    method = b.dataset.method;
-    keyCache.clear();
-    if (screen === 'play' && setWords.length > 0) toast('入力方式を変更したのでセットを最初からやり直す');
+    const wasPlaying = screen === 'play' && setWords.length > 0;
+    setMethod(b.dataset.method);
+    if (wasPlaying) toast('入力方式を変更したのでセットを最初からやり直す');
     startSet();
   });
 });
@@ -1546,6 +1797,15 @@ function describeImport(res){
   }
   return `${res.words.length}件の単語を読み込んだ`;
 }
+// 読み込んだワードが英語一色／日本語一色なら、それに合う入力方式へ寄せる
+function importMethodHint(res){
+  const list = res.kind === 'flat' ? res.words : res.parts.reduce((a,p) => a.concat(p), []);
+  if (!list.length) return null;
+  const enN = list.filter(w => w.e).length;
+  if (enN === list.length) return 'english';
+  if (enN === 0 && list.some(w => w.k)) return 'ja';
+  return null;
+}
 function applyImport(text, filename){
   let res;
   try { res = parseWordFile(text, filename); }
@@ -1555,11 +1815,19 @@ function applyImport(text, filename){
     return false;
   }
   imported = res;
+  fallbackNoticeShown.clear(); // 新しいファイルの対応状況を改めて通知できるようにする
+  const hint = importMethodHint(res);
+  let switched = null;
+  if (hint === 'english' && method !== 'english' && setMethod('english')) switched = 'english';
+  else if (hint === 'ja' && method === 'english' && setMethod('romaji')) switched = 'romaji';
+
   const kanaOKN = res.kind === 'flat' ? res.words.filter(w => w.k && w.kanaOK !== false).length : null;
   let msg = `「${filename}」から${describeImport(res)}（形式: ${{tpl:'tpl', wtxml:'WT用xml', wttxt:'WT用txt'}[res.format]}）。`;
-  if (res.kind === 'flat' && kanaOKN !== null && kanaOKN < res.words.length){
+  if (hint === 'english') msg += ' 英語ワードとして読み込んだ。';
+  else if (res.kind === 'flat' && kanaOKN !== null && kanaOKN < res.words.length){
     msg += ` うちかな入力対応: ${kanaOKN}件。`;
   }
+  if (switched) msg += ` 入力方式を${METHOD_LABEL[switched]}に切り替えた。`;
   if (res.warnings.length) msg += ' ' + res.warnings.join(' ');
   $('importStatus').textContent = msg;
   $('importStatus').hidden = false;
@@ -1594,6 +1862,7 @@ function switchTab(tab){
   $('tabPlay').classList.toggle('sel', tab === 'play');
   $('tabAnalysis').classList.toggle('sel', tab === 'analysis');
   $('tabWords').classList.toggle('sel', tab === 'words');
+  $('aboutBox').hidden = (tab === 'play' && screen === 'result');
   if (tab === 'analysis') renderAnalysis();
   if (tab === 'words') renderWordList();
 }
@@ -1622,9 +1891,11 @@ function renderAnalysis(){
   const allN = st.keysN + st.errN;
   $('aErr').textContent = allN ? (st.errN / allN * 100).toFixed(1) + '%' : '–';
   $('aOther').textContent = (() => {
-    const o = aMethod === 'romaji' ? stats.kana : stats.romaji;
-    const on = Object.values(o.big).reduce((a,v) => a + v[0], 0);
-    return on ? `${METHOD_LABEL[aMethod === 'romaji' ? 'kana' : 'romaji']}にも ${on.toLocaleString()}打の記録がある。` : '';
+    const others = METHODS.filter(m => m !== aMethod).map(m => {
+      const on = Object.values(stats[m].big).reduce((a,v) => a + v[0], 0);
+      return on ? `${METHOD_LABEL[m]} ${on.toLocaleString()}打` : null;
+    }).filter(Boolean);
+    return others.length ? `${others.join(' / ')}の記録もある。` : '';
   })();
 
   const slow = list.filter(b => b.n >= 5).sort((a,b) => b.mean - a.mean).slice(0, 12);
@@ -1648,7 +1919,9 @@ function renderAnalysis(){
     const o = out[a] || (out[a] = [0,0]);
     o[0] += b.n; o[1] += b.mean * b.n;
   }
-  const rows = aMethod === 'kana' ? KANA_ROWS : ['qwertyuiop-'.split(''),'asdfghjkl'.split(''),'zxcvbnm'.split('')];
+  const rows = aMethod === 'kana' ? KANA_ROWS
+    : aMethod === 'english' ? ['qwertyuiop'.split(''),'asdfghjkl'.split(''),'zxcvbnm'.split('')]
+    : ['qwertyuiop-'.split(''),'asdfghjkl'.split(''),'zxcvbnm'.split('')];
   $('kbdTitle').textContent = aMethod === 'kana' ? 'キー別 平均発信IKI（JISかな配列）' : 'キー別 平均発信IKI（QWERTY）';
   $('kbd').className = aMethod === 'kana' ? 'kana' : '';
   $('kbd').innerHTML = rows.map((row, ri) =>
@@ -1704,18 +1977,21 @@ function mix(c1,c2,f){
 $('resetBtn').addEventListener('click', resetStats);
 
 // ---- ワード一覧 ----
-const ALL_BUILTIN_WORDS = WORDS.map(w => ({ d: w.d, k: w.k, cat: '短語' }))
-  .concat(LONGS.map(w => ({ d: w.d, k: w.k, cat: '長文' })));
+const ALL_BUILTIN_WORDS = WORDS.map(w => ({ d: w.d, k: w.k, cat: '短語', len: w.k.length }))
+  .concat(LONGS.map(w => ({ d: w.d, k: w.k, cat: '長文', len: w.k.length })))
+  .concat(EN_WORD_LIST.map(w => ({ d: w.d, k: '', cat: '英単語', len: w.e.length })))
+  .concat(EN_SENTS.map(w => ({ d: w.d, k: '', cat: '英文', len: w.e.length })));
 let wlQuery = '', wlCat = 'all';
 function renderWordList(){
+  const q = wlQuery.toLowerCase();
   const list = ALL_BUILTIN_WORDS.filter(w => {
     if (wlCat !== 'all' && w.cat !== wlCat) return false;
-    if (wlQuery && !w.d.includes(wlQuery) && !w.k.includes(wlQuery)) return false;
+    if (q && !w.d.toLowerCase().includes(q) && !w.k.includes(wlQuery)) return false;
     return true;
   });
   $('wlCount').textContent = `${list.length} / ${ALL_BUILTIN_WORDS.length} 件`;
   $('wlBody').innerHTML = list.length
-    ? list.map((w, i) => `<tr><td class="num">${i+1}</td><td class="w">${esc(w.d)}</td><td class="mono">${esc(w.k)}</td><td>${w.cat}</td><td class="num">${w.k.length}</td></tr>`).join('')
+    ? list.map((w, i) => `<tr><td class="num">${i+1}</td><td class="w">${esc(w.d)}</td><td class="mono">${w.k ? esc(w.k) : '—'}</td><td>${w.cat}</td><td class="num">${w.len}</td></tr>`).join('')
     : '<tr><td colspan="5" class="empty">該当するワードがない。</td></tr>';
 }
 $('wlSearch').addEventListener('input', (e) => { wlQuery = e.target.value.trim(); renderWordList(); });
@@ -1732,6 +2008,7 @@ document.querySelectorAll('.wlchip').forEach(b => {
 (async function init(){
   await loadStats();
   syncAMethodBtns();
+  syncLenLabels();
   startSet();
 })();
 </script>
