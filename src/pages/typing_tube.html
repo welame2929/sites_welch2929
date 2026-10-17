@@ -282,6 +282,35 @@
   }
   .result-link:hover { background: var(--accent2); transform: scale(1.05); }
 
+  /* Result view modes */
+  .view-toggle { display: flex; justify-content: center; gap: 0; margin-top: 20px; }
+  .view-toggle button {
+    font-family: inherit; font-size: 0.8rem; font-weight: 700;
+    padding: 6px 18px; cursor: pointer;
+    border: 1.5px solid var(--border); background: var(--surface2); color: var(--text-muted);
+    transition: all 0.15s ease;
+  }
+  .view-toggle button:first-child { border-radius: 8px 0 0 8px; }
+  .view-toggle button:last-child { border-radius: 0 8px 8px 0; border-left: none; }
+  .view-toggle button.active { border-color: var(--accent); background: var(--accent-glow); color: #d8b4fe; }
+  #results.view-large .result-card {
+    background: #fff; color: #1a1a2e; border-color: #e2e2ee;
+    padding: 20px 24px; flex-direction: column; text-align: center; gap: 10px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.25);
+  }
+  #results.view-large .result-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  #results.view-large .diff-badge { font-size: 1.2rem; padding: 6px 16px; }
+  #results.view-large .diff-1 { background: rgba(34,197,94,0.12); color: #15803d; border-color: rgba(34,197,94,0.5); }
+  #results.view-large .diff-2 { background: rgba(6,182,212,0.12); color: #0e7490; border-color: rgba(6,182,212,0.5); }
+  #results.view-large .diff-3 { background: rgba(234,179,8,0.15); color: #a16207; border-color: rgba(234,179,8,0.6); }
+  #results.view-large .diff-4 { background: rgba(249,115,22,0.12); color: #c2410c; border-color: rgba(249,115,22,0.5); }
+  #results.view-large .diff-5, #results.view-large .diff-6 { background: rgba(239,68,68,0.1); color: #b91c1c; border-color: rgba(239,68,68,0.5); }
+  #results.view-large .result-info { flex: none; max-width: 100%; }
+  #results.view-large .result-title { font-size: 2.3rem; line-height: 1.35; white-space: normal; overflow: visible; text-overflow: clip; overflow-wrap: anywhere; margin-bottom: 4px; }
+  #results.view-large .result-artist { font-size: 1.4rem; color: #5a5a7a; }
+  #results.view-large .genre-tag { background: #ede9fe; color: #6d28d9; font-size: 1.1rem; padding: 4px 14px; }
+  #results.view-large .result-link { font-size: 1.2rem; padding: 10px 24px; }
+
   /* List section */
   .list-section {
     background: var(--surface);
@@ -364,6 +393,9 @@
   @media (max-width: 600px) {
     .result-card { flex-wrap: wrap; }
     .result-link { width: 100%; justify-content: center; }
+    #results.view-large .result-card { flex-wrap: nowrap; }
+    #results.view-large .result-title { font-size: 1.7rem; }
+    #results.view-large .result-artist { font-size: 1.15rem; }
     thead th:nth-child(4) { display: none; }
     tbody td:nth-child(4) { display: none; }
   }
@@ -436,7 +468,11 @@
       ランダム選曲
     </button>
 
-    <div id="results"></div>
+    <div class="view-toggle" id="viewToggle">
+      <button type="button" data-view="large" class="active">見やすい表示</button>
+      <button type="button" data-view="classic">従来の表示</button>
+    </div>
+    <div id="results" class="view-large"></div>
   </div>
 
   <!-- List Section -->
@@ -3702,12 +3738,6 @@ const _RAW = {
     },
     {
       "genre": "ボカロ",
-      "title": "ごめんごめん",
-      "artist": "100回嘔吐",
-      "url": "https://typing-tube.net/movie/show/29549"
-    },
-    {
-      "genre": "ボカロ",
       "title": "999転調",
       "artist": "西島尊大",
       "url": "https://typing-tube.net/movie/show/72314"
@@ -3765,6 +3795,36 @@ const _RAW = {
       "title": "生生しろよ",
       "artist": "キングサリ",
       "url": "https://typing-tube.net/movie/show/70902"
+    },
+    {
+      "genre": "その他",
+      "title": "ハグ!",
+      "artist": "MORE STAR",
+      "url": "https://typing-tube.net/movie/show/70697"
+    },
+    {
+      "genre": "その他",
+      "title": "しどと晴天大迷惑",
+      "artist": "米津玄師",
+      "url": "https://typing-tube.net/movie/show/70671"
+    },
+    {
+      "genre": "ボカロ",
+      "title": "チェイストゥヴァイス",
+      "artist": "みちる",
+      "url": "https://typing-tube.net/movie/show/70559"
+    },
+    {
+      "genre": "ボカロ",
+      "title": "だ・し・て🐍",
+      "artist": "はろける",
+      "url": "https://typing-tube.net/movie/show/70536"
+    },
+    {
+      "genre": "その他",
+      "title": "香港ブギ",
+      "artist": "Jon-YAKITORY/Æž!フヒフム",
+      "url": "https://typing-tube.net/movie/show/70279"
     }
   ],
   "★2": [
@@ -6803,6 +6863,66 @@ const _RAW = {
       "title": "I Don't Care",
       "artist": "Neko Hacker/ななひら",
       "url": "https://typing-tube.net/movie/show/70848"
+    },
+    {
+      "genre": "その他",
+      "title": "ちょー盛れてる!",
+      "artist": "KOGYARU",
+      "url": "https://typing-tube.net/movie/show/70800"
+    },
+    {
+      "genre": "ラップ",
+      "title": "ゴーストマンション",
+      "artist": "ピラフ星人",
+      "url": "https://typing-tube.net/movie/show/70783"
+    },
+    {
+      "genre": "その他",
+      "title": "恋のメガラバ",
+      "artist": "マキシマム ザ ホルモン",
+      "url": "https://typing-tube.net/movie/show/70543"
+    },
+    {
+      "genre": "ボカロ",
+      "title": "オーバーレイ",
+      "artist": "煮ル果実",
+      "url": "https://typing-tube.net/movie/show/70470"
+    },
+    {
+      "genre": "ボカロ",
+      "title": "マリオネットダンサー",
+      "artist": "ひらぎ",
+      "url": "https://typing-tube.net/movie/show/70461"
+    },
+    {
+      "genre": "ゲーム",
+      "title": "BEAST MODE",
+      "artist": "アイドルマスターシリーズ",
+      "url": "https://typing-tube.net/movie/show/70453"
+    },
+    {
+      "genre": "ボカロ",
+      "title": "あなたのいないデスクトップ",
+      "artist": "豆カカオ",
+      "url": "https://typing-tube.net/movie/show/70439"
+    },
+    {
+      "genre": "ゲーム",
+      "title": "リーチヒマヒママヨヤキソバ",
+      "artist": "雀魂-じゃんたま-",
+      "url": "https://typing-tube.net/movie/show/70351"
+    },
+    {
+      "genre": "ボカロ",
+      "title": "ベバトー",
+      "artist": "フロクロ",
+      "url": "https://typing-tube.net/movie/show/70128"
+    },
+    {
+      "genre": "ゲーム",
+      "title": "ダ・ダ・ダ☆ダンシングヒーロー",
+      "artist": "原神",
+      "url": "https://typing-tube.net/movie/show/70104"
     }
   ],
   "★3": [
@@ -9823,6 +9943,66 @@ const _RAW = {
       "title": "うちら強くてニューゲーム",
       "artist": "ハコネクト",
       "url": "https://typing-tube.net/movie/show/75103"
+    },
+    {
+      "genre": "ラップ",
+      "title": "Fright",
+      "artist": "Creepy Nuts",
+      "url": "https://typing-tube.net/movie/show/70798"
+    },
+    {
+      "genre": "ボカロ",
+      "title": "ディザスター",
+      "artist": "わんこそば",
+      "url": "https://typing-tube.net/movie/show/70693"
+    },
+    {
+      "genre": "アニメ",
+      "title": "Nero/ココロジョジョル第1部",
+      "artist": "ジョジョの奇妙な冒険(MAD)",
+      "url": "https://typing-tube.net/movie/show/70683"
+    },
+    {
+      "genre": "アニメ",
+      "title": "FLAME KEEPER",
+      "artist": "少年ジャンプ(MAD)",
+      "url": "https://typing-tube.net/movie/show/70672"
+    },
+    {
+      "genre": "ボカロ",
+      "title": "まるで二重振り子のセカイ！",
+      "artist": "霧四面体",
+      "url": "https://typing-tube.net/movie/show/70426"
+    },
+    {
+      "genre": "その他",
+      "title": "養命酒ラップ!",
+      "artist": "瀬戸弘司",
+      "url": "https://typing-tube.net/movie/show/70418"
+    },
+    {
+      "genre": "その他",
+      "title": "どーも、天才です!",
+      "artist": "P丸様。",
+      "url": "https://typing-tube.net/movie/show/70383"
+    },
+    {
+      "genre": "ボカロ",
+      "title": "サンクコスト",
+      "artist": "Aliey:S",
+      "url": "https://typing-tube.net/movie/show/70336"
+    },
+    {
+      "genre": "その他",
+      "title": "レッツ！スピーキング！おらリッシュ！",
+      "artist": "おらふくん",
+      "url": "https://typing-tube.net/movie/show/70180"
+    },
+    {
+      "genre": "ボカロ",
+      "title": "アマチュア音楽やめられねぇんだわ",
+      "artist": "Ro2noki",
+      "url": "https://typing-tube.net/movie/show/70081"
     }
   ],
   "★4": [
@@ -11013,6 +11193,36 @@ const _RAW = {
       "title": "Help me,さいたま2000!!",
       "artist": "太鼓の達人",
       "url": "https://typing-tube.net/movie/show/70887"
+    },
+    {
+      "genre": "アニメ",
+      "title": "Nero/ココロジョジョル第2部",
+      "artist": "ジョジョの奇妙な冒険(MAD)",
+      "url": "https://typing-tube.net/movie/show/70822"
+    },
+    {
+      "genre": "その他",
+      "title": "気にしないっ！",
+      "artist": "Appare!",
+      "url": "https://typing-tube.net/movie/show/70506"
+    },
+    {
+      "genre": "ボカロ",
+      "title": "重音テトはこんなパーティ二人で抜け出せるのか",
+      "artist": "かてらざわ",
+      "url": "https://typing-tube.net/movie/show/64687"
+    },
+    {
+      "genre": "ボカロ",
+      "title": "重音テトはこんなパーティ二人で抜け出せるのか ～Everlasting Edition～",
+      "artist": "かてらざわ",
+      "url": "https://typing-tube.net/movie/show/75134"
+    },
+    {
+      "genre": "その他",
+      "title": "総武線ラップ2021",
+      "artist": "フロクロ",
+      "url": "https://typing-tube.net/movie/show/70108"
     }
   ],
   "★5": [
@@ -11738,6 +11948,18 @@ function renderList() {
 document.addEventListener('DOMContentLoaded', () => {
   // ランダムセレクト
   document.getElementById('randomBtn').addEventListener('click', doRandom);
+  // 結果表示モード切替
+  const resultsEl = document.getElementById('results');
+  const viewBtns = document.querySelectorAll('#viewToggle button');
+  function setView(v) {
+    resultsEl.classList.toggle('view-large', v === 'large');
+    viewBtns.forEach(b => b.classList.toggle('active', b.dataset.view === v));
+    try { localStorage.setItem('ttResultView', v); } catch (e) {}
+  }
+  viewBtns.forEach(b => b.addEventListener('click', () => setView(b.dataset.view)));
+  let savedView = 'large';
+  try { savedView = localStorage.getItem('ttResultView') || 'large'; } catch (e) {}
+  setView(savedView === 'classic' ? 'classic' : 'large');
   setupChips('diffChips', ()=>{});
   setupChips('genreChips', ()=>{});
 
